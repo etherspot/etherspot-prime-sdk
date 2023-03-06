@@ -51,9 +51,9 @@ export class HttpRpcClient {
    * @param userOp1
    * @return userOpHash the id of this operation, for getUserOperationTransaction
    */
-  async sendUserOpToBundler (userOp1: UserOperationStruct): Promise<string> {
+  async sendUserOpToBundler (userOp: UserOperationStruct): Promise<string> {
     await this.initializing
-    const hexifiedUserOp = this.hexifyUserOp(userOp1)
+    const hexifiedUserOp = this.hexifyUserOp(userOp)
     return await this.userOpJsonRpcProvider
       .send('eth_sendUserOperation', [hexifiedUserOp, this.entryPointAddress])
   }
