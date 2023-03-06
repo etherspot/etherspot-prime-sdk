@@ -5,16 +5,15 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "esModuleInterop": true,
     "target": "es2017",
     "sourceMap": false,
     "baseUrl": "./",
     "rootDir": "./",
-    "strict": false,
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "lib": [
       "DOM",
-      "ES2015"
+      "ES5"
     ]
   },
   "include": [
