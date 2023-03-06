@@ -1,11 +1,11 @@
 import { Wallet, ethers, providers } from 'ethers';
-import { Sdk } from '../src';
+import { LiteSdk } from '../src';
 
 async function main() {
   // initializating sdk...
   const provider = new providers.JsonRpcProvider(process.env.PROVIDER);
   const wallet = new Wallet(process.env.PRIVATE_KEY, provider);
-  const sdk = new Sdk(
+  const sdk = new LiteSdk(
     wallet,
     'mumbai-aa.etherspot.dev',
     80001,

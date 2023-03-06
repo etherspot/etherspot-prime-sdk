@@ -1,1 +1,1 @@
-export { Sdk } from './sdk';
+export { LiteSdk } from './sdk';

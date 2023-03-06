@@ -4,7 +4,7 @@ import { TransactionDetailsForUserOp } from './base/TransactionDetailsForUserOp'
 import { UserOperationStruct } from './contracts';
 import { getGasFee } from './common';
 
-export class Sdk {
+export class LiteSdk {
   private etherspotAccount: EtherspotAccountAPI;
   private bundler: HttpRpcClient;
 
