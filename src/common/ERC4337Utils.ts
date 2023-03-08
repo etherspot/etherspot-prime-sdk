@@ -11,7 +11,7 @@ if (UserOpType == null) {
   throw new Error(
     `unable to find method ${validateUserOpMethod} in EP ${entryPointAbi
       .filter((x) => x.type === 'function')
-      .map((x) => x[0].name)
+      .map((x) => x.name)
       .join(',')}`,
   );
 }
