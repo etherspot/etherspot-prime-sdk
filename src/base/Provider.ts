@@ -1,16 +1,16 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers';
 
-import { EntryPoint__factory, EtherspotAccountFactory__factory } from '../contracts'
+import { EntryPoint__factory, EtherspotWalletFactory__factory } from '../contracts';
 
-import { ClientConfig } from './ClientConfig'
-import { EtherspotAccountAPI } from './EtherspotAccountAPI'
-import { ERC4337EthersProvider } from './ERC4337EthersProvider'
-import { HttpRpcClient } from './HttpRpcClient'
-import { DeterministicDeployer } from './DeterministicDeployer'
-import { Signer } from '@ethersproject/abstract-signer'
-import Debug from 'debug'
+import { ClientConfig } from './ClientConfig';
+import { EtherspotWalletAPI } from './EtherspotWalletAPI';
+import { ERC4337EthersProvider } from './ERC4337EthersProvider';
+import { HttpRpcClient } from './HttpRpcClient';
+import { DeterministicDeployer } from './DeterministicDeployer';
+import { Signer } from '@ethersproject/abstract-signer';
+import Debug from 'debug';
 
-const debug = Debug('aa.wrapProvider')
+const debug = Debug('aa.wrapProvider');
 
 /**
  * wrap an existing provider to tunnel requests through Account Abstraction.
@@ -18,25 +18,25 @@ const debug = Debug('aa.wrapProvider')
  * @param config see ClientConfig for more info
  * @param originalSigner use this signer as the owner. of this wallet. By default, use the provider's signer
  */
-export async function wrapProvider (
+export async function wrapProvider(
   originalProvider: JsonRpcProvider,
   config: ClientConfig,
-  originalSigner: Signer = originalProvider.getSigner()
+  originalSigner: Signer = originalProvider.getSigner(),
 ): Promise<ERC4337EthersProvider> {
-  const entryPoint = EntryPoint__factory.connect(config.entryPointAddress, originalProvider)
+  const entryPoint = EntryPoint__factory.connect(config.entryPointAddress, originalProvider);
   // Initial SimpleAccount instance is not deployed and exists just for the interface
-  const detDeployer = new DeterministicDeployer(originalProvider)
-  const simpleAccountDeployer = await detDeployer.deterministicDeploy(EtherspotAccountFactory__factory.bytecode)
-  const smartAccountAPI = new EtherspotAccountAPI({
+  const detDeployer = new DeterministicDeployer(originalProvider);
+  const simpleAccountDeployer = await detDeployer.deterministicDeploy(EtherspotWalletFactory__factory.bytecode);
+  const smartAccountAPI = new EtherspotWalletAPI({
     provider: originalProvider,
     entryPointAddress: entryPoint.address,
     owner: originalSigner,
     factoryAddress: simpleAccountDeployer,
-    paymasterAPI: config.paymasterAPI
-  })
-  debug('config=', config)
-  const chainId = await originalProvider.getNetwork().then(net => net.chainId)
-  const httpRpcClient = new HttpRpcClient(config.bundlerUrl, config.entryPointAddress, chainId)
+    paymasterAPI: config.paymasterAPI,
+  });
+  debug('config=', config);
+  const chainId = await originalProvider.getNetwork().then((net) => net.chainId);
+  const httpRpcClient = new HttpRpcClient(config.bundlerUrl, config.entryPointAddress, chainId);
   return await new ERC4337EthersProvider(
     chainId,
     config,
@@ -44,6 +44,6 @@ export async function wrapProvider (
     originalProvider,
     httpRpcClient,
     entryPoint,
-    smartAccountAPI
-  ).init()
+    smartAccountAPI,
+  ).init();
 }

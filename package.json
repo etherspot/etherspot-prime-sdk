@@ -19,6 +19,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "start": "exit 1",
+    "01-get-address": "./node_modules/.bin/ts-node ./examples/1-get-address",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",

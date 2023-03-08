@@ -1,11 +1,11 @@
 import { Wallet, providers } from 'ethers';
-import { EtherspotAccountAPI, HttpRpcClient } from './base';
+import { EtherspotWalletAPI, HttpRpcClient } from './base';
 import { TransactionDetailsForUserOp } from './base/TransactionDetailsForUserOp';
-import { UserOperationStruct } from './contracts';
+import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { getGasFee } from './common';
 
 export class LiteSdk {
-  private etherspotAccount: EtherspotAccountAPI;
+  private EtherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
 
   constructor(
@@ -13,52 +13,50 @@ export class LiteSdk {
     bundlerRpc: string,
     chainId: number,
     entryPoint: string,
-    accountFactory: string
+    registry: string,
+    accountFactory: string,
   ) {
-    this.etherspotAccount = new EtherspotAccountAPI({
+    this.EtherspotWallet = new EtherspotWalletAPI({
       provider: wallet.provider,
       owner: wallet,
       index: 0,
       entryPointAddress: entryPoint,
-      factoryAddress: accountFactory
+      registryAddress: registry,
+      factoryAddress: accountFactory,
     });
     this.bundler = new HttpRpcClient(bundlerRpc, entryPoint, chainId);
   }
 
   async getCounterFactualAddress(): Promise<string> {
-    return this.etherspotAccount.getCounterFactualAddress();
+    return this.EtherspotWallet.getCounterFactualAddress();
   }
 
-  async getUserOpReceipt(
-    userOpHash: string,
-    timeout = 30000,
-    interval = 5000
-  ): Promise<string | null> {
-    const block = await this.wallet.provider.getBlock('latest')
-    const endtime = Date.now() + timeout
+  async getUserOpReceipt(userOpHash: string, timeout = 30000, interval = 5000): Promise<string | null> {
+    const block = await this.wallet.provider.getBlock('latest');
+    const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {
-      const events = await this.etherspotAccount.epView.queryFilter(
-        this.etherspotAccount.epView.filters.UserOperationEvent(userOpHash),
-        Math.max(100, block.number - 100)
-      )
+      const events = await this.EtherspotWallet.epView.queryFilter(
+        this.EtherspotWallet.epView.filters.UserOperationEvent(userOpHash),
+        Math.max(100, block.number - 100),
+      );
       if (events.length > 0) {
-        return events[0].transactionHash
+        return events[0].transactionHash;
       }
-      await new Promise((resolve) => setTimeout(resolve, interval))
+      await new Promise((resolve) => setTimeout(resolve, interval));
     }
-    return null
+    return null;
   }
 
   async sign(tx: TransactionDetailsForUserOp) {
     const gas = await this.getGasFee();
-    return this.etherspotAccount.createSignedUserOp({
+    return this.EtherspotWallet.createSignedUserOp({
       ...tx,
-      ...gas
+      ...gas,
     });
   }
 
   async getHash(userOp: UserOperationStruct) {
-    return this.etherspotAccount.getUserOpHash(userOp);
+    return this.EtherspotWallet.getUserOpHash(userOp);
   }
 
   async send(userOp: UserOperationStruct) {
