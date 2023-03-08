@@ -33,3 +33,10 @@ test.js
 
 # .env file
 .env
+
+# contracts exposed
+src/contracts/factories/contracts-exposed/
+
+#oz typings
+src/contracts/@openzeppelin/
+src/contracts/factories/@openzeppelin/
