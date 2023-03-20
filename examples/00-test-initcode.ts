@@ -1,7 +1,5 @@
-import { Contract, Wallet, ethers, providers } from 'ethers';
+import { Wallet, ethers, providers } from 'ethers';
 import { LiteSdk } from '../src';
-import { PersonalAccountRegistry__factory } from '../src/contracts';
-import { PersonalAccountRegistry } from '../src/contracts';
 
 // mumbai contract addresses
 const ENTRYPOINT_ADDRESS = '0x1D9a2CB3638C2FC8bF9C01D088B79E75CD188b17';
@@ -10,19 +8,17 @@ const REGISTRY_ADDRESS = '0x7EB3A038F25B9F32f8e19A7F0De83D4916030eFa';
 
 async function main() {
   // initializating sdk...
-  const provider = new providers.JsonRpcProvider('ALCHEMY_API_URL+KEY');
+  const provider = new providers.JsonRpcProvider('https://polygon-mumbai.g.alchemy.com/v2/<ALCHEMY_API_KEY>');
   const wallet = new Wallet('<PRIVATE_KEY>', provider);
   const sdk = new LiteSdk(
     wallet, // wallet
-    process.env.BUNDLER_URL, // bundler rpc
+    'https://mumbai-bundler.etherspot.io', // bundler rpc
     80001, // chain id
     ENTRYPOINT_ADDRESS, // entry point
     REGISTRY_ADDRESS, // personal account registry
     REGISTRY_ADDRESS, // personal account registry (wallet factory)
   );
 
-  // sanity check for RPC provider
-  console.log(await provider.getSigner());
   console.log(`Wallet address: ${wallet.address}`);
 
   console.log('here 2');
@@ -39,7 +35,7 @@ async function main() {
     value: ethers.utils.parseEther('0.0001'), // amount of native asset to send,
     data: '0x', // calldata is empty since we just want to transfer ether
   });
-  userOp.initCode = sdk.getAccountInitCodePAR();
+  userOp.initCode = await sdk.getAccountInitCodePAR();
   console.log(`Signed userOp: ${userOp}`);
 
   console.log('here 4');

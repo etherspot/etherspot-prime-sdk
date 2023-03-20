@@ -41,9 +41,7 @@ export class PersonalAccountRegistryAPI {
     }
     return hexConcat([
       this.factory.address,
-      `0x5fbfb9cf000000000000000000000000${(await this.owner.getAddress()).slice(
-        2,
-      )}0000000000000000000000000000000000000000000000000000000000000000`,
+      this.factory.interface.encodeFunctionData('deployAccount', [await this.owner.getAddress()]),
     ]);
   }
 }
