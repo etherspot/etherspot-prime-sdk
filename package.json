@@ -19,7 +19,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "start": "exit 1",
-    "01-get-address": "./node_modules/.bin/ts-node ./examples/1-get-address",
+    "00-test-initcode": "./node_modules/.bin/ts-node ./examples/00-test-initcode",
+    "01-get-address": "./node_modules/.bin/ts-node ./examples/01-get-address",
+    "02-transfer-funds": "./node_modules/.bin/ts-node ./examples/02-transfer-funds",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
@@ -36,14 +38,15 @@
     "url": "https://github.com/etherspot/etherspot-lite-sdk/issues"
   },
   "dependencies": {
-    "ethers": "^5.7.0",
-    "@thehubbleproject/bls": "^0.5.1"
+    "@thehubbleproject/bls": "^0.5.1",
+    "axios": "^1.3.4",
+    "ethers": "^5.7.0"
   },
   "devDependencies": {
     "@types/node": "13.13.9",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
-    "typescript": "4.5.2",
-    "ts-node": "8.10.2"
+    "ts-node": "8.10.2",
+    "typescript": "4.5.2"
   }
 }

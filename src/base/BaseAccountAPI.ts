@@ -7,6 +7,7 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { getUserOpHash, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
+import { Address } from 'cluster';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -41,6 +42,7 @@ export abstract class BaseAccountAPI {
 
   // entryPoint connected to "zero" address. allowed to make static calls (e.g. to getSenderAddress)
   protected readonly entryPointView: EntryPoint;
+  protected readonly registryView: Address;
 
   provider: Provider;
   overheads?: Partial<GasOverheads>;

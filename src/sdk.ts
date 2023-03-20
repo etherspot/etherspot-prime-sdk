@@ -1,12 +1,15 @@
 import { Wallet, providers } from 'ethers';
-import { EtherspotWalletAPI, HttpRpcClient } from './base';
+import { EtherspotWalletAPI, HttpRpcClient, PersonalAccountRegistryAPI } from './base';
 import { TransactionDetailsForUserOp } from './base/TransactionDetailsForUserOp';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { getGasFee } from './common';
+import { BytesLike, hexConcat } from 'ethers/lib/utils';
+import { PersonalAccountRegistry } from './contracts';
 
 export class LiteSdk {
   private EtherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
+  private PersonalAccountRegistry: PersonalAccountRegistryAPI;
 
   constructor(
     private wallet: Wallet,
@@ -25,6 +28,11 @@ export class LiteSdk {
       factoryAddress: accountFactory,
     });
     this.bundler = new HttpRpcClient(bundlerRpc, entryPoint, chainId);
+    this.PersonalAccountRegistry = new PersonalAccountRegistryAPI({
+      provider: wallet.provider,
+      factoryAddress: accountFactory,
+      owner: wallet,
+    });
   }
 
   async getCounterFactualAddress(): Promise<string> {
@@ -65,5 +73,23 @@ export class LiteSdk {
 
   async getGasFee() {
     return getGasFee(this.wallet.provider as providers.JsonRpcProvider);
+  }
+
+  // added below
+
+  async getAccountContract() {
+    return this.EtherspotWallet._getAccountContract();
+  }
+
+  get epView() {
+    return this.EtherspotWallet.epView;
+  }
+
+  get regView() {
+    return this.EtherspotWallet.regView;
+  }
+
+  async getAccountInitCodePAR(): Promise<string> {
+    return this.PersonalAccountRegistry.getAccountInitCode();
   }
 }
