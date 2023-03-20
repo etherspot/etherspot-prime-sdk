@@ -30,7 +30,7 @@ export class LiteSdk {
     this.bundler = new HttpRpcClient(bundlerRpc, entryPoint, chainId);
     this.PersonalAccountRegistry = new PersonalAccountRegistryAPI({
       provider: wallet.provider,
-      factoryAddress: accountFactory,
+      factoryAddress: registry,
       owner: wallet,
     });
   }

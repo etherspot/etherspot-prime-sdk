@@ -6,12 +6,7 @@ export interface Gas {
 }
 
 export async function getGasFee(provider: ethers.providers.JsonRpcProvider): Promise<Gas> {
-  console.log(`getGasFee.ts:: before eth_masPriorityFeePerGas call`);
-
   const [fee, block] = await Promise.all([provider.send('eth_maxPriorityFeePerGas', []), provider.getBlock('latest')]);
-  console.log(`getGasFee.ts:: fee: ${fee}`);
-  console.log(`getGasFee.ts:: block: ${block}`);
-
   const tip = ethers.BigNumber.from(fee);
   const buffer = tip.div(100).mul(13);
   const maxPriorityFeePerGas = tip.add(buffer);
