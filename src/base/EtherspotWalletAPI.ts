@@ -78,6 +78,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async getNonce(): Promise<BigNumber> {
+    console.log('checking nonce...');
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
@@ -100,7 +101,21 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return await this.owner.signMessage(arrayify(userOpHash));
   }
 
+  async updateEntryPoint(newEntryPoint: string) {
+    const accountContract = await this._getAccountContract();
+    return accountContract.updateEntryPoint(newEntryPoint);
+  }
+
+  async updateRegistry(newRegistry: string) {
+    const accountContract = await this._getAccountContract();
+    return accountContract.updateRegistry(newRegistry);
+  }
+
   get epView() {
     return this.entryPointView;
+  }
+
+  get regView() {
+    return this.registryView;
   }
 }
