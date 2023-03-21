@@ -8,9 +8,9 @@ async function main() {
   // const wallet = Wallet.createRandom();
   const sdk = new LiteSdk(
     wallet, // wallet
-    'mumbai-aa.etherspot.dev', // bundler rpc
+    'https://mumbai-bundler.etherspot.io', // bundler rpc
     80001, // chain id
-    '0x1D9a2CB3638C2FC8bF9C01D088B79E75CD188b17', // entry point
+    '0x0576a174D229E3cFA37253523E645A78A0C91B57', // entry point
     '<deployed_personal_account_registry_address>', // personal account registry
     '<deployed_account_factory_address>', // etherspot wallet factory
   );

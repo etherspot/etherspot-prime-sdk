@@ -76,7 +76,7 @@ export abstract class BaseAccountAPI {
     }
 
     // check PersonalAccountRegistry is deployed at given address
-    if ((await this.provider.getCode(this.registryAddress)) === '0x') {
+    if (this.registryAddress && (await this.provider.getCode(this.registryAddress)) === '0x') {
       throw new Error(`registry not deployed at ${this.registryAddress}`);
     }
 
@@ -260,8 +260,8 @@ export abstract class BaseAccountAPI {
     }
 
     const partialUserOp: any = {
-      sender: this.getAccountAddress(),
-      nonce: this.getNonce(),
+      sender: await this.getAccountAddress(),
+      nonce: await this.getNonce(),
       initCode,
       callData,
       callGasLimit,
@@ -275,14 +275,14 @@ export abstract class BaseAccountAPI {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       const userOpForPm = {
         ...partialUserOp,
-        preVerificationGas: this.getPreVerificationGas(partialUserOp),
+        preVerificationGas: await this.getPreVerificationGas(partialUserOp),
       };
       paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOpForPm);
     }
     partialUserOp.paymasterAndData = paymasterAndData ?? '0x';
     return {
       ...partialUserOp,
-      preVerificationGas: this.getPreVerificationGas(partialUserOp),
+      preVerificationGas: await this.getPreVerificationGas(partialUserOp),
       signature: '',
     };
   }
