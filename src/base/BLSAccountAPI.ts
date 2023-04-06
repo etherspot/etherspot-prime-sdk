@@ -5,8 +5,8 @@ import {
   BLSAccountFactory,
   BLSAccountFactory__factory,
   BLSSignatureAggregator__factory,
-  UserOperationStruct,
 } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 
 import { BlsSignerFactory } from '@thehubbleproject/bls/dist/signer';
 import { arrayify, hexConcat, keccak256, resolveProperties } from 'ethers/lib/utils';
@@ -63,7 +63,6 @@ export class BLSAccountAPI extends BaseAccountAPI {
       this.factory.address,
       this.factory.interface.encodeFunctionData('createAccount', [
         this.entryPointAddress,
-        this.registryAddress,
         this.index,
         await this.getPublicKey(),
       ]),

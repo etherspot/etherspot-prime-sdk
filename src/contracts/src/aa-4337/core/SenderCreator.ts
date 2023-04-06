@@ -11,31 +11,31 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export interface SenderCreatorInterface extends utils.Interface {
   functions: {
-    "createSender(bytes)": FunctionFragment;
+    'createSender(bytes)': FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "createSender"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: 'createSender'): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "createSender",
+    functionFragment: 'createSender',
     values: [PromiseOrValue<BytesLike>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "createSender",
+    functionFragment: 'createSender',
     data: BytesLike
   ): Result;
 

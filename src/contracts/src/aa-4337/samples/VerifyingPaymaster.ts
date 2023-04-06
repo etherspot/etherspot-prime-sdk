@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -70,72 +70,72 @@ export type UserOperationStructOutput = [
 
 export interface VerifyingPaymasterInterface extends utils.Interface {
   functions: {
-    "addStake(uint32)": FunctionFragment;
-    "deposit()": FunctionFragment;
-    "entryPoint()": FunctionFragment;
-    "getDeposit()": FunctionFragment;
-    "getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),uint48,uint48)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "parsePaymasterAndData(bytes)": FunctionFragment;
-    "postOp(uint8,bytes,uint256)": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "senderNonce(address)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "unlockStake()": FunctionFragment;
-    "validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
-    "verifyingSigner()": FunctionFragment;
-    "withdrawStake(address)": FunctionFragment;
-    "withdrawTo(address,uint256)": FunctionFragment;
+    'addStake(uint32)': FunctionFragment;
+    'deposit()': FunctionFragment;
+    'entryPoint()': FunctionFragment;
+    'getDeposit()': FunctionFragment;
+    'getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),uint48,uint48)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'parsePaymasterAndData(bytes)': FunctionFragment;
+    'postOp(uint8,bytes,uint256)': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'senderNonce(address)': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'unlockStake()': FunctionFragment;
+    'validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
+    'verifyingSigner()': FunctionFragment;
+    'withdrawStake(address)': FunctionFragment;
+    'withdrawTo(address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "addStake"
-      | "deposit"
-      | "entryPoint"
-      | "getDeposit"
-      | "getHash"
-      | "owner"
-      | "parsePaymasterAndData"
-      | "postOp"
-      | "renounceOwnership"
-      | "senderNonce"
-      | "transferOwnership"
-      | "unlockStake"
-      | "validatePaymasterUserOp"
-      | "verifyingSigner"
-      | "withdrawStake"
-      | "withdrawTo"
+      | 'addStake'
+      | 'deposit'
+      | 'entryPoint'
+      | 'getDeposit'
+      | 'getHash'
+      | 'owner'
+      | 'parsePaymasterAndData'
+      | 'postOp'
+      | 'renounceOwnership'
+      | 'senderNonce'
+      | 'transferOwnership'
+      | 'unlockStake'
+      | 'validatePaymasterUserOp'
+      | 'verifyingSigner'
+      | 'withdrawStake'
+      | 'withdrawTo'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'deposit', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "entryPoint",
+    functionFragment: 'entryPoint',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeposit",
+    functionFragment: 'getDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getHash",
+    functionFragment: 'getHash',
     values: [
       UserOperationStruct,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "parsePaymasterAndData",
+    functionFragment: 'parsePaymasterAndData',
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "postOp",
+    functionFragment: 'postOp',
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
@@ -143,23 +143,23 @@ export interface VerifyingPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "senderNonce",
+    functionFragment: 'senderNonce',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'validatePaymasterUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -167,64 +167,64 @@ export interface VerifyingPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "verifyingSigner",
+    functionFragment: 'verifyingSigner',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTo",
+    functionFragment: 'withdrawTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDeposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getHash", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'entryPoint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getDeposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getHash', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "parsePaymasterAndData",
+    functionFragment: 'parsePaymasterAndData',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "postOp", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'postOp', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "senderNonce",
+    functionFragment: 'renounceOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'senderNonce',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockStake",
+    functionFragment: 'transferOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'unlockStake',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "verifyingSigner",
+    functionFragment: 'validatePaymasterUserOp',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawStake",
+    functionFragment: 'verifyingSigner',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'withdrawStake',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
 
   events: {
-    "OwnershipTransferred(address,address)": EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
 }
 
 export interface OwnershipTransferredEventObject {
@@ -500,7 +500,7 @@ export interface VerifyingPaymaster extends BaseContract {
   };
 
   filters: {
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;

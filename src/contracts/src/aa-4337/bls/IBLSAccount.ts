@@ -12,20 +12,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -69,20 +69,20 @@ export type UserOperationStructOutput = [
 
 export interface IBLSAccountInterface extends utils.Interface {
   functions: {
-    "getBlsPublicKey()": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    'getBlsPublicKey()': FunctionFragment;
+    'validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "getBlsPublicKey" | "validateUserOp"
+    nameOrSignatureOrTopic: 'getBlsPublicKey' | 'validateUserOp'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "getBlsPublicKey",
+    functionFragment: 'getBlsPublicKey',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -91,19 +91,19 @@ export interface IBLSAccountInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getBlsPublicKey",
+    functionFragment: 'getBlsPublicKey',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     data: BytesLike
   ): Result;
 
   events: {
-    "PublicKeyChanged(uint256[4],uint256[4])": EventFragment;
+    'PublicKeyChanged(uint256[4],uint256[4])': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "PublicKeyChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'PublicKeyChanged'): EventFragment;
 }
 
 export interface PublicKeyChangedEventObject {
@@ -185,7 +185,7 @@ export interface IBLSAccount extends BaseContract {
   };
 
   filters: {
-    "PublicKeyChanged(uint256[4],uint256[4])"(
+    'PublicKeyChanged(uint256[4],uint256[4])'(
       oldPublicKey?: null,
       newPublicKey?: null
     ): PublicKeyChangedEventFilter;

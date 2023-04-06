@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,48 +65,48 @@ export type UserOperationStructOutput = [
 
 export interface TestSignatureAggregatorInterface extends utils.Interface {
   functions: {
-    "addStake(address,uint32)": FunctionFragment;
-    "aggregateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[])": FunctionFragment;
-    "validateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],bytes)": FunctionFragment;
-    "validateUserOpSignature((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
+    'addStake(address,uint32)': FunctionFragment;
+    'aggregateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[])': FunctionFragment;
+    'validateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],bytes)': FunctionFragment;
+    'validateUserOpSignature((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "addStake"
-      | "aggregateSignatures"
-      | "validateSignatures"
-      | "validateUserOpSignature"
+      | 'addStake'
+      | 'aggregateSignatures'
+      | 'validateSignatures'
+      | 'validateUserOpSignature'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "aggregateSignatures",
+    functionFragment: 'aggregateSignatures',
     values: [UserOperationStruct[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "validateSignatures",
+    functionFragment: 'validateSignatures',
     values: [UserOperationStruct[], PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOpSignature",
+    functionFragment: 'validateUserOpSignature',
     values: [UserOperationStruct]
   ): string;
 
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "aggregateSignatures",
+    functionFragment: 'aggregateSignatures',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateSignatures",
+    functionFragment: 'validateSignatures',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOpSignature",
+    functionFragment: 'validateUserOpSignature',
     data: BytesLike
   ): Result;
 

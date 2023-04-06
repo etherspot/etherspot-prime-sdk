@@ -10,31 +10,31 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export interface IOracleInterface extends utils.Interface {
   functions: {
-    "getTokenValueOfEth(uint256)": FunctionFragment;
+    'getTokenValueOfEth(uint256)': FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "getTokenValueOfEth"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: 'getTokenValueOfEth'): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "getTokenValueOfEth",
+    functionFragment: 'getTokenValueOfEth',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getTokenValueOfEth",
+    functionFragment: 'getTokenValueOfEth',
     data: BytesLike
   ): Result;
 

@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,16 +65,16 @@ export type UserOperationStructOutput = [
 
 export interface IPaymasterInterface extends utils.Interface {
   functions: {
-    "postOp(uint8,bytes,uint256)": FunctionFragment;
-    "validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    'postOp(uint8,bytes,uint256)': FunctionFragment;
+    'validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "postOp" | "validatePaymasterUserOp"
+    nameOrSignatureOrTopic: 'postOp' | 'validatePaymasterUserOp'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "postOp",
+    functionFragment: 'postOp',
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
@@ -82,7 +82,7 @@ export interface IPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'validatePaymasterUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -90,9 +90,9 @@ export interface IPaymasterInterface extends utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "postOp", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'postOp', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'validatePaymasterUserOp',
     data: BytesLike
   ): Result;
 

@@ -1,38 +1,22 @@
-import { Wallet, providers } from 'ethers';
-import { EtherspotWalletAPI, HttpRpcClient, PersonalAccountRegistryAPI } from './base';
+import { BigNumberish, Wallet, providers } from 'ethers';
+import { EtherspotWalletAPI, HttpRpcClient } from './base';
 import { TransactionDetailsForUserOp } from './base/TransactionDetailsForUserOp';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { getGasFee } from './common';
-import { BytesLike, hexConcat } from 'ethers/lib/utils';
-import { PersonalAccountRegistry } from './contracts';
 
 export class LiteSdk {
   private EtherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
-  private PersonalAccountRegistry: PersonalAccountRegistryAPI;
 
-  constructor(
-    private wallet: Wallet,
-    bundlerRpc: string,
-    chainId: number,
-    entryPoint: string,
-    registry: string,
-    accountFactory: string,
-  ) {
+  constructor(private wallet: Wallet, bundlerRpc: string, chainId: number, entryPoint: string, accountFactory: string) {
     this.EtherspotWallet = new EtherspotWalletAPI({
       provider: wallet.provider,
       owner: wallet,
       index: 0,
       entryPointAddress: entryPoint,
-      registryAddress: registry,
       factoryAddress: accountFactory,
     });
     this.bundler = new HttpRpcClient(bundlerRpc, entryPoint, chainId);
-    this.PersonalAccountRegistry = new PersonalAccountRegistryAPI({
-      provider: wallet.provider,
-      factoryAddress: registry,
-      owner: wallet,
-    });
   }
 
   async getCounterFactualAddress(): Promise<string> {
@@ -56,7 +40,9 @@ export class LiteSdk {
   }
 
   async sign(tx: TransactionDetailsForUserOp) {
+    console.log('sdk.ts:: sign(): tx:', tx);
     const gas = await this.getGasFee();
+
     return this.EtherspotWallet.createSignedUserOp({
       ...tx,
       ...gas,
@@ -85,11 +71,7 @@ export class LiteSdk {
     return this.EtherspotWallet.epView;
   }
 
-  get regView() {
-    return this.EtherspotWallet.regView;
-  }
-
-  async getAccountInitCodePAR(): Promise<string> {
-    return this.PersonalAccountRegistry.getAccountInitCode();
+  async encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
+    return this.EtherspotWallet.encodeExecute(target, value, data);
   }
 }

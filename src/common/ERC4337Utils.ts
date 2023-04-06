@@ -1,5 +1,6 @@
 import { defaultAbiCoder, hexConcat, hexlify, keccak256 } from 'ethers/lib/utils';
-import { EntryPoint__factory, PersonalAccountRegistry, UserOperationStruct } from '../contracts';
+import { EntryPoint__factory } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import { ethers } from 'ethers';
 import { BytesLike } from '@ethersproject/bytes';
 

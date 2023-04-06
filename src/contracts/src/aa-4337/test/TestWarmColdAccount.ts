@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,31 +65,31 @@ export type UserOperationStructOutput = [
 
 export interface TestWarmColdAccountInterface extends utils.Interface {
   functions: {
-    "state()": FunctionFragment;
-    "touchPaymaster(address)": FunctionFragment;
-    "touchStorage()": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    'state()': FunctionFragment;
+    'touchPaymaster(address)': FunctionFragment;
+    'touchStorage()': FunctionFragment;
+    'validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "state"
-      | "touchPaymaster"
-      | "touchStorage"
-      | "validateUserOp"
+      | 'state'
+      | 'touchPaymaster'
+      | 'touchStorage'
+      | 'validateUserOp'
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "state", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'state', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "touchPaymaster",
+    functionFragment: 'touchPaymaster',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "touchStorage",
+    functionFragment: 'touchStorage',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -97,17 +97,17 @@ export interface TestWarmColdAccountInterface extends utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "state", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'state', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "touchPaymaster",
+    functionFragment: 'touchPaymaster',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "touchStorage",
+    functionFragment: 'touchStorage',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     data: BytesLike
   ): Result;
 

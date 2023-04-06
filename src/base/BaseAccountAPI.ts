@@ -1,18 +1,16 @@
 import { ethers, BigNumber, BigNumberish } from 'ethers';
 import { Provider } from '@ethersproject/providers';
-import { EntryPoint, EntryPoint__factory, UserOperationStruct } from '../contracts';
-
+import { EntryPoint, EntryPoint__factory } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { getUserOpHash, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { Address } from 'cluster';
 
 export interface BaseApiParams {
   provider: Provider;
   entryPointAddress: string;
-  registryAddress: string;
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
   paymasterAPI?: PaymasterAPI;
@@ -42,12 +40,10 @@ export abstract class BaseAccountAPI {
 
   // entryPoint connected to "zero" address. allowed to make static calls (e.g. to getSenderAddress)
   protected readonly entryPointView: EntryPoint;
-  protected readonly registryView: Address;
 
   provider: Provider;
   overheads?: Partial<GasOverheads>;
   entryPointAddress: string;
-  registryAddress: string;
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
 
@@ -59,7 +55,6 @@ export abstract class BaseAccountAPI {
     this.provider = params.provider;
     this.overheads = params.overheads;
     this.entryPointAddress = params.entryPointAddress;
-    this.registryAddress = params.registryAddress;
     this.accountAddress = params.accountAddress;
     this.paymasterAPI = params.paymasterAPI;
 
@@ -73,11 +68,6 @@ export abstract class BaseAccountAPI {
     // check EntryPoint is deployed at given address
     if ((await this.provider.getCode(this.entryPointAddress)) === '0x') {
       throw new Error(`entryPoint not deployed at ${this.entryPointAddress}`);
-    }
-
-    // check PersonalAccountRegistry is deployed at given address
-    if ((await this.provider.getCode(this.registryAddress)) === '0x') {
-      throw new Error(`registry not deployed at ${this.registryAddress}`);
     }
 
     await this.getAccountAddress();
@@ -137,6 +127,7 @@ export abstract class BaseAccountAPI {
     try {
       await this.entryPointView.callStatic.getSenderAddress(initCode);
     } catch (e: any) {
+      console.log(e);
       return e.errorArgs.sender;
     }
     throw new Error('must handle revert');

@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,22 +65,22 @@ export type UserOperationStructOutput = [
 
 export interface BaseAccountInterface extends utils.Interface {
   functions: {
-    "entryPoint()": FunctionFragment;
-    "nonce()": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    'entryPoint()': FunctionFragment;
+    'nonce()': FunctionFragment;
+    'validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "entryPoint" | "nonce" | "validateUserOp"
+    nameOrSignatureOrTopic: 'entryPoint' | 'nonce' | 'validateUserOp'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "entryPoint",
+    functionFragment: 'entryPoint',
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nonce', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -88,10 +88,10 @@ export interface BaseAccountInterface extends utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'entryPoint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nonce', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     data: BytesLike
   ): Result;
 

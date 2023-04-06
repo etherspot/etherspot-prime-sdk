@@ -12,48 +12,48 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../../../../../common";
+} from '../../../../../../../common';
 
 export interface BNPairingPrecompileCostEstimatorInterface
   extends utils.Interface {
   functions: {
-    "baseCost()": FunctionFragment;
-    "getGasCost(uint256)": FunctionFragment;
-    "perPairCost()": FunctionFragment;
-    "run()": FunctionFragment;
+    'baseCost()': FunctionFragment;
+    'getGasCost(uint256)': FunctionFragment;
+    'perPairCost()': FunctionFragment;
+    'run()': FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "baseCost" | "getGasCost" | "perPairCost" | "run"
+    nameOrSignatureOrTopic: 'baseCost' | 'getGasCost' | 'perPairCost' | 'run'
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "baseCost", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'baseCost', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getGasCost",
+    functionFragment: 'getGasCost',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "perPairCost",
+    functionFragment: 'perPairCost',
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "run", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'run', values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "baseCost", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getGasCost", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'baseCost', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getGasCost', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "perPairCost",
+    functionFragment: 'perPairCost',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "run", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'run', data: BytesLike): Result;
 
   events: {};
 }

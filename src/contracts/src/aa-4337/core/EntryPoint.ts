@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -167,52 +167,52 @@ export declare namespace EntryPoint {
 
 export interface EntryPointInterface extends utils.Interface {
   functions: {
-    "SIG_VALIDATION_FAILED()": FunctionFragment;
-    "_validateSenderAndPaymaster(bytes,address,bytes)": FunctionFragment;
-    "addStake(uint32)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "depositTo(address)": FunctionFragment;
-    "deposits(address)": FunctionFragment;
-    "getDepositInfo(address)": FunctionFragment;
-    "getSenderAddress(bytes)": FunctionFragment;
-    "getUserOpHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "handleAggregatedOps(((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address,bytes)[],address)": FunctionFragment;
-    "handleOps((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address)": FunctionFragment;
-    "innerHandleOp(bytes,((address,uint256,uint256,uint256,uint256,address,uint256,uint256),bytes32,uint256,uint256,uint256),bytes)": FunctionFragment;
-    "simulateHandleOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),address,bytes)": FunctionFragment;
-    "simulateValidation((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "unlockStake()": FunctionFragment;
-    "withdrawStake(address)": FunctionFragment;
-    "withdrawTo(address,uint256)": FunctionFragment;
+    'SIG_VALIDATION_FAILED()': FunctionFragment;
+    '_validateSenderAndPaymaster(bytes,address,bytes)': FunctionFragment;
+    'addStake(uint32)': FunctionFragment;
+    'balanceOf(address)': FunctionFragment;
+    'depositTo(address)': FunctionFragment;
+    'deposits(address)': FunctionFragment;
+    'getDepositInfo(address)': FunctionFragment;
+    'getSenderAddress(bytes)': FunctionFragment;
+    'getUserOpHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
+    'handleAggregatedOps(((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address,bytes)[],address)': FunctionFragment;
+    'handleOps((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address)': FunctionFragment;
+    'innerHandleOp(bytes,((address,uint256,uint256,uint256,uint256,address,uint256,uint256),bytes32,uint256,uint256,uint256),bytes)': FunctionFragment;
+    'simulateHandleOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),address,bytes)': FunctionFragment;
+    'simulateValidation((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
+    'unlockStake()': FunctionFragment;
+    'withdrawStake(address)': FunctionFragment;
+    'withdrawTo(address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "SIG_VALIDATION_FAILED"
-      | "_validateSenderAndPaymaster"
-      | "addStake"
-      | "balanceOf"
-      | "depositTo"
-      | "deposits"
-      | "getDepositInfo"
-      | "getSenderAddress"
-      | "getUserOpHash"
-      | "handleAggregatedOps"
-      | "handleOps"
-      | "innerHandleOp"
-      | "simulateHandleOp"
-      | "simulateValidation"
-      | "unlockStake"
-      | "withdrawStake"
-      | "withdrawTo"
+      | 'SIG_VALIDATION_FAILED'
+      | '_validateSenderAndPaymaster'
+      | 'addStake'
+      | 'balanceOf'
+      | 'depositTo'
+      | 'deposits'
+      | 'getDepositInfo'
+      | 'getSenderAddress'
+      | 'getUserOpHash'
+      | 'handleAggregatedOps'
+      | 'handleOps'
+      | 'innerHandleOp'
+      | 'simulateHandleOp'
+      | 'simulateValidation'
+      | 'unlockStake'
+      | 'withdrawStake'
+      | 'withdrawTo'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "SIG_VALIDATION_FAILED",
+    functionFragment: 'SIG_VALIDATION_FAILED',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "_validateSenderAndPaymaster",
+    functionFragment: '_validateSenderAndPaymaster',
     values: [
       PromiseOrValue<BytesLike>,
       PromiseOrValue<string>,
@@ -220,43 +220,43 @@ export interface EntryPointInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: 'balanceOf',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositTo",
+    functionFragment: 'depositTo',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "deposits",
+    functionFragment: 'deposits',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getDepositInfo",
+    functionFragment: 'getDepositInfo',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getSenderAddress",
+    functionFragment: 'getSenderAddress',
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserOpHash",
+    functionFragment: 'getUserOpHash',
     values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "handleAggregatedOps",
+    functionFragment: 'handleAggregatedOps',
     values: [IEntryPoint.UserOpsPerAggregatorStruct[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "handleOps",
+    functionFragment: 'handleOps',
     values: [UserOperationStruct[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "innerHandleOp",
+    functionFragment: 'innerHandleOp',
     values: [
       PromiseOrValue<BytesLike>,
       EntryPoint.UserOpInfoStruct,
@@ -264,7 +264,7 @@ export interface EntryPointInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "simulateHandleOp",
+    functionFragment: 'simulateHandleOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<string>,
@@ -272,94 +272,94 @@ export interface EntryPointInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "simulateValidation",
+    functionFragment: 'simulateValidation',
     values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTo",
+    functionFragment: 'withdrawTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "SIG_VALIDATION_FAILED",
+    functionFragment: 'SIG_VALIDATION_FAILED',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "_validateSenderAndPaymaster",
+    functionFragment: '_validateSenderAndPaymaster',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositTo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposits", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositTo', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposits', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDepositInfo",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSenderAddress",
+    functionFragment: 'getDepositInfo',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserOpHash",
+    functionFragment: 'getSenderAddress',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "handleAggregatedOps",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "handleOps", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "innerHandleOp",
+    functionFragment: 'getUserOpHash',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "simulateHandleOp",
+    functionFragment: 'handleAggregatedOps',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'handleOps', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'innerHandleOp',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "simulateValidation",
+    functionFragment: 'simulateHandleOp',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockStake",
+    functionFragment: 'simulateValidation',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawStake",
+    functionFragment: 'unlockStake',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'withdrawStake',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
 
   events: {
-    "AccountDeployed(bytes32,address,address,address)": EventFragment;
-    "Deposited(address,uint256)": EventFragment;
-    "SignatureAggregatorChanged(address)": EventFragment;
-    "StakeLocked(address,uint256,uint256)": EventFragment;
-    "StakeUnlocked(address,uint256)": EventFragment;
-    "StakeWithdrawn(address,address,uint256)": EventFragment;
-    "UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)": EventFragment;
-    "UserOperationRevertReason(bytes32,address,uint256,bytes)": EventFragment;
-    "Withdrawn(address,address,uint256)": EventFragment;
+    'AccountDeployed(bytes32,address,address,address)': EventFragment;
+    'Deposited(address,uint256)': EventFragment;
+    'SignatureAggregatorChanged(address)': EventFragment;
+    'StakeLocked(address,uint256,uint256)': EventFragment;
+    'StakeUnlocked(address,uint256)': EventFragment;
+    'StakeWithdrawn(address,address,uint256)': EventFragment;
+    'UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)': EventFragment;
+    'UserOperationRevertReason(bytes32,address,uint256,bytes)': EventFragment;
+    'Withdrawn(address,address,uint256)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AccountDeployed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Deposited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SignatureAggregatorChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeLocked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeUnlocked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeWithdrawn"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserOperationEvent"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserOperationRevertReason"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AccountDeployed'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'SignatureAggregatorChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeLocked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeUnlocked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeWithdrawn'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'UserOperationEvent'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'UserOperationRevertReason'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
 
 export interface AccountDeployedEventObject {
@@ -802,7 +802,7 @@ export interface EntryPoint extends BaseContract {
   };
 
   filters: {
-    "AccountDeployed(bytes32,address,address,address)"(
+    'AccountDeployed(bytes32,address,address,address)'(
       userOpHash?: PromiseOrValue<BytesLike> | null,
       sender?: PromiseOrValue<string> | null,
       factory?: null,
@@ -815,7 +815,7 @@ export interface EntryPoint extends BaseContract {
       paymaster?: null
     ): AccountDeployedEventFilter;
 
-    "Deposited(address,uint256)"(
+    'Deposited(address,uint256)'(
       account?: PromiseOrValue<string> | null,
       totalDeposit?: null
     ): DepositedEventFilter;
@@ -824,14 +824,14 @@ export interface EntryPoint extends BaseContract {
       totalDeposit?: null
     ): DepositedEventFilter;
 
-    "SignatureAggregatorChanged(address)"(
+    'SignatureAggregatorChanged(address)'(
       aggregator?: PromiseOrValue<string> | null
     ): SignatureAggregatorChangedEventFilter;
     SignatureAggregatorChanged(
       aggregator?: PromiseOrValue<string> | null
     ): SignatureAggregatorChangedEventFilter;
 
-    "StakeLocked(address,uint256,uint256)"(
+    'StakeLocked(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       totalStaked?: null,
       unstakeDelaySec?: null
@@ -842,7 +842,7 @@ export interface EntryPoint extends BaseContract {
       unstakeDelaySec?: null
     ): StakeLockedEventFilter;
 
-    "StakeUnlocked(address,uint256)"(
+    'StakeUnlocked(address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawTime?: null
     ): StakeUnlockedEventFilter;
@@ -851,7 +851,7 @@ export interface EntryPoint extends BaseContract {
       withdrawTime?: null
     ): StakeUnlockedEventFilter;
 
-    "StakeWithdrawn(address,address,uint256)"(
+    'StakeWithdrawn(address,address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawAddress?: null,
       amount?: null
@@ -862,7 +862,7 @@ export interface EntryPoint extends BaseContract {
       amount?: null
     ): StakeWithdrawnEventFilter;
 
-    "UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)"(
+    'UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)'(
       userOpHash?: PromiseOrValue<BytesLike> | null,
       sender?: PromiseOrValue<string> | null,
       paymaster?: PromiseOrValue<string> | null,
@@ -881,7 +881,7 @@ export interface EntryPoint extends BaseContract {
       actualGasUsed?: null
     ): UserOperationEventEventFilter;
 
-    "UserOperationRevertReason(bytes32,address,uint256,bytes)"(
+    'UserOperationRevertReason(bytes32,address,uint256,bytes)'(
       userOpHash?: PromiseOrValue<BytesLike> | null,
       sender?: PromiseOrValue<string> | null,
       nonce?: null,
@@ -894,7 +894,7 @@ export interface EntryPoint extends BaseContract {
       revertReason?: null
     ): UserOperationRevertReasonEventFilter;
 
-    "Withdrawn(address,address,uint256)"(
+    'Withdrawn(address,address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawAddress?: null,
       amount?: null

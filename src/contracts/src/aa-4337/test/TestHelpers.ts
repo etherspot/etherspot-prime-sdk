@@ -10,16 +10,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type ValidationDataStruct = {
   aggregator: PromiseOrValue<string>;
@@ -35,26 +35,26 @@ export type ValidationDataStructOutput = [string, number, number] & {
 
 export interface TestHelpersInterface extends utils.Interface {
   functions: {
-    "intersectTimeRange(uint256,uint256)": FunctionFragment;
-    "packValidationData(bool,uint48,uint48)": FunctionFragment;
-    "packValidationDataStruct((address,uint48,uint48))": FunctionFragment;
-    "parseValidationData(uint256)": FunctionFragment;
+    'intersectTimeRange(uint256,uint256)': FunctionFragment;
+    'packValidationData(bool,uint48,uint48)': FunctionFragment;
+    'packValidationDataStruct((address,uint48,uint48))': FunctionFragment;
+    'parseValidationData(uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "intersectTimeRange"
-      | "packValidationData"
-      | "packValidationDataStruct"
-      | "parseValidationData"
+      | 'intersectTimeRange'
+      | 'packValidationData'
+      | 'packValidationDataStruct'
+      | 'parseValidationData'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "intersectTimeRange",
+    functionFragment: 'intersectTimeRange',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "packValidationData",
+    functionFragment: 'packValidationData',
     values: [
       PromiseOrValue<boolean>,
       PromiseOrValue<BigNumberish>,
@@ -62,28 +62,28 @@ export interface TestHelpersInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "packValidationDataStruct",
+    functionFragment: 'packValidationDataStruct',
     values: [ValidationDataStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "parseValidationData",
+    functionFragment: 'parseValidationData',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "intersectTimeRange",
+    functionFragment: 'intersectTimeRange',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "packValidationData",
+    functionFragment: 'packValidationData',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "packValidationDataStruct",
+    functionFragment: 'packValidationDataStruct',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "parseValidationData",
+    functionFragment: 'parseValidationData',
     data: BytesLike
   ): Result;
 

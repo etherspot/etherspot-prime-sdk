@@ -11,115 +11,115 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from '../../common';
 
 export interface WhitelistInterface extends utils.Interface {
   functions: {
-    "add(address)": FunctionFragment;
-    "addBatch(address[])": FunctionFragment;
-    "check(address,address)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "remove(address)": FunctionFragment;
-    "removeBatch(address[])": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "whitelist(address,address)": FunctionFragment;
+    'add(address)': FunctionFragment;
+    'addBatch(address[])': FunctionFragment;
+    'check(address,address)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'remove(address)': FunctionFragment;
+    'removeBatch(address[])': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'whitelist(address,address)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "add"
-      | "addBatch"
-      | "check"
-      | "owner"
-      | "remove"
-      | "removeBatch"
-      | "renounceOwnership"
-      | "transferOwnership"
-      | "whitelist"
+      | 'add'
+      | 'addBatch'
+      | 'check'
+      | 'owner'
+      | 'remove'
+      | 'removeBatch'
+      | 'renounceOwnership'
+      | 'transferOwnership'
+      | 'whitelist'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "add",
+    functionFragment: 'add',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "addBatch",
+    functionFragment: 'addBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "check",
+    functionFragment: 'check',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "remove",
+    functionFragment: 'remove',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeBatch",
+    functionFragment: 'removeBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "whitelist",
+    functionFragment: 'whitelist',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "add", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addBatch", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "check", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addBatch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'check', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'remove', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeBatch",
+    functionFragment: 'removeBatch',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'renounceOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "whitelist", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'whitelist', data: BytesLike): Result;
 
   events: {
-    "AddedBatchToWhitelist(address,address[])": EventFragment;
-    "AddedToWhitelist(address,address)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "RemovedBatchFromWhitelist(address,address[])": EventFragment;
-    "RemovedFromWhitelist(address,address)": EventFragment;
-    "WhitelistInitialized(address,string)": EventFragment;
+    'AddedBatchToWhitelist(address,address[])': EventFragment;
+    'AddedToWhitelist(address,address)': EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
+    'RemovedBatchFromWhitelist(address,address[])': EventFragment;
+    'RemovedFromWhitelist(address,address)': EventFragment;
+    'WhitelistInitialized(address,string)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AddedBatchToWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "AddedToWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RemovedBatchFromWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RemovedFromWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WhitelistInitialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AddedBatchToWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AddedToWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RemovedBatchFromWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RemovedFromWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'WhitelistInitialized'): EventFragment;
 }
 
 export interface AddedBatchToWhitelistEventObject {
@@ -352,7 +352,7 @@ export interface Whitelist extends BaseContract {
   };
 
   filters: {
-    "AddedBatchToWhitelist(address,address[])"(
+    'AddedBatchToWhitelist(address,address[])'(
       paymaster?: PromiseOrValue<string> | null,
       accounts?: PromiseOrValue<string>[] | null
     ): AddedBatchToWhitelistEventFilter;
@@ -361,7 +361,7 @@ export interface Whitelist extends BaseContract {
       accounts?: PromiseOrValue<string>[] | null
     ): AddedBatchToWhitelistEventFilter;
 
-    "AddedToWhitelist(address,address)"(
+    'AddedToWhitelist(address,address)'(
       paymaster?: PromiseOrValue<string> | null,
       account?: PromiseOrValue<string> | null
     ): AddedToWhitelistEventFilter;
@@ -370,7 +370,7 @@ export interface Whitelist extends BaseContract {
       account?: PromiseOrValue<string> | null
     ): AddedToWhitelistEventFilter;
 
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
@@ -379,7 +379,7 @@ export interface Whitelist extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "RemovedBatchFromWhitelist(address,address[])"(
+    'RemovedBatchFromWhitelist(address,address[])'(
       paymaster?: PromiseOrValue<string> | null,
       accounts?: PromiseOrValue<string>[] | null
     ): RemovedBatchFromWhitelistEventFilter;
@@ -388,7 +388,7 @@ export interface Whitelist extends BaseContract {
       accounts?: PromiseOrValue<string>[] | null
     ): RemovedBatchFromWhitelistEventFilter;
 
-    "RemovedFromWhitelist(address,address)"(
+    'RemovedFromWhitelist(address,address)'(
       paymaster?: PromiseOrValue<string> | null,
       account?: PromiseOrValue<string> | null
     ): RemovedFromWhitelistEventFilter;
@@ -397,7 +397,7 @@ export interface Whitelist extends BaseContract {
       account?: PromiseOrValue<string> | null
     ): RemovedFromWhitelistEventFilter;
 
-    "WhitelistInitialized(address,string)"(
+    'WhitelistInitialized(address,string)'(
       owner?: null,
       version?: null
     ): WhitelistInitializedEventFilter;

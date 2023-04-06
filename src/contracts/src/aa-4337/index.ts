@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as bls from "./bls";
 export type { bls };
+import type * as callback from "./callback";
+export type { callback };
 import type * as core from "./core";
 export type { core };
 import type * as interfaces from "./interfaces";

@@ -11,30 +11,30 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export interface ICreate2DeployerInterface extends utils.Interface {
   functions: {
-    "deploy(bytes,bytes32)": FunctionFragment;
+    'deploy(bytes,bytes32)': FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "deploy"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: 'deploy'): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "deploy",
+    functionFragment: 'deploy',
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "deploy", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deploy', data: BytesLike): Result;
 
   events: {};
 }

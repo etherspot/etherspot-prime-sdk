@@ -4,7 +4,6 @@ import {
   EtherspotWallet__factory,
   EtherspotWalletFactory,
   EtherspotWalletFactory__factory,
-  UserOperationStruct,
 } from '../contracts';
 import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { Signer } from '@ethersproject/abstract-signer';
@@ -71,9 +70,11 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     }
     return hexConcat([
       this.factory.address,
-      `0x5fbfb9cf000000000000000000000000${(await this.owner.getAddress()).slice(
-        2,
-      )}0000000000000000000000000000000000000000000000000000000000000000`,
+      this.factory.interface.encodeFunctionData('createAccount', [
+        await this.entryPointAddress,
+        await this.owner.getAddress(),
+        this.index,
+      ]),
     ]);
   }
 
@@ -106,16 +107,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return accountContract.updateEntryPoint(newEntryPoint);
   }
 
-  async updateRegistry(newRegistry: string) {
-    const accountContract = await this._getAccountContract();
-    return accountContract.updateRegistry(newRegistry);
-  }
-
   get epView() {
     return this.entryPointView;
-  }
-
-  get regView() {
-    return this.registryView;
   }
 }

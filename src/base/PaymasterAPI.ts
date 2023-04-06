@@ -1,4 +1,4 @@
-import { UserOperationStruct } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 
 /**
  * an API to external a UserOperation with paymaster info

@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,20 +65,20 @@ export type UserOperationStructOutput = [
 
 export interface IAggregatedAccountInterface extends utils.Interface {
   functions: {
-    "getAggregator()": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    'getAggregator()': FunctionFragment;
+    'validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "getAggregator" | "validateUserOp"
+    nameOrSignatureOrTopic: 'getAggregator' | 'validateUserOp'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "getAggregator",
+    functionFragment: 'getAggregator',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -87,11 +87,11 @@ export interface IAggregatedAccountInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getAggregator",
+    functionFragment: 'getAggregator',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     data: BytesLike
   ): Result;
 

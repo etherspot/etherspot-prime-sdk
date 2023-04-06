@@ -12,16 +12,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -65,99 +65,99 @@ export type UserOperationStructOutput = [
 
 export interface BLSSignatureAggregatorInterface extends utils.Interface {
   functions: {
-    "BLS_DOMAIN()": FunctionFragment;
-    "N()": FunctionFragment;
-    "addStake(address,uint32)": FunctionFragment;
-    "aggregateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[])": FunctionFragment;
-    "getTrailingPublicKey(bytes)": FunctionFragment;
-    "getUserOpHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "getUserOpPublicKey((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "userOpToMessage((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "validateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],bytes)": FunctionFragment;
-    "validateUserOpSignature((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
+    'BLS_DOMAIN()': FunctionFragment;
+    'N()': FunctionFragment;
+    'addStake(address,uint32)': FunctionFragment;
+    'aggregateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[])': FunctionFragment;
+    'getTrailingPublicKey(bytes)': FunctionFragment;
+    'getUserOpHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
+    'getUserOpPublicKey((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
+    'userOpToMessage((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
+    'validateSignatures((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],bytes)': FunctionFragment;
+    'validateUserOpSignature((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "BLS_DOMAIN"
-      | "N"
-      | "addStake"
-      | "aggregateSignatures"
-      | "getTrailingPublicKey"
-      | "getUserOpHash"
-      | "getUserOpPublicKey"
-      | "userOpToMessage"
-      | "validateSignatures"
-      | "validateUserOpSignature"
+      | 'BLS_DOMAIN'
+      | 'N'
+      | 'addStake'
+      | 'aggregateSignatures'
+      | 'getTrailingPublicKey'
+      | 'getUserOpHash'
+      | 'getUserOpPublicKey'
+      | 'userOpToMessage'
+      | 'validateSignatures'
+      | 'validateUserOpSignature'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "BLS_DOMAIN",
+    functionFragment: 'BLS_DOMAIN',
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "N", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'N', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "aggregateSignatures",
+    functionFragment: 'aggregateSignatures',
     values: [UserOperationStruct[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "getTrailingPublicKey",
+    functionFragment: 'getTrailingPublicKey',
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserOpHash",
+    functionFragment: 'getUserOpHash',
     values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserOpPublicKey",
+    functionFragment: 'getUserOpPublicKey',
     values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "userOpToMessage",
+    functionFragment: 'userOpToMessage',
     values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "validateSignatures",
+    functionFragment: 'validateSignatures',
     values: [UserOperationStruct[], PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOpSignature",
+    functionFragment: 'validateUserOpSignature',
     values: [UserOperationStruct]
   ): string;
 
-  decodeFunctionResult(functionFragment: "BLS_DOMAIN", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "N", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'BLS_DOMAIN', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'N', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "aggregateSignatures",
+    functionFragment: 'aggregateSignatures',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getTrailingPublicKey",
+    functionFragment: 'getTrailingPublicKey',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserOpHash",
+    functionFragment: 'getUserOpHash',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserOpPublicKey",
+    functionFragment: 'getUserOpPublicKey',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "userOpToMessage",
+    functionFragment: 'userOpToMessage',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateSignatures",
+    functionFragment: 'validateSignatures',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOpSignature",
+    functionFragment: 'validateUserOpSignature',
     data: BytesLike
   ): Result;
 
