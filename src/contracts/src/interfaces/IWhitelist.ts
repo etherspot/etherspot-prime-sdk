@@ -11,62 +11,62 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from '../../common';
 
 export interface IWhitelistInterface extends utils.Interface {
   functions: {
-    "add(address)": FunctionFragment;
-    "addBatch(address[])": FunctionFragment;
-    "check(address,address)": FunctionFragment;
-    "remove(address)": FunctionFragment;
-    "removeBatch(address[])": FunctionFragment;
+    'add(address)': FunctionFragment;
+    'addBatch(address[])': FunctionFragment;
+    'check(address,address)': FunctionFragment;
+    'remove(address)': FunctionFragment;
+    'removeBatch(address[])': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "add"
-      | "addBatch"
-      | "check"
-      | "remove"
-      | "removeBatch"
+      | 'add'
+      | 'addBatch'
+      | 'check'
+      | 'remove'
+      | 'removeBatch'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "add",
+    functionFragment: 'add',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "addBatch",
+    functionFragment: 'addBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "check",
+    functionFragment: 'check',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "remove",
+    functionFragment: 'remove',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeBatch",
+    functionFragment: 'removeBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
 
-  decodeFunctionResult(functionFragment: "add", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addBatch", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "check", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addBatch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'check', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'remove', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeBatch",
+    functionFragment: 'removeBatch',
     data: BytesLike
   ): Result;
 

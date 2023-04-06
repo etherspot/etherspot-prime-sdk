@@ -1,7 +1,11 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import { hexValue } from 'ethers/lib/utils';
-import { UserOperationStruct } from '../contracts';
+import { resolveProperties } from 'ethers/lib/utils';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import Debug from 'debug';
+import { deepHexlify } from '../common/ERC4337Utils';
+
+const debug = Debug('aa.rpc');
 
 export class HttpRpcClient {
   private readonly userOpJsonRpcProvider: JsonRpcProvider;
@@ -27,41 +31,41 @@ export class HttpRpcClient {
     }
   }
 
-  private hexifyUserOp(userOp: UserOperationStruct): any {
-    const hexifiedUserOp: any = Object.keys(userOp)
-      .map((key) => {
-        let val = (userOp as any)[key];
-        if (typeof val !== 'string' || !val.startsWith('0x')) {
-          val = hexValue(val);
-        }
-        return [key, val];
-      })
-      .reduce(
-        (set, [k, v]) => ({
-          ...set,
-          [k]: v,
-        }),
-        {},
-      );
-    return hexifiedUserOp;
-  }
-
   /**
    * send a UserOperation to the bundler
    * @param userOp1
    * @return userOpHash the id of this operation, for getUserOperationTransaction
    */
-  async sendUserOpToBundler(userOp: UserOperationStruct): Promise<string> {
+  async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
     await this.initializing;
-    const hexifiedUserOp = this.hexifyUserOp(userOp);
+    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+    const jsonRequestData: [UserOperationStruct, string] = [hexifiedUserOp, this.entryPointAddress];
+    await this.printUserOperation('eth_sendUserOperation', jsonRequestData);
     return await this.userOpJsonRpcProvider.send('eth_sendUserOperation', [hexifiedUserOp, this.entryPointAddress]);
   }
 
   async sendAggregatedOpsToBundler(userOps1: UserOperationStruct[]): Promise<string> {
-    const hexifiedUserOps = await Promise.all(userOps1.map(async (userOp1) => await this.hexifyUserOp(userOp1)));
+    const hexifiedUserOps = await Promise.all(userOps1.map(async (userOp1) => await resolveProperties(userOp1)));
     return await this.userOpJsonRpcProvider.send('eth_sendAggregatedUserOperation', [
       hexifiedUserOps,
       this.entryPointAddress,
     ]);
+  }
+
+  private async printUserOperation(
+    method: string,
+    [userOp1, entryPointAddress]: [UserOperationStruct, string],
+  ): Promise<void> {
+    const userOp = await resolveProperties(userOp1);
+    debug(
+      'sending',
+      method,
+      {
+        ...userOp,
+        // initCode: (userOp.initCode ?? '').length,
+        // callData: (userOp.callData ?? '').length
+      },
+      entryPointAddress,
+    );
   }
 }

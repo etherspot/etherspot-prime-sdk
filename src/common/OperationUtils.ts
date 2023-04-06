@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { UserOperationStruct } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 
 export function toJSON(op: Partial<UserOperationStruct>): Promise<any> {
   return ethers.utils.resolveProperties(op).then((userOp) =>

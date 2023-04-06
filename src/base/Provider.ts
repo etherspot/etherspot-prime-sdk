@@ -30,7 +30,6 @@ export async function wrapProvider(
   const smartAccountAPI = new EtherspotWalletAPI({
     provider: originalProvider,
     entryPointAddress: entryPoint.address,
-    registryAddress: config.registryAddress,
     owner: originalSigner,
     factoryAddress: simpleAccountDeployer,
     paymasterAPI: config.paymasterAPI,

@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from '../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -70,108 +70,108 @@ export type UserOperationStructOutput = [
 
 export interface EtherspotPaymasterInterface extends utils.Interface {
   functions: {
-    "add(address)": FunctionFragment;
-    "addBatch(address[])": FunctionFragment;
-    "addStake(uint32)": FunctionFragment;
-    "check(address,address)": FunctionFragment;
-    "checkSponsorFunds(address)": FunctionFragment;
-    "deposit()": FunctionFragment;
-    "depositFunds()": FunctionFragment;
-    "entryPoint()": FunctionFragment;
-    "getDeposit()": FunctionFragment;
-    "getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),uint48,uint48)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "parsePaymasterAndData(bytes)": FunctionFragment;
-    "postOp(uint8,bytes,uint256)": FunctionFragment;
-    "remove(address)": FunctionFragment;
-    "removeBatch(address[])": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "senderNonce(address)": FunctionFragment;
-    "sponsorFunds(address)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "unlockStake()": FunctionFragment;
-    "validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
-    "whitelist(address,address)": FunctionFragment;
-    "withdrawStake(address)": FunctionFragment;
-    "withdrawTo(address,uint256)": FunctionFragment;
+    'add(address)': FunctionFragment;
+    'addBatch(address[])': FunctionFragment;
+    'addStake(uint32)': FunctionFragment;
+    'check(address,address)': FunctionFragment;
+    'checkSponsorFunds(address)': FunctionFragment;
+    'deposit()': FunctionFragment;
+    'depositFunds()': FunctionFragment;
+    'entryPoint()': FunctionFragment;
+    'getDeposit()': FunctionFragment;
+    'getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),uint48,uint48)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'parsePaymasterAndData(bytes)': FunctionFragment;
+    'postOp(uint8,bytes,uint256)': FunctionFragment;
+    'remove(address)': FunctionFragment;
+    'removeBatch(address[])': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'senderNonce(address)': FunctionFragment;
+    'sponsorFunds(address)': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'unlockStake()': FunctionFragment;
+    'validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
+    'whitelist(address,address)': FunctionFragment;
+    'withdrawStake(address)': FunctionFragment;
+    'withdrawTo(address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "add"
-      | "addBatch"
-      | "addStake"
-      | "check"
-      | "checkSponsorFunds"
-      | "deposit"
-      | "depositFunds"
-      | "entryPoint"
-      | "getDeposit"
-      | "getHash"
-      | "owner"
-      | "parsePaymasterAndData"
-      | "postOp"
-      | "remove"
-      | "removeBatch"
-      | "renounceOwnership"
-      | "senderNonce"
-      | "sponsorFunds"
-      | "transferOwnership"
-      | "unlockStake"
-      | "validatePaymasterUserOp"
-      | "whitelist"
-      | "withdrawStake"
-      | "withdrawTo"
+      | 'add'
+      | 'addBatch'
+      | 'addStake'
+      | 'check'
+      | 'checkSponsorFunds'
+      | 'deposit'
+      | 'depositFunds'
+      | 'entryPoint'
+      | 'getDeposit'
+      | 'getHash'
+      | 'owner'
+      | 'parsePaymasterAndData'
+      | 'postOp'
+      | 'remove'
+      | 'removeBatch'
+      | 'renounceOwnership'
+      | 'senderNonce'
+      | 'sponsorFunds'
+      | 'transferOwnership'
+      | 'unlockStake'
+      | 'validatePaymasterUserOp'
+      | 'whitelist'
+      | 'withdrawStake'
+      | 'withdrawTo'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "add",
+    functionFragment: 'add',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "addBatch",
+    functionFragment: 'addBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "check",
+    functionFragment: 'check',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "checkSponsorFunds",
+    functionFragment: 'checkSponsorFunds',
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'deposit', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "depositFunds",
+    functionFragment: 'depositFunds',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "entryPoint",
+    functionFragment: 'entryPoint',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeposit",
+    functionFragment: 'getDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getHash",
+    functionFragment: 'getHash',
     values: [
       UserOperationStruct,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "parsePaymasterAndData",
+    functionFragment: 'parsePaymasterAndData',
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "postOp",
+    functionFragment: 'postOp',
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
@@ -179,35 +179,35 @@ export interface EtherspotPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "remove",
+    functionFragment: 'remove',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeBatch",
+    functionFragment: 'removeBatch',
     values: [PromiseOrValue<string>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "senderNonce",
+    functionFragment: 'senderNonce',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "sponsorFunds",
+    functionFragment: 'sponsorFunds',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'validatePaymasterUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -215,95 +215,95 @@ export interface EtherspotPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "whitelist",
+    functionFragment: 'whitelist',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTo",
+    functionFragment: 'withdrawTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "add", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addBatch", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "check", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'add', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addBatch', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'check', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "checkSponsorFunds",
+    functionFragment: 'checkSponsorFunds',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositFunds",
+    functionFragment: 'depositFunds',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDeposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getHash", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'entryPoint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getDeposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getHash', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "parsePaymasterAndData",
+    functionFragment: 'parsePaymasterAndData',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "postOp", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "remove", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'postOp', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'remove', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "removeBatch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'removeBatch',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "senderNonce",
+    functionFragment: 'renounceOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "sponsorFunds",
+    functionFragment: 'senderNonce',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'sponsorFunds',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockStake",
+    functionFragment: 'transferOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'unlockStake',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "whitelist", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawStake",
+    functionFragment: 'validatePaymasterUserOp',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'whitelist', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'withdrawStake',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
 
   events: {
-    "AddedBatchToWhitelist(address,address[])": EventFragment;
-    "AddedToWhitelist(address,address)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "RemovedBatchFromWhitelist(address,address[])": EventFragment;
-    "RemovedFromWhitelist(address,address)": EventFragment;
-    "SponsorSuccessful(address,address,bytes)": EventFragment;
-    "SponsorUnsuccessful(address,address,bytes)": EventFragment;
-    "WhitelistInitialized(address,string)": EventFragment;
+    'AddedBatchToWhitelist(address,address[])': EventFragment;
+    'AddedToWhitelist(address,address)': EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
+    'RemovedBatchFromWhitelist(address,address[])': EventFragment;
+    'RemovedFromWhitelist(address,address)': EventFragment;
+    'SponsorSuccessful(address,address,bytes)': EventFragment;
+    'SponsorUnsuccessful(address,address,bytes)': EventFragment;
+    'WhitelistInitialized(address,string)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AddedBatchToWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "AddedToWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RemovedBatchFromWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RemovedFromWhitelist"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SponsorSuccessful"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SponsorUnsuccessful"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WhitelistInitialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AddedBatchToWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AddedToWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RemovedBatchFromWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'RemovedFromWhitelist'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'SponsorSuccessful'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'SponsorUnsuccessful'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'WhitelistInitialized'): EventFragment;
 }
 
 export interface AddedBatchToWhitelistEventObject {
@@ -795,7 +795,7 @@ export interface EtherspotPaymaster extends BaseContract {
   };
 
   filters: {
-    "AddedBatchToWhitelist(address,address[])"(
+    'AddedBatchToWhitelist(address,address[])'(
       paymaster?: PromiseOrValue<string> | null,
       accounts?: PromiseOrValue<string>[] | null
     ): AddedBatchToWhitelistEventFilter;
@@ -804,7 +804,7 @@ export interface EtherspotPaymaster extends BaseContract {
       accounts?: PromiseOrValue<string>[] | null
     ): AddedBatchToWhitelistEventFilter;
 
-    "AddedToWhitelist(address,address)"(
+    'AddedToWhitelist(address,address)'(
       paymaster?: PromiseOrValue<string> | null,
       account?: PromiseOrValue<string> | null
     ): AddedToWhitelistEventFilter;
@@ -813,7 +813,7 @@ export interface EtherspotPaymaster extends BaseContract {
       account?: PromiseOrValue<string> | null
     ): AddedToWhitelistEventFilter;
 
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
@@ -822,7 +822,7 @@ export interface EtherspotPaymaster extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "RemovedBatchFromWhitelist(address,address[])"(
+    'RemovedBatchFromWhitelist(address,address[])'(
       paymaster?: PromiseOrValue<string> | null,
       accounts?: PromiseOrValue<string>[] | null
     ): RemovedBatchFromWhitelistEventFilter;
@@ -831,7 +831,7 @@ export interface EtherspotPaymaster extends BaseContract {
       accounts?: PromiseOrValue<string>[] | null
     ): RemovedBatchFromWhitelistEventFilter;
 
-    "RemovedFromWhitelist(address,address)"(
+    'RemovedFromWhitelist(address,address)'(
       paymaster?: PromiseOrValue<string> | null,
       account?: PromiseOrValue<string> | null
     ): RemovedFromWhitelistEventFilter;
@@ -840,7 +840,7 @@ export interface EtherspotPaymaster extends BaseContract {
       account?: PromiseOrValue<string> | null
     ): RemovedFromWhitelistEventFilter;
 
-    "SponsorSuccessful(address,address,bytes)"(
+    'SponsorSuccessful(address,address,bytes)'(
       paymaster?: null,
       sender?: null,
       userOpHash?: null
@@ -851,7 +851,7 @@ export interface EtherspotPaymaster extends BaseContract {
       userOpHash?: null
     ): SponsorSuccessfulEventFilter;
 
-    "SponsorUnsuccessful(address,address,bytes)"(
+    'SponsorUnsuccessful(address,address,bytes)'(
       paymaster?: null,
       sender?: null,
       userOpHash?: null
@@ -862,7 +862,7 @@ export interface EtherspotPaymaster extends BaseContract {
       userOpHash?: null
     ): SponsorUnsuccessfulEventFilter;
 
-    "WhitelistInitialized(address,string)"(
+    'WhitelistInitialized(address,string)'(
       owner?: null,
       version?: null
     ): WhitelistInitializedEventFilter;

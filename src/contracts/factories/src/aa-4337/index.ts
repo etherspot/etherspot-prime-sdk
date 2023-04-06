@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as bls from "./bls";
+export * as callback from "./callback";
 export * as core from "./core";
 export * as interfaces from "./interfaces";
 export * as samples from "./samples";

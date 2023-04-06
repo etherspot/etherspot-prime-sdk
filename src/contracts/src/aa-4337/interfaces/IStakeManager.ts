@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export declare namespace IStakeManager {
   export type DepositInfoStruct = {
@@ -54,85 +54,85 @@ export declare namespace IStakeManager {
 
 export interface IStakeManagerInterface extends utils.Interface {
   functions: {
-    "addStake(uint32)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "depositTo(address)": FunctionFragment;
-    "getDepositInfo(address)": FunctionFragment;
-    "unlockStake()": FunctionFragment;
-    "withdrawStake(address)": FunctionFragment;
-    "withdrawTo(address,uint256)": FunctionFragment;
+    'addStake(uint32)': FunctionFragment;
+    'balanceOf(address)': FunctionFragment;
+    'depositTo(address)': FunctionFragment;
+    'getDepositInfo(address)': FunctionFragment;
+    'unlockStake()': FunctionFragment;
+    'withdrawStake(address)': FunctionFragment;
+    'withdrawTo(address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "addStake"
-      | "balanceOf"
-      | "depositTo"
-      | "getDepositInfo"
-      | "unlockStake"
-      | "withdrawStake"
-      | "withdrawTo"
+      | 'addStake'
+      | 'balanceOf'
+      | 'depositTo'
+      | 'getDepositInfo'
+      | 'unlockStake'
+      | 'withdrawStake'
+      | 'withdrawTo'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
+    functionFragment: 'balanceOf',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "depositTo",
+    functionFragment: 'depositTo',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getDepositInfo",
+    functionFragment: 'getDepositInfo',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTo",
+    functionFragment: 'withdrawTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "depositTo", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'depositTo', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getDepositInfo",
+    functionFragment: 'getDepositInfo',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
 
   events: {
-    "Deposited(address,uint256)": EventFragment;
-    "StakeLocked(address,uint256,uint256)": EventFragment;
-    "StakeUnlocked(address,uint256)": EventFragment;
-    "StakeWithdrawn(address,address,uint256)": EventFragment;
-    "Withdrawn(address,address,uint256)": EventFragment;
+    'Deposited(address,uint256)': EventFragment;
+    'StakeLocked(address,uint256,uint256)': EventFragment;
+    'StakeUnlocked(address,uint256)': EventFragment;
+    'StakeWithdrawn(address,address,uint256)': EventFragment;
+    'Withdrawn(address,address,uint256)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Deposited"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeLocked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeUnlocked"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "StakeWithdrawn"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Deposited'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeLocked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeUnlocked'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'StakeWithdrawn'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment;
 }
 
 export interface DepositedEventObject {
@@ -331,7 +331,7 @@ export interface IStakeManager extends BaseContract {
   };
 
   filters: {
-    "Deposited(address,uint256)"(
+    'Deposited(address,uint256)'(
       account?: PromiseOrValue<string> | null,
       totalDeposit?: null
     ): DepositedEventFilter;
@@ -340,7 +340,7 @@ export interface IStakeManager extends BaseContract {
       totalDeposit?: null
     ): DepositedEventFilter;
 
-    "StakeLocked(address,uint256,uint256)"(
+    'StakeLocked(address,uint256,uint256)'(
       account?: PromiseOrValue<string> | null,
       totalStaked?: null,
       unstakeDelaySec?: null
@@ -351,7 +351,7 @@ export interface IStakeManager extends BaseContract {
       unstakeDelaySec?: null
     ): StakeLockedEventFilter;
 
-    "StakeUnlocked(address,uint256)"(
+    'StakeUnlocked(address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawTime?: null
     ): StakeUnlockedEventFilter;
@@ -360,7 +360,7 @@ export interface IStakeManager extends BaseContract {
       withdrawTime?: null
     ): StakeUnlockedEventFilter;
 
-    "StakeWithdrawn(address,address,uint256)"(
+    'StakeWithdrawn(address,address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawAddress?: null,
       amount?: null
@@ -371,7 +371,7 @@ export interface IStakeManager extends BaseContract {
       amount?: null
     ): StakeWithdrawnEventFilter;
 
-    "Withdrawn(address,address,uint256)"(
+    'Withdrawn(address,address,uint256)'(
       account?: PromiseOrValue<string> | null,
       withdrawAddress?: null,
       amount?: null

@@ -3,15 +3,13 @@
 /* eslint-disable */
 import type * as aa4337 from "./aa-4337";
 export type { aa4337 };
-import type * as backwardCompatibilityHelpers from "./backward_compatibility_helpers";
-export type { backwardCompatibilityHelpers };
+import type * as access from "./access";
+export type { access };
+import type * as helpers from "./helpers";
+export type { helpers };
 import type * as interfaces from "./interfaces";
 export type { interfaces };
-import type * as libs from "./libs";
-export type { libs };
 import type * as paymaster from "./paymaster";
 export type { paymaster };
-import type * as test from "./test";
-export type { test };
 import type * as wallet from "./wallet";
 export type { wallet };

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ethers, BytesLike } from 'ethers';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
-import { UserOperationStruct } from '../contracts';
+import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import { toJSON } from '../common/OperationUtils';
 
 const SIG_SIZE = 65;

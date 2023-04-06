@@ -10,39 +10,39 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../../common";
+} from '../../../../common';
 
 export interface BLSOpenInterface extends utils.Interface {
   functions: {
-    "hashToPoint(bytes32,bytes)": FunctionFragment;
-    "isZeroBLSKey(uint256[4])": FunctionFragment;
-    "verifyMultiple(uint256[2],uint256[4][],uint256[2][])": FunctionFragment;
-    "verifySingle(uint256[2],uint256[4],uint256[2])": FunctionFragment;
+    'hashToPoint(bytes32,bytes)': FunctionFragment;
+    'isZeroBLSKey(uint256[4])': FunctionFragment;
+    'verifyMultiple(uint256[2],uint256[4][],uint256[2][])': FunctionFragment;
+    'verifySingle(uint256[2],uint256[4],uint256[2])': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "hashToPoint"
-      | "isZeroBLSKey"
-      | "verifyMultiple"
-      | "verifySingle"
+      | 'hashToPoint'
+      | 'isZeroBLSKey'
+      | 'verifyMultiple'
+      | 'verifySingle'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "hashToPoint",
+    functionFragment: 'hashToPoint',
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "isZeroBLSKey",
+    functionFragment: 'isZeroBLSKey',
     values: [
       [
         PromiseOrValue<BigNumberish>,
@@ -53,7 +53,7 @@ export interface BLSOpenInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "verifyMultiple",
+    functionFragment: 'verifyMultiple',
     values: [
       [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       [
@@ -66,7 +66,7 @@ export interface BLSOpenInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "verifySingle",
+    functionFragment: 'verifySingle',
     values: [
       [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
       [
@@ -80,19 +80,19 @@ export interface BLSOpenInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "hashToPoint",
+    functionFragment: 'hashToPoint',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isZeroBLSKey",
+    functionFragment: 'isZeroBLSKey',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "verifyMultiple",
+    functionFragment: 'verifyMultiple',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "verifySingle",
+    functionFragment: 'verifySingle',
     data: BytesLike
   ): Result;
 

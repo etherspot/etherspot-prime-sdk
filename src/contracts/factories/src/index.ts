@@ -2,9 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as aa4337 from "./aa-4337";
-export * as backwardCompatibilityHelpers from "./backward_compatibility_helpers";
+export * as access from "./access";
+export * as helpers from "./helpers";
 export * as interfaces from "./interfaces";
-export * as libs from "./libs";
 export * as paymaster from "./paymaster";
-export * as test from "./test";
 export * as wallet from "./wallet";

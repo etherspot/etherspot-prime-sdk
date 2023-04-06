@@ -12,48 +12,46 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export interface TestAggregatedAccountFactoryInterface extends utils.Interface {
   functions: {
-    "accountImplementation()": FunctionFragment;
-    "createAccount(address,address,address,uint256)": FunctionFragment;
-    "getAddress(address,address,address,uint256)": FunctionFragment;
+    'accountImplementation()': FunctionFragment;
+    'createAccount(address,address,uint256)': FunctionFragment;
+    'getAddress(address,address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "accountImplementation"
-      | "createAccount"
-      | "getAddress"
+      | 'accountImplementation'
+      | 'createAccount'
+      | 'getAddress'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "accountImplementation",
+    functionFragment: 'accountImplementation',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "createAccount",
+    functionFragment: 'createAccount',
     values: [
-      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAddress",
+    functionFragment: 'getAddress',
     values: [
-      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>
@@ -61,14 +59,14 @@ export interface TestAggregatedAccountFactoryInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "accountImplementation",
+    functionFragment: 'accountImplementation',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "createAccount",
+    functionFragment: 'createAccount',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getAddress", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getAddress', data: BytesLike): Result;
 
   events: {};
 }
@@ -104,7 +102,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     createAccount(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -112,7 +109,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     getAddress(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -123,7 +119,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
   createAccount(
     anEntryPoint: PromiseOrValue<string>,
-    anRegistry: PromiseOrValue<string>,
     owner: PromiseOrValue<string>,
     salt: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -131,7 +126,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
   getAddress(
     anEntryPoint: PromiseOrValue<string>,
-    anRegistry: PromiseOrValue<string>,
     owner: PromiseOrValue<string>,
     salt: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -142,7 +136,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     createAccount(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -150,7 +143,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     getAddress(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -164,7 +156,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     createAccount(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -172,7 +163,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     getAddress(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -186,7 +176,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     createAccount(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -194,7 +183,6 @@ export interface TestAggregatedAccountFactory extends BaseContract {
 
     getAddress(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
       owner: PromiseOrValue<string>,
       salt: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides

@@ -10,16 +10,16 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from 'ethers';
+import type { FunctionFragment, Result } from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -63,17 +63,17 @@ export type UserOperationStructOutput = [
 
 export interface TestUtilInterface extends utils.Interface {
   functions: {
-    "packUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
+    'packUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "packUserOp"): FunctionFragment;
+  getFunction(nameOrSignatureOrTopic: 'packUserOp'): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "packUserOp",
+    functionFragment: 'packUserOp',
     values: [UserOperationStruct]
   ): string;
 
-  decodeFunctionResult(functionFragment: "packUserOp", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'packUserOp', data: BytesLike): Result;
 
   events: {};
 }

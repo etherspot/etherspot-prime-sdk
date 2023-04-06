@@ -12,73 +12,73 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export interface TestCounterInterface extends utils.Interface {
   functions: {
-    "count()": FunctionFragment;
-    "countFail()": FunctionFragment;
-    "counters(address)": FunctionFragment;
-    "gasWaster(uint256,string)": FunctionFragment;
-    "justemit()": FunctionFragment;
-    "offset()": FunctionFragment;
-    "xxx(uint256)": FunctionFragment;
+    'count()': FunctionFragment;
+    'countFail()': FunctionFragment;
+    'counters(address)': FunctionFragment;
+    'gasWaster(uint256,string)': FunctionFragment;
+    'justemit()': FunctionFragment;
+    'offset()': FunctionFragment;
+    'xxx(uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "count"
-      | "countFail"
-      | "counters"
-      | "gasWaster"
-      | "justemit"
-      | "offset"
-      | "xxx"
+      | 'count'
+      | 'countFail'
+      | 'counters'
+      | 'gasWaster'
+      | 'justemit'
+      | 'offset'
+      | 'xxx'
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "count", values?: undefined): string;
-  encodeFunctionData(functionFragment: "countFail", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'count', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'countFail', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "counters",
+    functionFragment: 'counters',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "gasWaster",
+    functionFragment: 'gasWaster',
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "justemit", values?: undefined): string;
-  encodeFunctionData(functionFragment: "offset", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'justemit', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'offset', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "xxx",
+    functionFragment: 'xxx',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "count", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "countFail", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "counters", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "gasWaster", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "justemit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "offset", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "xxx", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'count', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'countFail', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'counters', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'gasWaster', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'justemit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'offset', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'xxx', data: BytesLike): Result;
 
   events: {
-    "CalledFrom(address)": EventFragment;
+    'CalledFrom(address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "CalledFrom"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'CalledFrom'): EventFragment;
 }
 
 export interface CalledFromEventObject {
@@ -199,7 +199,7 @@ export interface TestCounter extends BaseContract {
   };
 
   filters: {
-    "CalledFrom(address)"(sender?: null): CalledFromEventFilter;
+    'CalledFrom(address)'(sender?: null): CalledFromEventFilter;
     CalledFrom(sender?: null): CalledFromEventFilter;
   };
 

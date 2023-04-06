@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -70,62 +70,62 @@ export type UserOperationStructOutput = [
 
 export interface DepositPaymasterInterface extends utils.Interface {
   functions: {
-    "COST_OF_POST()": FunctionFragment;
-    "addDepositFor(address,address,uint256)": FunctionFragment;
-    "addStake(uint32)": FunctionFragment;
-    "addToken(address,address)": FunctionFragment;
-    "balances(address,address)": FunctionFragment;
-    "deposit()": FunctionFragment;
-    "depositInfo(address,address)": FunctionFragment;
-    "entryPoint()": FunctionFragment;
-    "getDeposit()": FunctionFragment;
-    "lockTokenDeposit()": FunctionFragment;
-    "oracles(address)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "postOp(uint8,bytes,uint256)": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "unlockBlock(address)": FunctionFragment;
-    "unlockStake()": FunctionFragment;
-    "unlockTokenDeposit()": FunctionFragment;
-    "validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
-    "withdrawStake(address)": FunctionFragment;
-    "withdrawTo(address,uint256)": FunctionFragment;
-    "withdrawTokensTo(address,address,uint256)": FunctionFragment;
+    'COST_OF_POST()': FunctionFragment;
+    'addDepositFor(address,address,uint256)': FunctionFragment;
+    'addStake(uint32)': FunctionFragment;
+    'addToken(address,address)': FunctionFragment;
+    'balances(address,address)': FunctionFragment;
+    'deposit()': FunctionFragment;
+    'depositInfo(address,address)': FunctionFragment;
+    'entryPoint()': FunctionFragment;
+    'getDeposit()': FunctionFragment;
+    'lockTokenDeposit()': FunctionFragment;
+    'oracles(address)': FunctionFragment;
+    'owner()': FunctionFragment;
+    'postOp(uint8,bytes,uint256)': FunctionFragment;
+    'renounceOwnership()': FunctionFragment;
+    'transferOwnership(address)': FunctionFragment;
+    'unlockBlock(address)': FunctionFragment;
+    'unlockStake()': FunctionFragment;
+    'unlockTokenDeposit()': FunctionFragment;
+    'validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
+    'withdrawStake(address)': FunctionFragment;
+    'withdrawTo(address,uint256)': FunctionFragment;
+    'withdrawTokensTo(address,address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "COST_OF_POST"
-      | "addDepositFor"
-      | "addStake"
-      | "addToken"
-      | "balances"
-      | "deposit"
-      | "depositInfo"
-      | "entryPoint"
-      | "getDeposit"
-      | "lockTokenDeposit"
-      | "oracles"
-      | "owner"
-      | "postOp"
-      | "renounceOwnership"
-      | "transferOwnership"
-      | "unlockBlock"
-      | "unlockStake"
-      | "unlockTokenDeposit"
-      | "validatePaymasterUserOp"
-      | "withdrawStake"
-      | "withdrawTo"
-      | "withdrawTokensTo"
+      | 'COST_OF_POST'
+      | 'addDepositFor'
+      | 'addStake'
+      | 'addToken'
+      | 'balances'
+      | 'deposit'
+      | 'depositInfo'
+      | 'entryPoint'
+      | 'getDeposit'
+      | 'lockTokenDeposit'
+      | 'oracles'
+      | 'owner'
+      | 'postOp'
+      | 'renounceOwnership'
+      | 'transferOwnership'
+      | 'unlockBlock'
+      | 'unlockStake'
+      | 'unlockTokenDeposit'
+      | 'validatePaymasterUserOp'
+      | 'withdrawStake'
+      | 'withdrawTo'
+      | 'withdrawTokensTo'
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "COST_OF_POST",
+    functionFragment: 'COST_OF_POST',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "addDepositFor",
+    functionFragment: 'addDepositFor',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -133,41 +133,41 @@ export interface DepositPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "addStake",
+    functionFragment: 'addStake',
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "addToken",
+    functionFragment: 'addToken',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "balances",
+    functionFragment: 'balances',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'deposit', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "depositInfo",
+    functionFragment: 'depositInfo',
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "entryPoint",
+    functionFragment: 'entryPoint',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeposit",
+    functionFragment: 'getDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "lockTokenDeposit",
+    functionFragment: 'lockTokenDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "oracles",
+    functionFragment: 'oracles',
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "postOp",
+    functionFragment: 'postOp',
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
@@ -175,27 +175,27 @@ export interface DepositPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
+    functionFragment: 'renounceOwnership',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
+    functionFragment: 'transferOwnership',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockBlock",
+    functionFragment: 'unlockBlock',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockStake',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "unlockTokenDeposit",
+    functionFragment: 'unlockTokenDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'validatePaymasterUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -203,15 +203,15 @@ export interface DepositPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawStake",
+    functionFragment: 'withdrawStake',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTo",
+    functionFragment: 'withdrawTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawTokensTo",
+    functionFragment: 'withdrawTokensTo',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -220,69 +220,69 @@ export interface DepositPaymasterInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "COST_OF_POST",
+    functionFragment: 'COST_OF_POST',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "addDepositFor",
+    functionFragment: 'addDepositFor',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addToken", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balances", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addStake', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addToken', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balances', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "depositInfo",
+    functionFragment: 'depositInfo',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getDeposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'entryPoint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getDeposit', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "lockTokenDeposit",
+    functionFragment: 'lockTokenDeposit',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "oracles", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "postOp", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'oracles', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'postOp', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
+    functionFragment: 'renounceOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockBlock",
+    functionFragment: 'transferOwnership',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockStake",
+    functionFragment: 'unlockBlock',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "unlockTokenDeposit",
+    functionFragment: 'unlockStake',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validatePaymasterUserOp",
+    functionFragment: 'unlockTokenDeposit',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawStake",
+    functionFragment: 'validatePaymasterUserOp',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "withdrawTo", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawTokensTo",
+    functionFragment: 'withdrawStake',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'withdrawTo', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'withdrawTokensTo',
     data: BytesLike
   ): Result;
 
   events: {
-    "OwnershipTransferred(address,address)": EventFragment;
+    'OwnershipTransferred(address,address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment;
 }
 
 export interface OwnershipTransferredEventObject {
@@ -641,7 +641,7 @@ export interface DepositPaymaster extends BaseContract {
   };
 
   filters: {
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;

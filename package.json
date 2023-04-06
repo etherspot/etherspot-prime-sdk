@@ -19,9 +19,11 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "start": "exit 1",
-    "00-test-initcode": "./node_modules/.bin/ts-node ./examples/00-test-initcode",
     "01-get-address": "./node_modules/.bin/ts-node ./examples/01-get-address",
     "02-transfer-funds": "./node_modules/.bin/ts-node ./examples/02-transfer-funds",
+    "03-transfer-erc20": "./node_modules/.bin/ts-node ./examples/03-transfer-erc20",
+    "04-batch-transfer": "./node_modules/.bin/ts-node ./examples/04-batch-transfer",
+    "05-batch-erc20-transfer": "./node_modules/.bin/ts-node ./examples/05-batch-erc20-transfer",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
@@ -46,6 +48,7 @@
     "@types/node": "13.13.9",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
+    "dotenv": "^16.0.3",
     "ts-node": "8.10.2",
     "typescript": "4.5.2"
   }

@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers';
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi';
+import type { Listener, Provider } from '@ethersproject/providers';
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from '../../../common';
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -70,79 +70,90 @@ export type UserOperationStructOutput = [
 
 export interface TestAggregatedAccountInterface extends utils.Interface {
   functions: {
-    "_registry()": FunctionFragment;
-    "addDeposit()": FunctionFragment;
-    "aggregator()": FunctionFragment;
-    "canImplementInterfaceForAddress(bytes32,address)": FunctionFragment;
-    "entryPoint()": FunctionFragment;
-    "execute(address,uint256,bytes)": FunctionFragment;
-    "executeBatch(address[],bytes[])": FunctionFragment;
-    "getDeposit()": FunctionFragment;
-    "initialize(address,address,address)": FunctionFragment;
-    "isValidSignature(bytes32,bytes)": FunctionFragment;
-    "isValidSignature(bytes,bytes)": FunctionFragment;
-    "nonce()": FunctionFragment;
-    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
-    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "proxiableUUID()": FunctionFragment;
-    "registry()": FunctionFragment;
-    "tokensReceived(address,address,address,uint256,bytes,bytes)": FunctionFragment;
-    "updateEntryPoint(address)": FunctionFragment;
-    "updateRegistry(address)": FunctionFragment;
-    "upgradeTo(address)": FunctionFragment;
-    "upgradeToAndCall(address,bytes)": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
-    "withdrawDepositTo(address,uint256)": FunctionFragment;
+    'addDeposit()': FunctionFragment;
+    'addGuardian(address)': FunctionFragment;
+    'addOwner(address)': FunctionFragment;
+    'aggregator()': FunctionFragment;
+    'entryPoint()': FunctionFragment;
+    'execute(address,uint256,bytes)': FunctionFragment;
+    'executeBatch(address[],bytes[])': FunctionFragment;
+    'getDeposit()': FunctionFragment;
+    'initialize(address,address)': FunctionFragment;
+    'isGuardian(address)': FunctionFragment;
+    'isOwner(address)': FunctionFragment;
+    'isValidSig(address,bytes32,bytes)': FunctionFragment;
+    'isValidSigImpl(address,bytes32,bytes,bool)': FunctionFragment;
+    'isValidSigWithSideEffects(address,bytes32,bytes)': FunctionFragment;
+    'nonce()': FunctionFragment;
+    'onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)': FunctionFragment;
+    'onERC1155Received(address,address,uint256,uint256,bytes)': FunctionFragment;
+    'onERC721Received(address,address,uint256,bytes)': FunctionFragment;
+    'proxiableUUID()': FunctionFragment;
+    'removeGuardian(address)': FunctionFragment;
+    'removeOwner(address)': FunctionFragment;
+    'supportsInterface(bytes4)': FunctionFragment;
+    'tokensReceived(address,address,address,uint256,bytes,bytes)': FunctionFragment;
+    'updateEntryPoint(address)': FunctionFragment;
+    'upgradeTo(address)': FunctionFragment;
+    'upgradeToAndCall(address,bytes)': FunctionFragment;
+    'validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
+    'withdrawDepositTo(address,uint256)': FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "_registry"
-      | "addDeposit"
-      | "aggregator"
-      | "canImplementInterfaceForAddress"
-      | "entryPoint"
-      | "execute"
-      | "executeBatch"
-      | "getDeposit"
-      | "initialize"
-      | "isValidSignature(bytes32,bytes)"
-      | "isValidSignature(bytes,bytes)"
-      | "nonce"
-      | "onERC1155Received"
-      | "onERC721Received"
-      | "owner"
-      | "proxiableUUID"
-      | "registry"
-      | "tokensReceived"
-      | "updateEntryPoint"
-      | "updateRegistry"
-      | "upgradeTo"
-      | "upgradeToAndCall"
-      | "validateUserOp"
-      | "withdrawDepositTo"
+      | 'addDeposit'
+      | 'addGuardian'
+      | 'addOwner'
+      | 'aggregator'
+      | 'entryPoint'
+      | 'execute'
+      | 'executeBatch'
+      | 'getDeposit'
+      | 'initialize'
+      | 'isGuardian'
+      | 'isOwner'
+      | 'isValidSig'
+      | 'isValidSigImpl'
+      | 'isValidSigWithSideEffects'
+      | 'nonce'
+      | 'onERC1155BatchReceived'
+      | 'onERC1155Received'
+      | 'onERC721Received'
+      | 'proxiableUUID'
+      | 'removeGuardian'
+      | 'removeOwner'
+      | 'supportsInterface'
+      | 'tokensReceived'
+      | 'updateEntryPoint'
+      | 'upgradeTo'
+      | 'upgradeToAndCall'
+      | 'validateUserOp'
+      | 'withdrawDepositTo'
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "_registry", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "addDeposit",
+    functionFragment: 'addDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "aggregator",
+    functionFragment: 'addGuardian',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'addOwner',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'aggregator',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "canImplementInterfaceForAddress",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "entryPoint",
+    functionFragment: 'entryPoint',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "execute",
+    functionFragment: 'execute',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
@@ -150,32 +161,63 @@ export interface TestAggregatedAccountInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "executeBatch",
+    functionFragment: 'executeBatch',
     values: [PromiseOrValue<string>[], PromiseOrValue<BytesLike>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "getDeposit",
+    functionFragment: 'getDeposit',
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "initialize",
+    functionFragment: 'initialize',
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isGuardian',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isOwner',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'isValidSig',
     values: [
       PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<string>
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "isValidSignature(bytes32,bytes)",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    functionFragment: 'isValidSigImpl',
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<boolean>
+    ]
   ): string;
   encodeFunctionData(
-    functionFragment: "isValidSignature(bytes,bytes)",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+    functionFragment: 'isValidSigWithSideEffects',
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
-  encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'nonce', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "onERC1155Received",
+    functionFragment: 'onERC1155BatchReceived',
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'onERC1155Received',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -185,7 +227,7 @@ export interface TestAggregatedAccountInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "onERC721Received",
+    functionFragment: 'onERC721Received',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -193,14 +235,24 @@ export interface TestAggregatedAccountInterface extends utils.Interface {
       PromiseOrValue<BytesLike>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "proxiableUUID",
+    functionFragment: 'proxiableUUID',
     values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: "registry", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "tokensReceived",
+    functionFragment: 'removeGuardian',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'removeOwner',
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'supportsInterface',
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'tokensReceived',
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -211,23 +263,19 @@ export interface TestAggregatedAccountInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateEntryPoint",
+    functionFragment: 'updateEntryPoint',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateRegistry",
+    functionFragment: 'upgradeTo',
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "upgradeTo",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "upgradeToAndCall",
+    functionFragment: 'upgradeToAndCall',
     values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "validateUserOp",
+    functionFragment: 'validateUserOp',
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
@@ -235,93 +283,112 @@ export interface TestAggregatedAccountInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "withdrawDepositTo",
+    functionFragment: 'withdrawDepositTo',
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "_registry", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "addDeposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "aggregator", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addDeposit', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "canImplementInterfaceForAddress",
+    functionFragment: 'addGuardian',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'addOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'aggregator', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'entryPoint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'execute', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "executeBatch",
+    functionFragment: 'executeBatch',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getDeposit", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'getDeposit', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isGuardian', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'isValidSig', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "isValidSignature(bytes32,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isValidSignature(bytes,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "onERC1155Received",
+    functionFragment: 'isValidSigImpl',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "onERC721Received",
+    functionFragment: 'isValidSigWithSideEffects',
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'nonce', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "proxiableUUID",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "registry", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "tokensReceived",
+    functionFragment: 'onERC1155BatchReceived',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateEntryPoint",
+    functionFragment: 'onERC1155Received',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateRegistry",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "upgradeToAndCall",
+    functionFragment: 'onERC721Received',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "validateUserOp",
+    functionFragment: 'proxiableUUID',
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "withdrawDepositTo",
+    functionFragment: 'removeGuardian',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'removeOwner',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'supportsInterface',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'tokensReceived',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'updateEntryPoint',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: 'upgradeTo', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'upgradeToAndCall',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'validateUserOp',
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'withdrawDepositTo',
     data: BytesLike
   ): Result;
 
   events: {
-    "AdminChanged(address,address)": EventFragment;
-    "BeaconUpgraded(address)": EventFragment;
-    "ERC777Received(address,address,uint256)": EventFragment;
-    "EntryPointChanged(address,address)": EventFragment;
-    "EtherspotWalletInitialized(address,address,address)": EventFragment;
-    "Initialized(uint8)": EventFragment;
-    "RegistryChanged(address,address)": EventFragment;
-    "Upgraded(address)": EventFragment;
+    'AdminChanged(address,address)': EventFragment;
+    'BeaconUpgraded(address)': EventFragment;
+    'EntryPointChanged(address,address)': EventFragment;
+    'EtherspotWalletInitialized(address,address)': EventFragment;
+    'EtherspotWalletReceived(address,uint256)': EventFragment;
+    'GuardianAdded(address)': EventFragment;
+    'GuardianRemoved(address)': EventFragment;
+    'Initialized(uint8)': EventFragment;
+    'OwnerAdded(address)': EventFragment;
+    'OwnerRemoved(address)': EventFragment;
+    'Upgraded(address)': EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ERC777Received"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EntryPointChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EtherspotWalletInitialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RegistryChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AdminChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'BeaconUpgraded'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EntryPointChanged'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EtherspotWalletInitialized'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'EtherspotWalletReceived'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'GuardianAdded'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'GuardianRemoved'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Initialized'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnerAdded'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnerRemoved'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'Upgraded'): EventFragment;
 }
 
 export interface AdminChangedEventObject {
@@ -345,18 +412,6 @@ export type BeaconUpgradedEvent = TypedEvent<
 
 export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>;
 
-export interface ERC777ReceivedEventObject {
-  from: string;
-  to: string;
-  amount: BigNumber;
-}
-export type ERC777ReceivedEvent = TypedEvent<
-  [string, string, BigNumber],
-  ERC777ReceivedEventObject
->;
-
-export type ERC777ReceivedEventFilter = TypedEventFilter<ERC777ReceivedEvent>;
-
 export interface EntryPointChangedEventObject {
   oldEntryPoint: string;
   newEntryPoint: string;
@@ -371,16 +426,44 @@ export type EntryPointChangedEventFilter =
 
 export interface EtherspotWalletInitializedEventObject {
   entryPoint: string;
-  registry: string;
   owner: string;
 }
 export type EtherspotWalletInitializedEvent = TypedEvent<
-  [string, string, string],
+  [string, string],
   EtherspotWalletInitializedEventObject
 >;
 
 export type EtherspotWalletInitializedEventFilter =
   TypedEventFilter<EtherspotWalletInitializedEvent>;
+
+export interface EtherspotWalletReceivedEventObject {
+  from: string;
+  amount: BigNumber;
+}
+export type EtherspotWalletReceivedEvent = TypedEvent<
+  [string, BigNumber],
+  EtherspotWalletReceivedEventObject
+>;
+
+export type EtherspotWalletReceivedEventFilter =
+  TypedEventFilter<EtherspotWalletReceivedEvent>;
+
+export interface GuardianAddedEventObject {
+  newGuardian: string;
+}
+export type GuardianAddedEvent = TypedEvent<[string], GuardianAddedEventObject>;
+
+export type GuardianAddedEventFilter = TypedEventFilter<GuardianAddedEvent>;
+
+export interface GuardianRemovedEventObject {
+  removedGuardian: string;
+}
+export type GuardianRemovedEvent = TypedEvent<
+  [string],
+  GuardianRemovedEventObject
+>;
+
+export type GuardianRemovedEventFilter = TypedEventFilter<GuardianRemovedEvent>;
 
 export interface InitializedEventObject {
   version: number;
@@ -389,16 +472,19 @@ export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
-export interface RegistryChangedEventObject {
-  oldRegistry: string;
-  newRegistry: string;
+export interface OwnerAddedEventObject {
+  newOwner: string;
 }
-export type RegistryChangedEvent = TypedEvent<
-  [string, string],
-  RegistryChangedEventObject
->;
+export type OwnerAddedEvent = TypedEvent<[string], OwnerAddedEventObject>;
 
-export type RegistryChangedEventFilter = TypedEventFilter<RegistryChangedEvent>;
+export type OwnerAddedEventFilter = TypedEventFilter<OwnerAddedEvent>;
+
+export interface OwnerRemovedEventObject {
+  removedOwner: string;
+}
+export type OwnerRemovedEvent = TypedEvent<[string], OwnerRemovedEventObject>;
+
+export type OwnerRemovedEventFilter = TypedEventFilter<OwnerRemovedEvent>;
 
 export interface UpgradedEventObject {
   implementation: string;
@@ -434,19 +520,21 @@ export interface TestAggregatedAccount extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    _registry(overrides?: CallOverrides): Promise<[string]>;
-
     addDeposit(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    aggregator(overrides?: CallOverrides): Promise<[string]>;
+    addGuardian(
+      _newGuardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
-    canImplementInterfaceForAddress(
-      interfaceHash: PromiseOrValue<BytesLike>,
-      addr: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    addOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    aggregator(overrides?: CallOverrides): Promise<[string]>;
 
     entryPoint(overrides?: CallOverrides): Promise<[string]>;
 
@@ -467,24 +555,52 @@ export interface TestAggregatedAccount extends BaseContract {
 
     initialize(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
-      arg2: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "isValidSignature(bytes32,bytes)"(
-      messageHash: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isGuardian(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[boolean]>;
 
-    "isValidSignature(bytes,bytes)"(
-      message: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isOwner(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[boolean]>;
+
+    isValidSig(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    isValidSigImpl(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      allowSideEffects: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    isValidSigWithSideEffects(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     onERC1155Received(
       arg0: PromiseOrValue<string>,
@@ -503,29 +619,35 @@ export interface TestAggregatedAccount extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
     proxiableUUID(overrides?: CallOverrides): Promise<[string]>;
 
-    registry(overrides?: CallOverrides): Promise<[string]>;
+    removeGuardian(
+      _guardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeOwner(
+      _owner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     tokensReceived(
       arg0: PromiseOrValue<string>,
-      _from: PromiseOrValue<string>,
-      _to: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<string>,
+      arg3: PromiseOrValue<BigNumberish>,
       arg4: PromiseOrValue<BytesLike>,
       arg5: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: CallOverrides
+    ): Promise<[void]>;
 
     updateEntryPoint(
       _newEntryPoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    updateRegistry(
-      _newRegistry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -554,19 +676,21 @@ export interface TestAggregatedAccount extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  _registry(overrides?: CallOverrides): Promise<string>;
-
   addDeposit(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  aggregator(overrides?: CallOverrides): Promise<string>;
+  addGuardian(
+    _newGuardian: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
-  canImplementInterfaceForAddress(
-    interfaceHash: PromiseOrValue<BytesLike>,
-    addr: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  addOwner(
+    _newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  aggregator(overrides?: CallOverrides): Promise<string>;
 
   entryPoint(overrides?: CallOverrides): Promise<string>;
 
@@ -587,24 +711,52 @@ export interface TestAggregatedAccount extends BaseContract {
 
   initialize(
     anEntryPoint: PromiseOrValue<string>,
-    anRegistry: PromiseOrValue<string>,
-    arg2: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "isValidSignature(bytes32,bytes)"(
-    messageHash: PromiseOrValue<BytesLike>,
-    signature: PromiseOrValue<BytesLike>,
+  isGuardian(
+    _address: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<boolean>;
 
-  "isValidSignature(bytes,bytes)"(
-    message: PromiseOrValue<BytesLike>,
-    signature: PromiseOrValue<BytesLike>,
+  isOwner(
+    _address: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<boolean>;
+
+  isValidSig(
+    _signer: PromiseOrValue<string>,
+    _hash: PromiseOrValue<BytesLike>,
+    _signature: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  isValidSigImpl(
+    _signer: PromiseOrValue<string>,
+    _hash: PromiseOrValue<BytesLike>,
+    _signature: PromiseOrValue<BytesLike>,
+    allowSideEffects: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  isValidSigWithSideEffects(
+    _signer: PromiseOrValue<string>,
+    _hash: PromiseOrValue<BytesLike>,
+    _signature: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+  onERC1155BatchReceived(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    arg2: PromiseOrValue<BigNumberish>[],
+    arg3: PromiseOrValue<BigNumberish>[],
+    arg4: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   onERC1155Received(
     arg0: PromiseOrValue<string>,
@@ -623,29 +775,35 @@ export interface TestAggregatedAccount extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  owner(overrides?: CallOverrides): Promise<string>;
-
   proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
-  registry(overrides?: CallOverrides): Promise<string>;
+  removeGuardian(
+    _guardian: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeOwner(
+    _owner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  supportsInterface(
+    interfaceId: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   tokensReceived(
     arg0: PromiseOrValue<string>,
-    _from: PromiseOrValue<string>,
-    _to: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
+    arg1: PromiseOrValue<string>,
+    arg2: PromiseOrValue<string>,
+    arg3: PromiseOrValue<BigNumberish>,
     arg4: PromiseOrValue<BytesLike>,
     arg5: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: CallOverrides
+  ): Promise<void>;
 
   updateEntryPoint(
     _newEntryPoint: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  updateRegistry(
-    _newRegistry: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -674,17 +832,19 @@ export interface TestAggregatedAccount extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    _registry(overrides?: CallOverrides): Promise<string>;
-
     addDeposit(overrides?: CallOverrides): Promise<void>;
 
-    aggregator(overrides?: CallOverrides): Promise<string>;
-
-    canImplementInterfaceForAddress(
-      interfaceHash: PromiseOrValue<BytesLike>,
-      addr: PromiseOrValue<string>,
+    addGuardian(
+      _newGuardian: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<void>;
+
+    addOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    aggregator(overrides?: CallOverrides): Promise<string>;
 
     entryPoint(overrides?: CallOverrides): Promise<string>;
 
@@ -705,24 +865,52 @@ export interface TestAggregatedAccount extends BaseContract {
 
     initialize(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
-      arg2: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "isValidSignature(bytes32,bytes)"(
-      messageHash: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isGuardian(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<boolean>;
 
-    "isValidSignature(bytes,bytes)"(
-      message: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isOwner(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<boolean>;
+
+    isValidSig(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isValidSigImpl(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      allowSideEffects: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isValidSigWithSideEffects(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     onERC1155Received(
       arg0: PromiseOrValue<string>,
@@ -741,17 +929,28 @@ export interface TestAggregatedAccount extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    owner(overrides?: CallOverrides): Promise<string>;
-
     proxiableUUID(overrides?: CallOverrides): Promise<string>;
 
-    registry(overrides?: CallOverrides): Promise<string>;
+    removeGuardian(
+      _guardian: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeOwner(
+      _owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     tokensReceived(
       arg0: PromiseOrValue<string>,
-      _from: PromiseOrValue<string>,
-      _to: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<string>,
+      arg3: PromiseOrValue<BigNumberish>,
       arg4: PromiseOrValue<BytesLike>,
       arg5: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -759,11 +958,6 @@ export interface TestAggregatedAccount extends BaseContract {
 
     updateEntryPoint(
       _newEntryPoint: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    updateRegistry(
-      _newRegistry: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -793,7 +987,7 @@ export interface TestAggregatedAccount extends BaseContract {
   };
 
   filters: {
-    "AdminChanged(address,address)"(
+    'AdminChanged(address,address)'(
       previousAdmin?: null,
       newAdmin?: null
     ): AdminChangedEventFilter;
@@ -802,25 +996,14 @@ export interface TestAggregatedAccount extends BaseContract {
       newAdmin?: null
     ): AdminChangedEventFilter;
 
-    "BeaconUpgraded(address)"(
+    'BeaconUpgraded(address)'(
       beacon?: PromiseOrValue<string> | null
     ): BeaconUpgradedEventFilter;
     BeaconUpgraded(
       beacon?: PromiseOrValue<string> | null
     ): BeaconUpgradedEventFilter;
 
-    "ERC777Received(address,address,uint256)"(
-      from?: null,
-      to?: null,
-      amount?: null
-    ): ERC777ReceivedEventFilter;
-    ERC777Received(
-      from?: null,
-      to?: null,
-      amount?: null
-    ): ERC777ReceivedEventFilter;
-
-    "EntryPointChanged(address,address)"(
+    'EntryPointChanged(address,address)'(
       oldEntryPoint?: null,
       newEntryPoint?: null
     ): EntryPointChangedEventFilter;
@@ -829,30 +1012,42 @@ export interface TestAggregatedAccount extends BaseContract {
       newEntryPoint?: null
     ): EntryPointChangedEventFilter;
 
-    "EtherspotWalletInitialized(address,address,address)"(
+    'EtherspotWalletInitialized(address,address)'(
       entryPoint?: PromiseOrValue<string> | null,
-      registry?: PromiseOrValue<string> | null,
       owner?: PromiseOrValue<string> | null
     ): EtherspotWalletInitializedEventFilter;
     EtherspotWalletInitialized(
       entryPoint?: PromiseOrValue<string> | null,
-      registry?: PromiseOrValue<string> | null,
       owner?: PromiseOrValue<string> | null
     ): EtherspotWalletInitializedEventFilter;
 
-    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    'EtherspotWalletReceived(address,uint256)'(
+      from?: PromiseOrValue<string> | null,
+      amount?: PromiseOrValue<BigNumberish> | null
+    ): EtherspotWalletReceivedEventFilter;
+    EtherspotWalletReceived(
+      from?: PromiseOrValue<string> | null,
+      amount?: PromiseOrValue<BigNumberish> | null
+    ): EtherspotWalletReceivedEventFilter;
+
+    'GuardianAdded(address)'(newGuardian?: null): GuardianAddedEventFilter;
+    GuardianAdded(newGuardian?: null): GuardianAddedEventFilter;
+
+    'GuardianRemoved(address)'(
+      removedGuardian?: null
+    ): GuardianRemovedEventFilter;
+    GuardianRemoved(removedGuardian?: null): GuardianRemovedEventFilter;
+
+    'Initialized(uint8)'(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
-    "RegistryChanged(address,address)"(
-      oldRegistry?: null,
-      newRegistry?: null
-    ): RegistryChangedEventFilter;
-    RegistryChanged(
-      oldRegistry?: null,
-      newRegistry?: null
-    ): RegistryChangedEventFilter;
+    'OwnerAdded(address)'(newOwner?: null): OwnerAddedEventFilter;
+    OwnerAdded(newOwner?: null): OwnerAddedEventFilter;
 
-    "Upgraded(address)"(
+    'OwnerRemoved(address)'(removedOwner?: null): OwnerRemovedEventFilter;
+    OwnerRemoved(removedOwner?: null): OwnerRemovedEventFilter;
+
+    'Upgraded(address)'(
       implementation?: PromiseOrValue<string> | null
     ): UpgradedEventFilter;
     Upgraded(
@@ -861,19 +1056,21 @@ export interface TestAggregatedAccount extends BaseContract {
   };
 
   estimateGas: {
-    _registry(overrides?: CallOverrides): Promise<BigNumber>;
-
     addDeposit(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    aggregator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    canImplementInterfaceForAddress(
-      interfaceHash: PromiseOrValue<BytesLike>,
-      addr: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    addGuardian(
+      _newGuardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    addOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    aggregator(overrides?: CallOverrides): Promise<BigNumber>;
 
     entryPoint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -894,24 +1091,52 @@ export interface TestAggregatedAccount extends BaseContract {
 
     initialize(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
-      arg2: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "isValidSignature(bytes32,bytes)"(
-      messageHash: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isGuardian(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "isValidSignature(bytes,bytes)"(
-      message: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isOwner(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isValidSig(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    isValidSigImpl(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      allowSideEffects: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    isValidSigWithSideEffects(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     onERC1155Received(
       arg0: PromiseOrValue<string>,
@@ -930,29 +1155,35 @@ export interface TestAggregatedAccount extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
     proxiableUUID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    registry(overrides?: CallOverrides): Promise<BigNumber>;
+    removeGuardian(
+      _guardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeOwner(
+      _owner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     tokensReceived(
       arg0: PromiseOrValue<string>,
-      _from: PromiseOrValue<string>,
-      _to: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<string>,
+      arg3: PromiseOrValue<BigNumberish>,
       arg4: PromiseOrValue<BytesLike>,
       arg5: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     updateEntryPoint(
       _newEntryPoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    updateRegistry(
-      _newRegistry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -982,19 +1213,21 @@ export interface TestAggregatedAccount extends BaseContract {
   };
 
   populateTransaction: {
-    _registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     addDeposit(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    aggregator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    canImplementInterfaceForAddress(
-      interfaceHash: PromiseOrValue<BytesLike>,
-      addr: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    addGuardian(
+      _newGuardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    addOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    aggregator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     entryPoint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1015,24 +1248,52 @@ export interface TestAggregatedAccount extends BaseContract {
 
     initialize(
       anEntryPoint: PromiseOrValue<string>,
-      anRegistry: PromiseOrValue<string>,
-      arg2: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "isValidSignature(bytes32,bytes)"(
-      messageHash: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isGuardian(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "isValidSignature(bytes,bytes)"(
-      message: PromiseOrValue<BytesLike>,
-      signature: PromiseOrValue<BytesLike>,
+    isOwner(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isValidSig(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    isValidSigImpl(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      allowSideEffects: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    isValidSigWithSideEffects(
+      _signer: PromiseOrValue<string>,
+      _hash: PromiseOrValue<BytesLike>,
+      _signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     nonce(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     onERC1155Received(
       arg0: PromiseOrValue<string>,
@@ -1051,29 +1312,35 @@ export interface TestAggregatedAccount extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     proxiableUUID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    registry(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    removeGuardian(
+      _guardian: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeOwner(
+      _owner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    supportsInterface(
+      interfaceId: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     tokensReceived(
       arg0: PromiseOrValue<string>,
-      _from: PromiseOrValue<string>,
-      _to: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<string>,
+      arg3: PromiseOrValue<BigNumberish>,
       arg4: PromiseOrValue<BytesLike>,
       arg5: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     updateEntryPoint(
       _newEntryPoint: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    updateRegistry(
-      _newRegistry: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
