@@ -1,25 +1,24 @@
-import { Wallet, providers } from 'ethers';
 import { LiteSdk } from '../src';
+import { NetworkNames, getNetworkConfig } from './config';
 
-const ENTRYPOINT_ADDRESS: string = '0x0576a174D229E3cFA37253523E645A78A0C91B57';
-const WALLET_FACTORY_ADDRESS: string = '0x3cf07383654c2569867F02098774eddEEea86573';
-const PROVIDER_URL: string = '';
-const PRIVATE_KEY: string = '';
+// add/change to correct network
+const config = getNetworkConfig(NetworkNames.Mumbai);
 
 async function main() {
   // initializating sdk...
-  const provider = new providers.JsonRpcProvider(PROVIDER_URL);
-  const wallet = new Wallet(PRIVATE_KEY, provider);
-  // const wallet = Wallet.createRandom();
   const sdk = new LiteSdk(
-    wallet, // wallet
-    'https://mumbai-bundler.etherspot.io', // bundler rpc
-    80001, // chain id
-    ENTRYPOINT_ADDRESS, // entry point
-    WALLET_FACTORY_ADDRESS, // etherspot wallet factory
+    process.env.WALLET_PRIVATE_KEY, // owner wallet private key
+    config.rpcProvider, // rpc provider
+    config.bundler, // bundler rpc
+    config.chainId, // chain id
+    config.contracts.entryPoint, // entry point
+    config.contracts.walletFactory, // etherspot wallet factory
+    undefined,
   );
-  const address = await sdk.getCounterFactualAddress();
-  console.log(`EtherspotWallet address: ${address}`);
+
+  // get EtherspotWallet address...
+  const address: string = await sdk.getCounterFactualAddress();
+  console.log('\x1b[33m%s\x1b[0m', `EtherspotWallet address: ${address}`);
 }
 
 main()

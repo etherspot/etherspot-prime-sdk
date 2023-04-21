@@ -7,4 +7,5 @@ export { ClientConfig } from './ClientConfig';
 export { HttpRpcClient } from './HttpRpcClient';
 export { DeterministicDeployer } from './DeterministicDeployer';
 export { BLSAccountAPI } from './BLSAccountAPI';
+export { VerifyingPaymasterAPI } from './VerifyingPaymasterAPI';
 export * from './calcPreVerificationGas';

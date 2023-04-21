@@ -93,6 +93,8 @@ export abstract class BaseAccountAPI {
    */
   abstract encodeExecute(target: string, value: BigNumberish, data: string): Promise<string>;
 
+  abstract encodeBatch(targets: string[], datas: string[]): Promise<string>;
+
   /**
    * sign a userOp's hash (userOpHash).
    * @param userOpHash
@@ -127,7 +129,7 @@ export abstract class BaseAccountAPI {
     try {
       await this.entryPointView.callStatic.getSenderAddress(initCode);
     } catch (e: any) {
-      console.log(e);
+      // console.log(e);
       return e.errorArgs.sender;
     }
     throw new Error('must handle revert');
@@ -177,7 +179,20 @@ export abstract class BaseAccountAPI {
     }
 
     const value = parseNumber(detailsForUserOp.value) ?? BigNumber.from(0);
-    const callData = await this.encodeExecute(detailsForUserOp.target, value, detailsForUserOp.data);
+    let callData: string;
+    const data = detailsForUserOp.data;
+    let target = detailsForUserOp.target;
+    if (typeof data === 'string') {
+      if (typeof target !== 'string') {
+        throw new Error('must have target address if data is single value');
+      }
+      callData = await this.encodeExecute(target, value, data);
+    } else {
+      if (typeof target === 'string') {
+        target = Array(data.length).fill(target);
+      }
+      callData = await this.encodeBatch(target, data);
+    }
 
     const callGasLimit =
       parseNumber(detailsForUserOp.gasLimit) ??
