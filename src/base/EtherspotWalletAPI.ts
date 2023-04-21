@@ -8,7 +8,7 @@ import {
 import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { Signer } from '@ethersproject/abstract-signer';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
-import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
+import { PaymasterAPI } from './PaymasterAPI';
 
 /**
  * constructor params, added no top of base params:
@@ -109,5 +109,10 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   get epView() {
     return this.entryPointView;
+  }
+
+  async encodeBatch(targets: string[], datas: string[]): Promise<string> {
+    const accountContract = await this._getAccountContract();
+    return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
   }
 }

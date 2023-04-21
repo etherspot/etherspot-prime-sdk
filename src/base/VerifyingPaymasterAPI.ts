@@ -15,7 +15,7 @@ interface paymasterResponse {
   result: BytesLike;
 }
 
-class VerifyingPaymasterAPI extends PaymasterAPI {
+export class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
   constructor(paymasterUrl: string, entryPoint: string) {

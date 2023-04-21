@@ -110,4 +110,9 @@ export class BLSAccountAPI extends BaseAccountAPI {
     }
     return this.signer;
   }
+
+  async encodeBatch(targets: string[], datas: string[]): Promise<string> {
+    const accountContract = await this._getAccountContract();
+    return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
+  }
 }
