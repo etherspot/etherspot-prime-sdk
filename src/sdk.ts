@@ -46,6 +46,7 @@ export class LiteSdk {
         Math.max(100, block.number - 100),
       );
       if (events.length > 0) {
+        console.log(events[0].args.actualGasUsed.toString());
         return events[0].transactionHash;
       }
       await new Promise((resolve) => setTimeout(resolve, interval));
