@@ -36,7 +36,3 @@ test.js
 
 # contracts exposed
 src/contracts/factories/contracts-exposed/
-
-#oz typings
-src/contracts/@openzeppelin/
-src/contracts/factories/@openzeppelin/
