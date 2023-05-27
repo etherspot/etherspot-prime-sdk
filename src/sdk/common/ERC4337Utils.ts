@@ -30,86 +30,36 @@ function encode(typevalues: Array<{ type: string; val: any }>, forSignature: boo
   return defaultAbiCoder.encode(types, values);
 }
 
+// reverse "Deferrable" or "PromiseOrValue" fields
+export type NotPromise<T> = {
+  [P in keyof T]: Exclude<T[P], Promise<any>>
+}
+
 /**
  * pack the userOperation
  * @param op
  * @param forSignature "true" if the hash is needed to calculate the getUserOpHash()
  *  "false" to pack entire UserOp, for calculating the calldata cost of putting it on-chain.
  */
-export function packUserOp(op: UserOperationStruct, forSignature = true): string {
+export function packUserOp (op: NotPromise<UserOperationStruct>, forSignature = true): string {
   if (forSignature) {
-    // lighter signature scheme (must match UserOperation#pack): do encode a zero-length signature, but strip afterwards the appended zero-length value
-    const userOpType = {
-      components: [
-        {
-          type: 'address',
-          name: 'sender',
-        },
-        {
-          type: 'uint256',
-          name: 'nonce',
-        },
-        {
-          type: 'bytes',
-          name: 'initCode',
-        },
-        {
-          type: 'bytes',
-          name: 'callData',
-        },
-        {
-          type: 'uint256',
-          name: 'callGasLimit',
-        },
-        {
-          type: 'uint256',
-          name: 'verificationGasLimit',
-        },
-        {
-          type: 'uint256',
-          name: 'preVerificationGas',
-        },
-        {
-          type: 'uint256',
-          name: 'maxFeePerGas',
-        },
-        {
-          type: 'uint256',
-          name: 'maxPriorityFeePerGas',
-        },
-        {
-          type: 'bytes',
-          name: 'paymasterAndData',
-        },
-        {
-          type: 'bytes',
-          name: 'signature',
-        },
-      ],
-      name: 'userOp',
-      type: 'tuple',
-    };
-    // console.log('hard-coded userOpType', userOpType)
-    // console.log('from ABI userOpType', UserOpType)
-    let encoded = defaultAbiCoder.encode(
-      [userOpType as any],
-      [
-        {
-          ...op,
-          signature: '0x',
-        },
-      ],
-    );
-    // remove leading word (total length) and trailing word (zero-length signature)
-    encoded = '0x' + encoded.slice(66, encoded.length - 64);
-    return encoded;
+    return defaultAbiCoder.encode(
+      ['address', 'uint256', 'bytes32', 'bytes32',
+        'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
+        'bytes32'],
+      [op.sender, op.nonce, keccak256(op.initCode), keccak256(op.callData),
+        op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
+        keccak256(op.paymasterAndData)])
+  } else {
+    // for the purpose of calculating gas cost encode also signature (and no keccak of bytes)
+    return defaultAbiCoder.encode(
+      ['address', 'uint256', 'bytes', 'bytes',
+        'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
+        'bytes', 'bytes'],
+      [op.sender, op.nonce, op.initCode, op.callData,
+        op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
+        op.paymasterAndData, op.signature])
   }
-
-  const typevalues = (UserOpType as any).components.map((c: { name: keyof typeof op; type: string }) => ({
-    type: c.type,
-    val: op[c.name],
-  }));
-  return encode(typevalues, forSignature);
 }
 
 /**
@@ -121,9 +71,10 @@ export function packUserOp(op: UserOperationStruct, forSignature = true): string
  * @param entryPoint
  * @param chainId
  */
-export function getUserOpHash(op: UserOperationStruct, entryPoint: string, chainId: number): string {
+export function getUserOpHash(op: NotPromise<UserOperationStruct>, entryPoint: string, chainId: number): string {
   const userOpHash = keccak256(packUserOp(op, true));
   const enc = defaultAbiCoder.encode(['bytes32', 'address', 'uint256'], [userOpHash, entryPoint, chainId]);
+  console.log(userOpHash, entryPoint, chainId, enc);
   return keccak256(enc);
 }
 

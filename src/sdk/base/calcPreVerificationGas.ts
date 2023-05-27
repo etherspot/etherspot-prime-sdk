@@ -1,6 +1,6 @@
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 
-import { packUserOp } from '../common';
+import { NotPromise, packUserOp } from '../common';
 import { arrayify, hexlify } from 'ethers/lib/utils';
 
 export interface GasOverheads {
@@ -64,7 +64,7 @@ export function calcPreVerificationGas(
   overheads?: Partial<GasOverheads>,
 ): number {
   const ov = { ...DefaultGasOverheads, ...(overheads ?? {}) };
-  const p: UserOperationStruct = {
+  const p: NotPromise<UserOperationStruct> = {
     // dummy values, in case the UserOp is incomplete.
     preVerificationGas: 21000, // dummy value, just for calldata cost
     signature: hexlify(Buffer.alloc(ov.sigSize, 1)), // dummy signature

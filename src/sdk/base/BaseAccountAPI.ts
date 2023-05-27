@@ -6,7 +6,7 @@ import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
-import { ErrorSubject, Exception, getUserOpHash, packUserOp, Service } from '../common';
+import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { AccountService, AccountTypes, CreateSessionDto, Env, EnvNames, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
@@ -367,7 +367,7 @@ export abstract class BaseAccountAPI {
   /**
    * ABI-encode a user operation. used for calldata cost estimation
    */
-  packUserOp(userOp: UserOperationStruct): string {
+  packUserOp(userOp: NotPromise<UserOperationStruct>): string {
     return packUserOp(userOp, false);
   }
 

@@ -65,7 +65,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    * this value holds the "factory" address, followed by this account's information
    */
   async getAccountInitCode(): Promise<string> {
-    console.log('factoryAddress', this.factoryAddress, this.provider)
+    // console.log('factoryAddress', this.factoryAddress, this.provider)
     if (this.factory == null) {
       if (this.factoryAddress != null && this.factoryAddress !== '') {
         this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
@@ -104,8 +104,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async signUserOpHash(userOpHash: string): Promise<string> {
-    // return await this.owner.signMessage(arrayify(userOpHash));
-    // console.log('sign: ', await this.services.walletService.signMessage(arrayify(userOpHash)), await this.owner.signMessage(arrayify(userOpHash)))
     return await this.services.walletService.signMessage(arrayify(userOpHash));
 
   }

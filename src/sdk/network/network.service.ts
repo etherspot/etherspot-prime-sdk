@@ -1,4 +1,3 @@
-import { ContractNames, getContractAddress } from '@etherspot/contracts';
 import { Observable } from 'rxjs';
 import { NetworkConfig } from '.';
 import { ObjectSubject, Service, Exception, prepareAddress } from '../common';
