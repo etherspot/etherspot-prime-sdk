@@ -13,7 +13,6 @@ export class KeyWalletProvider implements WalletProvider {
   readonly provider: providers.JsonRpcProvider;
 
   constructor(privateKey: string, provider: providers.JsonRpcProvider) {
-    console.log('key based provider', provider, privateKey);
     this.wallet = new Wallet(privateKey, provider);
 
     this.signer = new Wallet(privateKey, provider)
