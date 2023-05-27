@@ -5,17 +5,19 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "target": "es2017",
     "sourceMap": false,
     "baseUrl": "./",
     "rootDir": "./",
+    "strict": false,
     "downlevelIteration": true,
-    "esModuleInterop": true,
     "lib": [
       "DOM",
-      "ES5"
-    ],
-    "resolveJsonModule": true,
+      "ES5",
+      "es2015.collection",
+      "es2015.iterable"
+    ]
   },
   "include": [
     "./examples/**/*.ts",
