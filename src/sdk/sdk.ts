@@ -1,48 +1,235 @@
-import { BigNumberish, Wallet, ethers, providers } from 'ethers';
-import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
-import { TransactionDetailsForUserOp } from './base/TransactionDetailsForUserOp';
+import { BehaviorSubject } from 'rxjs';
+import { State, StateService } from './state';
+import { isWalletProvider, WalletProviderLike } from './wallet';
+import { SdkOptions } from './interfaces';
+import { Network } from "./network";
+import { Env } from "./env";
+import { BatchTransactionRequest, Exception, getGasFee, TransactionRequest } from "./common";
+import { BigNumber, BigNumberish, ethers, providers, Wallet } from 'ethers';
+import { Networks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
-import { getGasFee } from './common';
+import { EtherspotWalletAPI, HttpRpcClient } from './base';
+import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
+import { CreateSessionDto, SignMessageDto, validateDto } from './dto';
+import { Session } from '.';
+import { ERC20__factory } from './contracts';
 import { ERC20_ABI } from './helpers/abi/ERC20_ABI';
 
-export class LiteSdk {
-  private EtherspotWallet: EtherspotWalletAPI;
-  private bundler: HttpRpcClient;
-  wallet: Wallet;
-  rpcProvider: ethers.providers.JsonRpcProvider;
+/**
+ * Prime-Sdk
+ *
+ * @category Prime-Sdk
+ */
+export class PrimeSdk {
 
-  constructor(
-    private privateKey: string,
-    provider: string,
-    bundlerRpc: string,
-    chainId: number,
-    entryPoint: string,
-    accountFactory: string,
-    paymasterAPI: VerifyingPaymasterAPI | undefined,
-  ) {
-    this.rpcProvider = new ethers.providers.JsonRpcProvider(provider);
-    this.wallet = new Wallet(privateKey, this.rpcProvider);
-    // this.EtherspotWallet = new EtherspotWalletAPI({
-    //   provider: this.wallet.provider,
-    //   owner: this.wallet,
-    //   index: 0,
-    //   entryPointAddress: entryPoint,
-    //   factoryAddress: accountFactory,
-    //   paymasterAPI: paymasterAPI,
-    // });
-    this.bundler = new HttpRpcClient(bundlerRpc, entryPoint, chainId);
+  private etherspotWallet: EtherspotWalletAPI;
+  private bundler: HttpRpcClient;
+
+  private transactions: BatchTransactionRequest = {to: [], data: [], value: []};
+
+  constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
+
+    if (!isWalletProvider(walletProvider)) {
+      throw new Exception('Invalid wallet provider');
+    }
+
+    const env = Env.prepare(optionsLike.env);
+
+    const {
+      networkName, //
+      rpcProviderUrl,
+      bundlerRpcUrl,
+    } = optionsLike;
+
+
+    let provider;
+
+    if (rpcProviderUrl) {
+      provider = new providers.JsonRpcProvider(rpcProviderUrl);
+    } else provider = new providers.JsonRpcProvider(bundlerRpcUrl);
+
+    this.etherspotWallet = new EtherspotWalletAPI({
+      owner: new Wallet(walletProvider.privateKey, provider),
+      provider,
+      walletProvider,
+      optionsLike,
+      entryPointAddress: Networks[networkName].contracts.entryPoint,
+      factoryAddress: Networks[networkName].contracts.walletFactory,
+      paymasterAPI: optionsLike.paymasterApi,
+    })
+
+    this.bundler = new HttpRpcClient(bundlerRpcUrl, Networks[networkName].contracts.entryPoint, Networks[networkName].chainId);
+
+  }
+
+
+  // exposes
+  get state(): StateService {
+    return this.etherspotWallet.services.stateService;
+  }
+
+  get state$(): BehaviorSubject<State> {
+    return this.etherspotWallet.services.stateService.state$;
+  }
+
+  get supportedNetworks(): Network[] {
+    return this.etherspotWallet.services.networkService.supportedNetworks;
+  }
+
+  /**
+   * destroys
+   */
+  destroy(): void {
+    this.etherspotWallet.context.destroy();
+  }
+
+  // wallet
+
+  /**
+   * signs message
+   * @param dto
+   * @return Promise<string>
+   */
+  async signMessage(dto: SignMessageDto): Promise<string> {
+    const { message } = await validateDto(dto, SignMessageDto);
+
+    await this.etherspotWallet.require({
+      network: false,
+    });
+
+    return this.etherspotWallet.services.walletService.signMessage(message);
+  }
+
+  // session
+
+  /**
+   * creates session
+   * @param dto
+   * @return Promise<Session>
+   */
+  async createSession(dto: CreateSessionDto = {}): Promise<Session> {
+    const { ttl, fcmToken } = await validateDto(dto, CreateSessionDto);
+
+    await this.etherspotWallet.require();
+
+    return this.etherspotWallet.services.sessionService.createSession(ttl, fcmToken);
   }
 
   async getCounterFactualAddress(): Promise<string> {
-    return this.EtherspotWallet.getCounterFactualAddress();
+    return this.etherspotWallet.getCounterFactualAddress();
+  }
+
+
+  async depositFromKeyWallet(amount: string, tokenAddress?: string): Promise<string> {
+    try {
+      const ewalletAddress = await this.getCounterFactualAddress();
+
+      if (tokenAddress) {
+        const token = ethers.utils.getAddress(tokenAddress);
+        const erc20Contract = ERC20__factory.connect(token, this.etherspotWallet.services.walletService.getWalletProvider());
+        const dec = await erc20Contract.functions.decimals();
+        const approveData = erc20Contract.interface.encodeFunctionData('approve', [this.state.walletAddress, ethers.utils.parseUnits(amount, dec)])
+        const transactionData = erc20Contract.interface.encodeFunctionData('transferFrom', [this.state.walletAddress, ewalletAddress, ethers.utils.parseUnits(amount, dec)])
+        const balance = await erc20Contract.functions.balanceOf(ewalletAddress)
+        if (balance[0].lt(ethers.utils.parseEther(amount))) {
+          
+          const approvetx = await this.etherspotWallet.services.walletService.sendTransaction({
+            to: tokenAddress, // EtherspotWallet address
+            data: approveData, // approval data
+            gasLimit: ethers.utils.hexlify(500000),
+          });
+
+          await approvetx.wait();
+
+          const tx = await this.etherspotWallet.services.walletService.sendTransaction({
+            to: tokenAddress, // EtherspotWallet address
+            data: transactionData, // transferFrom data
+            gasLimit: ethers.utils.hexlify(500000),
+          });
+          await tx.wait();
+          return `Transfer successful. Account funded with ${amount} ${await erc20Contract.symbol()}`;
+        } else {
+          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(
+            balance[0],
+          )} ${await erc20Contract.symbol()}`;
+        }
+      } else {
+        const balance = await this.etherspotWallet.provider.getBalance(ewalletAddress);
+
+        // Check if wallet balance is less than the amount to transfer
+        if (balance.lt(ethers.utils.parseEther(amount))) {
+          // Transfer funds to the wallet
+          const tx = await this.etherspotWallet.services.walletService.sendTransaction({
+            to: ewalletAddress, // EtherspotWallet address
+            data: '0x', // no data
+            value: ethers.utils.parseEther(amount), // 0.1 MATIC
+            gasLimit: ethers.utils.hexlify(50000),
+          });
+          await tx.wait();
+          return `Transfer successful. Account funded with ${amount} ${tx}`;
+        } else {
+          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(balance)}`;
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      return `Transfer failed: ${e.message}`;
+    }
+  }
+
+  async sign(gasDetails?: TransactionGasInfoForUserOp) {
+    const gas = await this.getGasFee();
+
+    if (this.transactions.to.length < 1){
+      throw new Error("cannot sign empty transaction batch");
+    }
+
+    const tx: TransactionDetailsForUserOp = {
+      target: this.transactions.to,
+      values: this.transactions.value,
+      data: this.transactions.data,
+      ...gasDetails,
+    }
+
+    return this.etherspotWallet.createSignedUserOp({
+      ...tx,
+      ...gas,
+    });
+  }
+
+  async getGasFee() {
+    return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
+  }
+
+  async send(userOp: UserOperationStruct) {
+    return this.bundler.sendUserOpToBundler(userOp);
+  }
+
+  async getNativeBalance() {
+    if (!this.etherspotWallet.accountAddress) {
+      await this.getCounterFactualAddress();
+    }
+    const balance = await this.etherspotWallet.provider.getBalance(this.etherspotWallet.accountAddress);
+    return ethers.utils.formatEther(balance);
+  }
+
+  async getTokenBalance(tokenAddress: string) {
+    if (!this.etherspotWallet.accountAddress) {
+      await this.getCounterFactualAddress();
+    }
+    const token = ethers.utils.getAddress(tokenAddress);
+    const erc20Contract = ERC20__factory.connect(token, this.etherspotWallet.services.walletService.getWalletProvider());
+    const dec = await erc20Contract.functions.decimals();
+    const balance = await erc20Contract.functions.balanceOf(this.etherspotWallet.accountAddress)
+    return ethers.utils.formatUnits(balance[0], dec);
   }
 
   async getUserOpReceipt(userOpHash: string, timeout = 60000, interval = 5000): Promise<string | null> {
-    const block = await this.wallet.provider.getBlock('latest');
+    const block = await this.etherspotWallet.provider.getBlock('latest');
     const endtime = Date.now() + timeout;
     while (Date.now() < endtime) {
-      const events = await this.EtherspotWallet.epView.queryFilter(
-        this.EtherspotWallet.epView.filters.UserOperationEvent(userOpHash),
+      const events = await this.etherspotWallet.epView.queryFilter(
+        this.etherspotWallet.epView.filters.UserOperationEvent(userOpHash),
         Math.max(100, block.number - 100),
       );
       if (events.length > 0) {
@@ -54,169 +241,20 @@ export class LiteSdk {
     return null;
   }
 
-  async sign(tx: TransactionDetailsForUserOp) {
-    const gas = await this.getGasFee();
-
-    return this.EtherspotWallet.createSignedUserOp({
-      ...tx,
-      ...gas,
-    });
-  }
-
   async getHash(userOp: UserOperationStruct) {
-    return this.EtherspotWallet.getUserOpHash(userOp);
-  }
-
-  async send(userOp: UserOperationStruct) {
-    return this.bundler.sendUserOpToBundler(userOp);
-  }
-
-  async getGasFee() {
-    return getGasFee(this.wallet.provider as providers.JsonRpcProvider);
-  }
-
-  // added below
-
-  async getAccountContract() {
-    return this.EtherspotWallet._getAccountContract();
-  }
-
-  get epView() {
-    return this.EtherspotWallet.epView;
+    return this.etherspotWallet.getUserOpHash(userOp);
   }
 
   async encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
     const formatTarget = ethers.utils.getAddress(target);
-    return await this.EtherspotWallet.encodeExecute(formatTarget, value, data);
+    return await this.etherspotWallet.encodeExecute(formatTarget, value, data);
   }
 
-  async encodeBatch(targets: string[], datas: string[]): Promise<string> {
-    return this.EtherspotWallet.encodeBatch(targets, datas);
-  }
-
-  async prefundIfRequired(amount: string, tokenAddress?: string): Promise<string> {
-    try {
-      const ewalletAddress = await this.getCounterFactualAddress();
-
-      if (tokenAddress) {
-        const token = ethers.utils.getAddress(tokenAddress);
-        const erc20 = new ethers.Contract(token, ERC20_ABI, this.wallet);
-        const dec = await erc20.decimals();
-        const balance = await erc20.balanceOf(ewalletAddress);
-
-        if (balance.lt(ethers.utils.parseEther(amount))) {
-          const tx = await erc20.transfer(ewalletAddress, ethers.utils.parseUnits(amount, dec));
-          await tx.wait();
-          return `Transfer successful. Account funded with ${amount} ${await erc20.symbol()}`;
-        } else {
-          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(
-            balance,
-          )} ${await erc20.symbol()}`;
-        }
-      } else {
-        const balance = await this.rpcProvider.getBalance(ewalletAddress);
-        // Check if wallet balance is less than the amount to transfer
-        if (balance.lt(ethers.utils.parseEther(amount))) {
-          // Transfer funds to the wallet
-          const tx = await this.wallet.sendTransaction({
-            to: ewalletAddress, // EtherspotWallet address
-            data: '0x', // no data
-            value: ethers.utils.parseEther(amount), // 0.1 MATIC
-            gasLimit: ethers.utils.hexlify(50000),
-          });
-          await tx.wait();
-          return `Transfer successful. Account funded with ${amount}`;
-        } else {
-          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(balance)}`;
-        }
-      }
-    } catch (e) {
-      console.log(e);
-      return `Transfer failed: ${e.message}`;
-    }
-  }
-
-  async getERC20Instance(tokenAddress: string) {
-    const token = ethers.utils.getAddress(tokenAddress);
-    return new ethers.Contract(token, ERC20_ABI, this.wallet);
-  }
-
-  async erc20Balance(address: string, tokenAddress: string): Promise<BigNumberish> {
-    const erc20 = await this.getERC20Instance(tokenAddress);
-    return await erc20.balanceOf(address);
-  }
-
-  async erc20Approve(spender: string, amount: string, tokenAddress: string): Promise<boolean> {
-    const ewalletAddress = await this.getCounterFactualAddress();
-    try {
-      const erc20 = await this.getERC20Instance(tokenAddress);
-      const value = await this.formatAmount(amount, await erc20.decimals());
-      const success = await erc20.approve(spender, value, { from: ewalletAddress });
-      return success;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  }
-
-  formatAmount(amount: string, decimals = 18): BigNumberish {
-    return ethers.utils.parseUnits(amount, decimals);
-  }
-
-  parseAmount(amount: string, decimals = 18): string {
-    return ethers.utils.formatUnits(amount, decimals);
-  }
-
-  async generateBatchExecutesData(
-    target: string,
-    recipients: string[],
-    values: string[],
-  ): Promise<{ dest: string[]; data: string[] }> {
-    const ac = await this.getAccountContract();
-    const dest = Array.from({ length: recipients.length }, () => target);
-    const data = await Promise.all(
-      recipients.map(async (recipient, i) =>
-        ac.interface.encodeFunctionData('execute', [recipient, this.formatAmount(values[i]), '0x']),
-      ),
-    );
-
-    return { dest, data };
-  }
-
-  async generateERC20BatchTransfersData(
-    target: string,
-    recipients: string[],
-    values: string[],
-  ): Promise<{ dest: string[]; data: string[] }> {
-    const erc20 = await this.getERC20Instance(target);
-    const [sym, dec] = await Promise.all([erc20.symbol(), erc20.decimals()]);
-
-    const transferDataPromises = recipients.map((recipient, i) => {
-      const transferData = erc20.interface.encodeFunctionData('transfer', [
-        recipient,
-        this.formatAmount(values[i], dec),
-      ]);
-      return Promise.resolve(transferData);
-    });
-
-    const transferData = await Promise.all(transferDataPromises);
-
-    return {
-      dest: Array.from({ length: recipients.length }, () => erc20.address),
-      data: transferData,
-    };
-  }
-
-  async connectToContract(address: string, abi: any) {
-    const addr = ethers.utils.getAddress(address);
-    return new ethers.Contract(addr, abi, this.wallet);
-  }
-
-  async generateUniSingleSwapParams(tokenIn: string, tokenOut: string, value: string) {
+  async getUniSingleSwapParams(tokenIn: string, tokenOut: string, value: string) {
     const wallet = await this.getCounterFactualAddress();
     const amount = ethers.utils.parseEther(value);
-    const blockNum = await this.rpcProvider.getBlockNumber();
-    const timestamp = (await this.rpcProvider.getBlock(blockNum)).timestamp;
+    const blockNum = await this.etherspotWallet.provider.getBlockNumber();
+    const timestamp = (await this.etherspotWallet.provider.getBlock(blockNum)).timestamp;
     const params = {
       tokenIn: tokenIn,
       tokenOut: tokenOut,
@@ -230,9 +268,37 @@ export class LiteSdk {
     return params;
   }
 
-  async mintTokenToOwner(tokenAddress: string, amount: string) {
-    const erc20 = await this.getERC20Instance(tokenAddress);
-    const formatAmount = this.formatAmount(amount, await erc20.decimals());
-    await erc20.mint(this.wallet.address, formatAmount);
+  async addTransactionToBatch(
+    tx: TransactionRequest,
+  ): Promise<BatchTransactionRequest> {
+    this.transactions.to.push(tx.to);
+    this.transactions.value.push(tx.value ?? BigNumber.from(0));
+    this.transactions.data.push(tx.data ?? '0x');
+    return this.transactions;
   }
+
+  async clearTransactionsFromBatch(): Promise<void> {
+    this.transactions.to = [];
+    this.transactions.data = [];
+    this.transactions.value = [];
+  }
+
+  async signSingleTransaction(tx: TransactionDetailsForUserOp) {
+    const gas = await this.getGasFee();
+
+    return this.etherspotWallet.createSignedUserOp({
+      ...tx,
+      ...gas,
+    });
+  }
+
+  async getAccountContract() {
+    return this.etherspotWallet._getAccountContract();
+  }
+
+  async getERC20Instance(tokenAddress: string) {
+    const token = ethers.utils.getAddress(tokenAddress);
+    return new ethers.Contract(token, ERC20_ABI, this.etherspotWallet.provider);
+  }
+
 }

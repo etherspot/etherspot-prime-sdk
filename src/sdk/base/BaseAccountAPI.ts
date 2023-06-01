@@ -81,12 +81,6 @@ export abstract class BaseAccountAPI {
 
     const { networkOptions } = env;
 
-    let provider;
-
-    if (rpcProviderUrl) {
-      provider = new providers.JsonRpcProvider(rpcProviderUrl);
-    } else provider = new providers.JsonRpcProvider(bundlerRpcUrl);
-
     this.services = {
       networkService: new NetworkService(networkOptions, networkName),
       walletService: new WalletService(params.walletProvider, {
@@ -293,7 +287,7 @@ export abstract class BaseAccountAPI {
    */
   protected abstract encodeExecute(target: string, value: BigNumberish, data: string): Promise<string>;
 
-  protected abstract encodeBatch(targets: string[], datas: string[]): Promise<string>;
+  protected abstract encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string>;
 
   /**
    * sign a userOp's hash (userOpHash).
@@ -392,13 +386,12 @@ export abstract class BaseAccountAPI {
       if (typeof target === 'string') {
         target = Array(data.length).fill(target);
       }
-      callData = await this.encodeBatch(target, data);
+      callData = await this.encodeBatch(target, detailsForUserOp.values, data);
     }
-    // const provider = this.services.walletService.getWalletProvider();
-
+    const provider = this.services.walletService.getWalletProvider();
     const callGasLimit =
       parseNumber(detailsForUserOp.gasLimit) ??
-      (await this.provider.estimateGas({
+      (await provider.estimateGas({
         from: this.entryPointAddress,
         to: this.getAccountAddress(),
         data: callData,
@@ -417,8 +410,8 @@ export abstract class BaseAccountAPI {
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
     const op = await resolveProperties(userOp);
-    // const provider = this.services.walletService.getWalletProvider();
-    const chainId = await this.provider.getNetwork().then((net) => net.chainId);
+    const provider = this.services.walletService.getWalletProvider();
+    const chainId = await provider.getNetwork().then((net) => net.chainId);
     return getUserOpHash(op, this.entryPointAddress, chainId);
   }
 
@@ -441,8 +434,8 @@ export abstract class BaseAccountAPI {
     if (initCode == null || initCode === '0x') return 0;
     const deployerAddress = initCode.substring(0, 42);
     const deployerCallData = '0x' + initCode.substring(42);
-    // const provider = this.services.walletService.getWalletProvider();
-    return await this.provider.estimateGas({ to: deployerAddress, data: deployerCallData });
+    const provider = this.services.walletService.getWalletProvider();
+    return await provider.estimateGas({ to: deployerAddress, data: deployerCallData });
   }
 
   /**
@@ -460,8 +453,8 @@ export abstract class BaseAccountAPI {
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (maxFeePerGas == null || maxPriorityFeePerGas == null) {
-      // const provider = this.services.walletService.getWalletProvider();
-      const feeData = await this.provider.getFeeData();
+      const provider = this.services.walletService.getWalletProvider();
+      const feeData = await provider.getFeeData();
       if (maxFeePerGas == null) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
       }

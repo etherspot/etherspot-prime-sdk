@@ -9,6 +9,13 @@ export interface TransactionDetailsForUserOp {
   // target data or multiple target datas for a batch
   data: string | string[];
   value?: BigNumberish;
+  values?: BigNumberish[];
+  gasLimit?: BigNumberish;
+  maxFeePerGas?: BigNumberish;
+  maxPriorityFeePerGas?: BigNumberish;
+}
+
+export interface TransactionGasInfoForUserOp {
   gasLimit?: BigNumberish;
   maxFeePerGas?: BigNumberish;
   maxPriorityFeePerGas?: BigNumberish;
