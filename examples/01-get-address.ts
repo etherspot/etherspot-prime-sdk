@@ -8,7 +8,7 @@ dotenv.config();
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: process.env.BUNDLER_URL })
+  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets })
 
   // get EtherspotWallet address...
   const address: string = await primeSdk.getCounterFactualAddress();

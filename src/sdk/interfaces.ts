@@ -10,7 +10,7 @@ export interface SdkOptions {
   stateStorage?: StateStorage;
   sessionStorage?: SessionStorage;
   omitWalletProviderNetworkCheck?: boolean;
-  bundlerRpcUrl: string;
+  bundlerRpcUrl?: string;
   rpcProviderUrl?: string;
   paymasterApi?: VerifyingPaymasterAPI;
 }
