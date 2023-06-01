@@ -1,43 +1,53 @@
-import { ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { NetworkNames } from '../src/sdk/network/constants';
-import { Sdk } from '../src';
+import { PrimeSdk } from '../src';
 
 import { getNetworkConfig } from './config';
 import { EnvNames } from '../src/sdk/env';
+import { printOp } from '../src/sdk/common/OperationUtils';
 
 // add/change these values
 const config = getNetworkConfig(NetworkNames.Mumbai);
 const recipient: string = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
-const value: string = '1.5'; // transfer value
+const value: string = '0.01'; // transfer value
 
 async function main() {
   // initializating sdk...
-  const sdk1 = new Sdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
+  const primeSdk = new PrimeSdk({ privateKey: '0x513a984bbd054d9fb6d8ba656183185f55bad24a8f900a57a820077374fa9779' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
 
-  console.log('address: ', sdk1.state.walletAddress)
+  console.log('address: ', primeSdk.state.walletAddress)
 
   // get address of EtherspotWallet...
-  const address: string = await sdk1.getCounterFactualAddress();
+  const address: string = await primeSdk.getCounterFactualAddress();
   console.log('\x1b[33m%s\x1b[0m', `EtherspotWallet address: ${address}`);
 
   // transfer some native tokens to the EtherspotWallet (if required)...
-  const prefunded: string = await sdk1.prefundIfRequired((+value + 0.01).toString(), '0x0998B0b3CdED25564a8d2e531D93E666FB21E99d');
+  const prefunded: string = await primeSdk.depositFromKeyWallet((+value + 0.01).toString());
   console.log('\x1b[33m%s\x1b[0m', prefunded);
 
-  // creating and signing userOp...
-  const userOp = await sdk1.sign({
-    target: recipient, // recipient
-    value: ethers.utils.parseEther(value), // amount of native asset to send,
-    data: '0x', // calldata is empty since we just want to transfer ether
-  });
+  // clear the transaction batch
+  await primeSdk.clearTransactionsFromBatch();
+
+  // add transactions to the batch
+  const transactionBatch = await primeSdk.addTransactionToBatch({to: recipient, value: ethers.utils.parseEther(value)});
+  console.log('transactions: ', transactionBatch);
+
+  // get balance of the account address
+  const balance = await primeSdk.getNativeBalance();
+
+  console.log('balances: ', balance);
+
+  // sign transactions added to the batch
+  const op = await primeSdk.sign();
+  console.log(`Signed UserOp: ${await printOp(op)}`);
 
   // sending to the bundler...
-  const uoHash = await sdk1.send(userOp);
+  const uoHash = await primeSdk.send(op);
   console.log(`UserOpHash: ${uoHash}`);
 
   // get transaction hash...
   console.log('Waiting for transaction...');
-  const txHash = await sdk1.getUserOpReceipt(uoHash);
+  const txHash = await primeSdk.getUserOpReceipt(uoHash);
   console.log('\x1b[33m%s\x1b[0m', `Transaction hash: ${txHash}`);
 }
 

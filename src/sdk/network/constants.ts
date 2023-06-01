@@ -18,7 +18,7 @@ export const Networks: {
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xD05a6638b11fCf28157f43dAEDb3B541CCfcC7F8',
+      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {

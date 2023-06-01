@@ -1,5 +1,4 @@
-export { LiteSdk } from './sdk';
-import { Sdk } from './sdk1';
+import { PrimeSdk } from './sdk';
 
 export * from './account';
 export * from './dto';
@@ -10,5 +9,5 @@ export * from './session';
 export * from './state';
 export * from './wallet';
 
-export { Sdk };
-export default Sdk;
+export { PrimeSdk };
+export default PrimeSdk;

@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import {
   EtherspotWallet,
   EtherspotWallet__factory,
@@ -34,6 +34,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   factoryAddress?: string;
   // owner: Signer;
   index: number;
+  accountAddress?: string;
 
   /**
    * our account contract.
@@ -73,6 +74,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
         throw new Error('no factory to get initCode');
       }
     }
+
     return hexConcat([
       this.factory.address,
       this.factory.interface.encodeFunctionData('createAccount', [
@@ -83,13 +85,28 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     ]);
   }
 
+  async getCounterFactualAddress(): Promise<string> {
+    this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
+    this.accountAddress = await this.factory.getAddress(
+      this.entryPointAddress,
+      this.services.walletService.walletAddress,
+      this.index,
+    );
+    return this.accountAddress;
+  }
+
+
+  // async nounce(): Promise<BigNumber> {
+  //   return this.getNonce();
+  // }
+
   async getNonce(): Promise<BigNumber> {
     console.log('checking nonce...');
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
     const accountContract = await this._getAccountContract();
-    return await accountContract.nonce();
+    return await accountContract.getNonce();
   }
 
   /**
@@ -117,8 +134,8 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return this.entryPointView;
   }
 
-  async encodeBatch(targets: string[], datas: string[]): Promise<string> {
+  async encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string> {
     const accountContract = await this._getAccountContract();
-    return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
+    return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, datas]);
   }
 }

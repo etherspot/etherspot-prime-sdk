@@ -27,7 +27,6 @@ export class KeyWalletProvider implements WalletProvider {
   }
 
   async signMessage(message: BytesLike): Promise<string> {
-    console.log('sign: ', message);
     return this.wallet.signMessage(message);
   }
 

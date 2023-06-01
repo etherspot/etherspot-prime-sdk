@@ -1,60 +1,74 @@
-import { LiteSdk } from '../src';
-import { getVerifyingPaymaster } from '../src/base/VerifyingPaymasterAPI';
-import { printOp } from '../src/common/OperationUtils';
-import { NetworkNames, getNetworkConfig } from './config';
+import { ethers } from 'ethers';
+import { NetworkNames } from '../src/sdk/network/constants';
+import { PrimeSdk } from '../src';
+
+import { getNetworkConfig } from './config';
+import { EnvNames } from '../src/sdk/env';
+import { printOp } from '../src/sdk/common/OperationUtils';
 
 // add/change these values
 const config = getNetworkConfig(NetworkNames.Mumbai);
-const erc20TokenAddress: string = ''; // ERC20 token address
-const recipient: string = ''; // receipient wallet address
-const value: string = ''; // transfer value
+const recipient: string = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
+const value: string = '1'; // transfer value
+const tokenAddress: string = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
 
 async function main() {
-  // logic for paymaster implementation
-  const paymasterAPI = config.paymaster.use
-    ? getVerifyingPaymaster(config.paymaster.url, config.contracts.entryPoint)
-    : undefined;
   // initializating sdk...
-  const sdk = new LiteSdk(
-    process.env.WALLET_PRIVATE_KEY, // owner wallet private key
-    config.rpcProvider, // rpc provider
-    config.bundler, // bundler rpc
-    config.chainId, // chain id
-    config.contracts.entryPoint, // entry point
-    config.contracts.walletFactory, // etherspot wallet factory
-    paymasterAPI,
-  );
+  const primeSdk = new PrimeSdk({ privateKey: '0x513a984bbd054d9fb6d8ba656183185f55bad24a8f900a57a820077374fa9779' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
+
+  console.log('address: ', primeSdk.state.walletAddress)
 
   // get address of EtherspotWallet...
-  const address: string = await sdk.getCounterFactualAddress();
+  const address: string = await primeSdk.getCounterFactualAddress();
   console.log('\x1b[33m%s\x1b[0m', `EtherspotWallet address: ${address}`);
 
-  // transfer some of the ERC20 token to the EtherspotWallet (if required)...
-  const prefunded: string = await sdk.prefundIfRequired((+value + 0.01).toString(), erc20TokenAddress);
+  // transfer some native tokens to EtherspotWallet for gas payment (if required)...
+  const prefundedNative: string = await primeSdk.depositFromKeyWallet('0.01');
+  console.log('\x1b[33m%s\x1b[0m', prefundedNative);
+
+  // transfer some tokens to the EtherspotWallet (if required)...
+  const prefunded: string = await primeSdk.depositFromKeyWallet((+value).toString(), tokenAddress);
   console.log('\x1b[33m%s\x1b[0m', prefunded);
 
-  // connect to the ERC20 token contract...
-  const erc20 = await sdk.getERC20Instance(erc20TokenAddress);
-  const [symbol, decimals] = await Promise.all([erc20.symbol(), erc20.decimals()]);
+  // get erc20 Contract Interface
+  const erc20Instance = await primeSdk.getERC20Instance(tokenAddress);
 
-  // parse transfer value to correct format
-  const parseAmount = sdk.formatAmount(value, decimals);
-  console.log(`Transferring ${value} ${symbol}...`);
+  // get decimals from erc20 contract
+  const decimals = await erc20Instance.functions.decimals();
 
-  // creating and signing userOp...
-  const op = await sdk.sign({
-    target: erc20.address,
-    data: erc20.interface.encodeFunctionData('transfer', [recipient, parseAmount]),
-  });
-  console.log(`Signed UserOperation: ${await printOp(op)}`);
+  // get approval encoded data
+  const approvalData = await erc20Instance.interface.encodeFunctionData('approve', [address, ethers.utils.parseUnits(value, decimals)]);
+
+  // get transferFrom encoded data
+  const transactionData = await erc20Instance.interface.encodeFunctionData('transfer', [recipient, ethers.utils.parseUnits(value, decimals)])
+
+  // clear the transaction batch
+  await primeSdk.clearTransactionsFromBatch();
+
+  // add transactions to the batch
+  let transactionBatch = await primeSdk.addTransactionToBatch({to: tokenAddress, data: approvalData});
+  console.log('transactions: ', transactionBatch);
+
+  // add transactions to the batch
+  transactionBatch = await primeSdk.addTransactionToBatch({to: tokenAddress, data: transactionData});
+  console.log('transactions: ', transactionBatch);
+
+  // get balance of the account address
+  const balance = await primeSdk.getNativeBalance();
+
+  console.log('balances: ', balance);
+
+  // sign transactions added to the batch
+  const op = await primeSdk.sign();
+  console.log(`Signed UserOp: ${await printOp(op)}`);
 
   // sending to the bundler...
-  const uoHash = await sdk.send(op);
+  const uoHash = await primeSdk.send(op);
   console.log(`UserOpHash: ${uoHash}`);
 
   // get transaction hash...
   console.log('Waiting for transaction...');
-  const txHash = await sdk.getUserOpReceipt(uoHash);
+  const txHash = await primeSdk.getUserOpReceipt(uoHash);
   console.log('\x1b[33m%s\x1b[0m', `Transaction hash: ${txHash}`);
 }
 
