@@ -169,12 +169,6 @@ export abstract class BaseAccountAPI {
     return this.services.sessionService.createSession(ttl, fcmToken);
   }
 
-  // async getCounterFactualAddress(): Promise<string> {
-  //   // return this.EtherspotWallet.getCounterFactualAddress();
-  //   return this.getCounterFactualAddress();
-  // }
-
-
 
   // private
 
