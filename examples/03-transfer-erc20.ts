@@ -1,20 +1,17 @@
 import { ethers } from 'ethers';
 import { NetworkNames } from '../src/sdk/network/constants';
 import { PrimeSdk } from '../src';
-
-import { getNetworkConfig } from './config';
 import { EnvNames } from '../src/sdk/env';
 import { printOp } from '../src/sdk/common/OperationUtils';
 
 // add/change these values
-const config = getNetworkConfig(NetworkNames.Mumbai);
 const recipient: string = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value: string = '1'; // transfer value
 const tokenAddress: string = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
+  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: process.env.BUNDLER_URL })
 
   console.log('address: ', primeSdk.state.walletAddress)
 
