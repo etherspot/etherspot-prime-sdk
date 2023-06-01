@@ -38,4 +38,4 @@ export interface WalletLike {
   privateKey: string;
 }
 
-export type WalletProviderLike = WalletLike;
+export type WalletProviderLike = WalletLike | Web3Provider | WalletConnectConnector | Web3eip1193Provider;

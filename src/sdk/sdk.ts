@@ -49,7 +49,6 @@ export class PrimeSdk {
     } else provider = new providers.JsonRpcProvider(bundlerRpcUrl);
 
     this.etherspotWallet = new EtherspotWalletAPI({
-      owner: new Wallet(walletProvider.privateKey, provider),
       provider,
       walletProvider,
       optionsLike,

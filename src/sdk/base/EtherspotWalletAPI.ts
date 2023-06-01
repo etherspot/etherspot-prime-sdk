@@ -6,10 +6,7 @@ import {
   EtherspotWalletFactory__factory,
 } from '../contracts';
 import { arrayify, hexConcat } from 'ethers/lib/utils';
-import { Signer } from '@ethersproject/abstract-signer';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
-import { PaymasterAPI } from './PaymasterAPI';
-import { Service } from '../common';
 
 /**
  * constructor params, added no top of base params:
@@ -18,7 +15,6 @@ import { Service } from '../common';
  * @param index nonce value used when creating multiple accounts for the same owner
  */
 export interface EtherspotWalletApiParams extends BaseApiParams {
-  owner: Signer;
   factoryAddress?: string;
   index?: number;
 }
@@ -32,7 +28,6 @@ export interface EtherspotWalletApiParams extends BaseApiParams {
  */
 export class EtherspotWalletAPI extends BaseAccountAPI {
   factoryAddress?: string;
-  // owner: Signer;
   index: number;
   accountAddress?: string;
 
@@ -45,13 +40,9 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   factory?: EtherspotWalletFactory;
 
   constructor(params: EtherspotWalletApiParams) {
-    console.log('params: ', params)
     super(params);
     this.factoryAddress = params.factoryAddress;
-    // this.owner = params.owner;
     this.index = params.index ?? 0;
-
-    // console.log(this.services.walletService)
   }
 
   async _getAccountContract(): Promise<EtherspotWallet> {
@@ -66,7 +57,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    * this value holds the "factory" address, followed by this account's information
    */
   async getAccountInitCode(): Promise<string> {
-    // console.log('factoryAddress', this.factoryAddress, this.provider)
     if (this.factory == null) {
       if (this.factoryAddress != null && this.factoryAddress !== '') {
         this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
@@ -94,11 +84,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     );
     return this.accountAddress;
   }
-
-
-  // async nounce(): Promise<BigNumber> {
-  //   return this.getNonce();
-  // }
 
   async getNonce(): Promise<BigNumber> {
     console.log('checking nonce...');
