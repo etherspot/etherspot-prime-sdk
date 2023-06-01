@@ -13,7 +13,7 @@ const value: string = '0.01'; // transfer value
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: '0x513a984bbd054d9fb6d8ba656183185f55bad24a8f900a57a820077374fa9779' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
+  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
 
   console.log('address: ', primeSdk.state.walletAddress)
 
