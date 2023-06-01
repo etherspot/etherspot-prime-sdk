@@ -42,7 +42,6 @@ export class PrimeSdk {
 
     if (!optionsLike.bundlerRpcUrl) {
       const networkConfig = getNetworkConfig(networkName);
-      console.log('bundler url: ', networkConfig.bundler);
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
     }
 
