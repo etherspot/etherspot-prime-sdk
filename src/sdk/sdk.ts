@@ -6,7 +6,7 @@ import { Network } from "./network";
 import { Env } from "./env";
 import { BatchTransactionRequest, Exception, getGasFee, TransactionRequest } from "./common";
 import { BigNumber, BigNumberish, ethers, providers, Wallet } from 'ethers';
-import { Networks } from './network/constants';
+import { getNetworkConfig, Networks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
@@ -38,15 +38,20 @@ export class PrimeSdk {
     const {
       networkName, //
       rpcProviderUrl,
-      bundlerRpcUrl,
     } = optionsLike;
+
+    if (!optionsLike.bundlerRpcUrl) {
+      const networkConfig = getNetworkConfig(networkName);
+      console.log('bundler url: ', networkConfig.bundler);
+      optionsLike.bundlerRpcUrl = networkConfig.bundler;
+    }
 
 
     let provider;
 
     if (rpcProviderUrl) {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
-    } else provider = new providers.JsonRpcProvider(bundlerRpcUrl);
+    } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
@@ -57,7 +62,7 @@ export class PrimeSdk {
       paymasterAPI: optionsLike.paymasterApi,
     })
 
-    this.bundler = new HttpRpcClient(bundlerRpcUrl, Networks[networkName].contracts.entryPoint, Networks[networkName].chainId);
+    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[networkName].contracts.entryPoint, Networks[networkName].chainId);
 
   }
 

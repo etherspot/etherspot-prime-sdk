@@ -37,3 +37,7 @@ export const CHAIN_ID_TO_NETWORK_NAME: { [key: number]: NetworkNames } = Object.
   }),
   {},
 );
+
+export function getNetworkConfig(key: NetworkNames) {
+  return Networks[key];
+}
