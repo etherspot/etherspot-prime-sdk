@@ -1,7 +1,7 @@
 {
-  "name": "etherspot-lite",
-  "version": "0.0.1",
-  "description": "Etherspot-Lite SDK",
+  "name": "etherspot-prime",
+  "version": "1.0.0",
+  "description": "Etherspot-prime SDK",
   "keywords": [
     "ether",
     "ethereum",
@@ -32,10 +32,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/etherspot/etherspot-lite-sdk.git"
+    "url": "git+https://github.com/etherspot/etherspot-prime-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/etherspot/etherspot-lite-sdk/issues"
+    "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
     "@thehubbleproject/bls": "0.5.1",
