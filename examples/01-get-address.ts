@@ -1,23 +1,18 @@
-import { LiteSdk } from '../src';
-import { NetworkNames, getNetworkConfig } from './config';
+import { NetworkNames } from '../src/sdk/network/constants';
+import { PrimeSdk } from '../src';
+
+import { getNetworkConfig } from './config';
+import { EnvNames } from '../src/sdk/env';
 
 // add/change to correct network
 const config = getNetworkConfig(NetworkNames.Mumbai);
 
 async function main() {
   // initializating sdk...
-  const sdk = new LiteSdk(
-    process.env.WALLET_PRIVATE_KEY, // owner wallet private key
-    config.rpcProvider, // rpc provider
-    config.bundler, // bundler rpc
-    config.chainId, // chain id
-    config.contracts.entryPoint, // entry point
-    config.contracts.walletFactory, // etherspot wallet factory
-    undefined,
-  );
+  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets, bundlerRpcUrl: config.bundler })
 
   // get EtherspotWallet address...
-  const address: string = await sdk.getCounterFactualAddress();
+  const address: string = await primeSdk.getCounterFactualAddress();
   console.log('\x1b[33m%s\x1b[0m', `EtherspotWallet address: ${address}`);
 }
 
