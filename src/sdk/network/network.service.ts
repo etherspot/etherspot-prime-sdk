@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { NetworkConfig } from '.';
 import { ObjectSubject, Service, Exception, prepareAddress } from '../common';
-import { NETWORK_NAME_TO_CHAIN_ID, NetworkNames, Networks } from './constants';
-import { Network, NetworkOptions } from './interfaces';
+import { NETWORK_NAME_TO_CHAIN_ID, NetworkNames, Networks, CHAIN_ID_TO_NETWORK_NAME, SupportedNetworks } from './constants';
+import { Network } from './interfaces';
 
 export class NetworkService extends Service {
   readonly network$ = new ObjectSubject<Network>(null);
@@ -11,15 +11,12 @@ export class NetworkService extends Service {
   readonly supportedNetworks: Network[];
   readonly externalContractAddresses = new Map<string, { [key: number]: string }>();
 
-  constructor(private options: NetworkOptions, defaultNetworkName?: NetworkNames) {
+  constructor(defaultChainId?: number) {
     super();
-    
-    const { supportedNetworkNames } = options;
-
-    this.supportedNetworks = supportedNetworkNames
-      .map((name) => {
-        const chainId = NETWORK_NAME_TO_CHAIN_ID[name];
-        return !chainId
+    this.supportedNetworks = SupportedNetworks
+      .map((chainId) => {
+        const name = CHAIN_ID_TO_NETWORK_NAME[chainId];
+        return !name
           ? null
           : {
               chainId,
@@ -32,8 +29,8 @@ export class NetworkService extends Service {
       throw new Exception('Invalid network config');
     }
 
-    this.defaultNetwork = defaultNetworkName
-      ? this.supportedNetworks.find(({ name }) => name === defaultNetworkName)
+    this.defaultNetwork = defaultChainId
+      ? this.supportedNetworks.find(({ chainId }) => chainId === defaultChainId)
       : this.supportedNetworks[0];
 
     if (!this.defaultNetwork) {
@@ -59,15 +56,18 @@ export class NetworkService extends Service {
     this.network$.next(this.supportedNetworks.find(({ name }) => name === networkName) || null);
   }
 
-  isNetworkNameSupported(networkName: string): boolean {
-    return !!this.supportedNetworks.find(({ name }) => name === networkName);
+  // isNetworkNameSupported(networkName: string): boolean {
+  //   return !!this.supportedNetworks.find(({ name }) => name === networkName);
+  // }
+
+  isNetworkSupported(chainId: number): boolean {
+    return SupportedNetworks.includes(chainId);
   }
 
-  getNetworkConfig(networkName: NetworkNames): NetworkConfig {
-    const key = networkName;
-    const networkConfig = Networks[key];
+  getNetworkConfig(chainId: number): NetworkConfig {
+    const networkConfig = Networks[chainId];
     if (!networkConfig) {
-      throw new Error(`No network config found for network name '${key}'`);
+      throw new Error(`No network config found for network '${chainId}'`);
     }
     return networkConfig;
   }

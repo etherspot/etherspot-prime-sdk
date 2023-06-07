@@ -1,6 +1,4 @@
-import { NetworkNames } from '../src/sdk/network/constants';
 import { PrimeSdk } from '../src';
-import { EnvNames } from '../src/sdk/env';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +6,7 @@ dotenv.config();
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: '' }, { networkName: NetworkNames.Mumbai, env: EnvNames.TestNets })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) })
 
   // get EtherspotWallet address...
   const address: string = await primeSdk.getCounterFactualAddress();

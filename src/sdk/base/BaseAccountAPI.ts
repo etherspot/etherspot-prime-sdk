@@ -8,7 +8,7 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { AccountService, AccountTypes, CreateSessionDto, Env, EnvNames, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { AccountService, AccountTypes, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
 
 export interface BaseApiParams {
@@ -68,10 +68,10 @@ export abstract class BaseAccountAPI {
       throw new Exception('Invalid wallet provider');
     }
 
-    const env = Env.prepare(optionsLike.env);
+    // const env = Env.prepare(optionsLike.env);
 
     const {
-      networkName, //
+      chainId, //
       omitWalletProviderNetworkCheck,
       stateStorage,
       sessionStorage,
@@ -79,10 +79,10 @@ export abstract class BaseAccountAPI {
       bundlerRpcUrl,
     } = optionsLike;
 
-    const { networkOptions } = env;
+    // const { networkOptions } = env;
 
     this.services = {
-      networkService: new NetworkService(networkOptions, networkName),
+      networkService: new NetworkService(chainId),
       walletService: new WalletService(params.walletProvider, {
         omitProviderNetworkCheck: omitWalletProviderNetworkCheck,
         provider: rpcProviderUrl,
@@ -484,7 +484,7 @@ export abstract class BaseAccountAPI {
     return {
       ...partialUserOp,
       preVerificationGas: this.getPreVerificationGas(partialUserOp),
-      signature: '',
+      signature: '0x',
     };
   }
 

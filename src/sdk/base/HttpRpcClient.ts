@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { resolveProperties } from 'ethers/lib/utils';
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import Debug from 'debug';
@@ -29,6 +29,12 @@ export class HttpRpcClient {
         `bundler ${this.bundlerUrl} is on chainId ${bundlerChain}, but provider is on chainId ${this.chainId}`,
       );
     }
+  }
+
+  async getVerificationGasInfo(tx: UserOperationStruct): Promise<any> {
+    const hexifiedUserOp = deepHexlify(await resolveProperties(tx));
+    const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [hexifiedUserOp, this.entryPointAddress]);
+    return response;
   }
 
   /**

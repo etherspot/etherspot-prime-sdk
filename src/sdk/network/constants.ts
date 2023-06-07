@@ -4,6 +4,8 @@ export enum NetworkNames {
   Mumbai = 'mumbai',
 }
 
+export const SupportedNetworks = [80001]
+
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
 } = {
@@ -13,7 +15,7 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
 export const Networks: {
   [key: string]: NetworkConfig
 } = {
-  [NetworkNames.Mumbai]: {
+  [80001]: {
     chainId: 80001,
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
@@ -38,6 +40,6 @@ export const CHAIN_ID_TO_NETWORK_NAME: { [key: number]: NetworkNames } = Object.
   {},
 );
 
-export function getNetworkConfig(key: NetworkNames) {
+export function getNetworkConfig(key: number) {
   return Networks[key];
 }
