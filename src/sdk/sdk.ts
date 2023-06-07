@@ -3,9 +3,8 @@ import { State, StateService } from './state';
 import { isWalletProvider, WalletProviderLike } from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { Env } from "./env";
-import { BatchTransactionRequest, Exception, getGasFee, TransactionRequest } from "./common";
-import { BigNumber, BigNumberish, ethers, providers, Wallet } from 'ethers';
+import { BatchUserOpsRequest, Exception, getGasFee, UserOpsRequest } from "./common";
+import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient } from './base';
@@ -13,7 +12,6 @@ import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base
 import { CreateSessionDto, SignMessageDto, validateDto } from './dto';
 import { Session } from '.';
 import { ERC20__factory } from './contracts';
-import { ERC20_ABI } from './helpers/abi/ERC20_ABI';
 
 /**
  * Prime-Sdk
@@ -25,7 +23,7 @@ export class PrimeSdk {
   private etherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
 
-  private transactions: BatchTransactionRequest = {to: [], data: [], value: []};
+  private userOpsBatch: BatchUserOpsRequest = {to: [], data: [], value: []};
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
@@ -33,15 +31,13 @@ export class PrimeSdk {
       throw new Exception('Invalid wallet provider');
     }
 
-    const env = Env.prepare(optionsLike.env);
-
     const {
-      networkName, //
+      chainId, //
       rpcProviderUrl,
     } = optionsLike;
 
     if (!optionsLike.bundlerRpcUrl) {
-      const networkConfig = getNetworkConfig(networkName);
+      const networkConfig = getNetworkConfig(chainId);
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
     }
 
@@ -56,12 +52,12 @@ export class PrimeSdk {
       provider,
       walletProvider,
       optionsLike,
-      entryPointAddress: Networks[networkName].contracts.entryPoint,
-      factoryAddress: Networks[networkName].contracts.walletFactory,
+      entryPointAddress: Networks[chainId].contracts.entryPoint,
+      factoryAddress: Networks[chainId].contracts.walletFactory,
       paymasterAPI: optionsLike.paymasterApi,
     })
 
-    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[networkName].contracts.entryPoint, Networks[networkName].chainId);
+    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
 
   }
 
@@ -122,82 +118,36 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-
-  async depositFromKeyWallet(amount: string, tokenAddress?: string): Promise<string> {
-    try {
-      const ewalletAddress = await this.getCounterFactualAddress();
-
-      if (tokenAddress) {
-        const token = ethers.utils.getAddress(tokenAddress);
-        const erc20Contract = ERC20__factory.connect(token, this.etherspotWallet.services.walletService.getWalletProvider());
-        const dec = await erc20Contract.functions.decimals();
-        const approveData = erc20Contract.interface.encodeFunctionData('approve', [this.state.walletAddress, ethers.utils.parseUnits(amount, dec)])
-        const transactionData = erc20Contract.interface.encodeFunctionData('transferFrom', [this.state.walletAddress, ewalletAddress, ethers.utils.parseUnits(amount, dec)])
-        const balance = await erc20Contract.functions.balanceOf(ewalletAddress)
-        if (balance[0].lt(ethers.utils.parseEther(amount))) {
-          
-          const approvetx = await this.etherspotWallet.services.walletService.sendTransaction({
-            to: tokenAddress, // EtherspotWallet address
-            data: approveData, // approval data
-            gasLimit: ethers.utils.hexlify(500000),
-          });
-
-          await approvetx.wait();
-
-          const tx = await this.etherspotWallet.services.walletService.sendTransaction({
-            to: tokenAddress, // EtherspotWallet address
-            data: transactionData, // transferFrom data
-            gasLimit: ethers.utils.hexlify(500000),
-          });
-          await tx.wait();
-          return `Transfer successful. Account funded with ${amount} ${await erc20Contract.symbol()}`;
-        } else {
-          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(
-            balance[0],
-          )} ${await erc20Contract.symbol()}`;
-        }
-      } else {
-        const balance = await this.etherspotWallet.provider.getBalance(ewalletAddress);
-
-        // Check if wallet balance is less than the amount to transfer
-        if (balance.lt(ethers.utils.parseEther(amount))) {
-          // Transfer funds to the wallet
-          const tx = await this.etherspotWallet.services.walletService.sendTransaction({
-            to: ewalletAddress, // EtherspotWallet address
-            data: '0x', // no data
-            value: ethers.utils.parseEther(amount), // 0.1 MATIC
-            gasLimit: ethers.utils.hexlify(50000),
-          });
-          await tx.wait();
-          return `Transfer successful. Account funded with ${amount} ${tx}`;
-        } else {
-          return `Sufficient balance already exists. Current balance is ${ethers.utils.formatEther(balance)}`;
-        }
-      }
-    } catch (e) {
-      console.log(e);
-      return `Transfer failed: ${e.message}`;
-    }
-  }
-
   async sign(gasDetails?: TransactionGasInfoForUserOp) {
     const gas = await this.getGasFee();
 
-    if (this.transactions.to.length < 1){
+    if (this.userOpsBatch.to.length < 1){
       throw new Error("cannot sign empty transaction batch");
     }
 
     const tx: TransactionDetailsForUserOp = {
-      target: this.transactions.to,
-      values: this.transactions.value,
-      data: this.transactions.data,
+      target: this.userOpsBatch.to,
+      values: this.userOpsBatch.value,
+      data: this.userOpsBatch.data,
       ...gasDetails,
     }
 
-    return this.etherspotWallet.createSignedUserOp({
+    let partialtx = await this.etherspotWallet.createSignedUserOp({
       ...tx,
       ...gas,
     });
+
+    const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
+    
+    if (bundlerGasEstimate.preVerificationGas) {
+      partialtx.preVerificationGas = bundlerGasEstimate.preVerificationGas;
+      partialtx.verificationGasLimit = bundlerGasEstimate.verificationGas;
+      partialtx.callGasLimit = bundlerGasEstimate.callGasLimit;
+      console.log(partialtx);
+    }
+
+    return await this.etherspotWallet.signUserOp(partialtx);
+
   }
 
   async getGasFee() {
@@ -244,64 +194,27 @@ export class PrimeSdk {
     return null;
   }
 
-  async getHash(userOp: UserOperationStruct) {
+  async getUserOpHash(userOp: UserOperationStruct) {
     return this.etherspotWallet.getUserOpHash(userOp);
   }
 
-  async encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
-    const formatTarget = ethers.utils.getAddress(target);
-    return await this.etherspotWallet.encodeExecute(formatTarget, value, data);
+  async addUserOpsToBatch(
+    tx: UserOpsRequest,
+  ): Promise<BatchUserOpsRequest> {
+    this.userOpsBatch.to.push(tx.to);
+    this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
+    this.userOpsBatch.data.push(tx.data ?? '0x');
+    return this.userOpsBatch;
   }
 
-  async getUniSingleSwapParams(tokenIn: string, tokenOut: string, value: string) {
-    const wallet = await this.getCounterFactualAddress();
-    const amount = ethers.utils.parseEther(value);
-    const blockNum = await this.etherspotWallet.provider.getBlockNumber();
-    const timestamp = (await this.etherspotWallet.provider.getBlock(blockNum)).timestamp;
-    const params = {
-      tokenIn: tokenIn,
-      tokenOut: tokenOut,
-      fee: 500,
-      recipient: wallet,
-      deadline: timestamp + 1000,
-      amountIn: amount,
-      amountOutMinimum: 0,
-      sqrtPriceLimitX96: 0,
-    };
-    return params;
-  }
-
-  async addTransactionToBatch(
-    tx: TransactionRequest,
-  ): Promise<BatchTransactionRequest> {
-    this.transactions.to.push(tx.to);
-    this.transactions.value.push(tx.value ?? BigNumber.from(0));
-    this.transactions.data.push(tx.data ?? '0x');
-    return this.transactions;
-  }
-
-  async clearTransactionsFromBatch(): Promise<void> {
-    this.transactions.to = [];
-    this.transactions.data = [];
-    this.transactions.value = [];
-  }
-
-  async signSingleTransaction(tx: TransactionDetailsForUserOp) {
-    const gas = await this.getGasFee();
-
-    return this.etherspotWallet.createSignedUserOp({
-      ...tx,
-      ...gas,
-    });
+  async clearUserOpsFromBatch(): Promise<void> {
+    this.userOpsBatch.to = [];
+    this.userOpsBatch.data = [];
+    this.userOpsBatch.value = [];
   }
 
   async getAccountContract() {
     return this.etherspotWallet._getAccountContract();
-  }
-
-  async getERC20Instance(tokenAddress: string) {
-    const token = ethers.utils.getAddress(tokenAddress);
-    return new ethers.Contract(token, ERC20_ABI, this.etherspotWallet.provider);
   }
 
 }

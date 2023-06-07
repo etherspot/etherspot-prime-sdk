@@ -2,7 +2,6 @@ import { PrimeSdk } from './sdk';
 
 export * from './account';
 export * from './dto';
-export * from './env';
 export * from './interfaces';
 export * from './network';
 export * from './session';

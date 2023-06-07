@@ -107,7 +107,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   async signUserOpHash(userOpHash: string): Promise<string> {
     return await this.services.walletService.signMessage(arrayify(userOpHash));
-
   }
 
   async updateEntryPoint(newEntryPoint: string) {

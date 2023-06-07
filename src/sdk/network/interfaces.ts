@@ -18,7 +18,3 @@ export interface NetworkConfig {
     url: string;
   };
 };
-
-export interface NetworkOptions {
-  supportedNetworkNames: NetworkNames[];
-}
