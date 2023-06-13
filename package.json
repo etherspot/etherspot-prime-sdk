@@ -1,7 +1,7 @@
 {
-  "name": "etherspot-prime",
+  "name": "@etherspot/prime-sdk",
   "version": "1.0.0",
-  "description": "Etherspot-prime SDK",
+  "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
     "ethereum",
@@ -50,8 +50,8 @@
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "@types/prettier": "^2.7.3",
+    "@types/node": "18.11.9",
+    "@types/prettier": "2.7.3",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
     "dotenv": "16.0.3",

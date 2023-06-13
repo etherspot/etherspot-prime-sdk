@@ -469,7 +469,6 @@ export abstract class BaseAccountAPI {
       chainId: 80001,
     };
 
-    // console.log('partialUserOp: ', partialUserOp);
 
     let paymasterAndData: string | undefined;
     if (this.paymasterAPI != null) {
