@@ -140,10 +140,9 @@ export class PrimeSdk {
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
     
     if (bundlerGasEstimate.preVerificationGas) {
-      partialtx.preVerificationGas = bundlerGasEstimate.preVerificationGas;
-      partialtx.verificationGasLimit = bundlerGasEstimate.verificationGas;
-      partialtx.callGasLimit = bundlerGasEstimate.callGasLimit;
-      console.log(partialtx);
+      partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
+      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
+      partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
     return await this.etherspotWallet.signUserOp(partialtx);
@@ -215,6 +214,13 @@ export class PrimeSdk {
 
   async getAccountContract() {
     return this.etherspotWallet._getAccountContract();
+  }
+
+  async totalGasEstimated(userOp: UserOperationStruct): Promise<BigNumber> {
+    const callGasLimit = BigNumber.from(await userOp.callGasLimit);
+    const verificationGasLimit = BigNumber.from(await userOp.verificationGasLimit);
+    const preVerificationGas = BigNumber.from(await userOp.preVerificationGas);
+    return callGasLimit.add(verificationGasLimit).add(preVerificationGas);
   }
 
 }
