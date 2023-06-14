@@ -1,4 +1,4 @@
-import { BytesLike, providers } from 'ethers';
+import { BytesLike } from 'ethers';
 import { prepareAddress, toHex } from '../../common';
 import { NetworkNames, prepareNetworkName } from '../../network';
 import { Web3eip1193Provider } from './interfaces';
@@ -61,12 +61,5 @@ export class Web3eip1193WalletProvider extends DynamicWalletProvider {
     } catch (error) {
       return error;
     }
-  }
-
-  async sendTransaction(transaction: providers.TransactionRequest): Promise<any> {
-    return this.sendRequest('eth_sendTransaction', [{
-      from: this.address, // The user's active address.
-      ...transaction,
-    }])
   }
 }

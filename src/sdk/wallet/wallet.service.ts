@@ -43,10 +43,6 @@ export class WalletService extends Service {
     return this.provider ? this.provider.signMessage(message) : null;
   }
 
-  async sendTransaction(transaction: providers.TransactionRequest): Promise<providers.TransactionResponse> {
-    return this.provider ? this.provider.sendTransaction(transaction) : null;
-  }
-
   protected switchWalletProvider(providerLike: WalletProviderLike): void {
     let provider: WalletProvider = null;
     if (providerLike) {
@@ -56,15 +52,15 @@ export class WalletService extends Service {
           const walletLike = providerLike as EtherWallet;
           const isNotJsonRpcProvider = walletLike.provider?.constructor.name !== 'JsonRpcProvider';
           if (privateKey && isNotJsonRpcProvider) {
-            provider = new KeyWalletProvider(privateKey, this.getWalletProvider());
+            provider = new KeyWalletProvider(privateKey);
           } else {
-            // provider = providerLike as WalletProvider;
+            provider = providerLike as WalletProvider;
           }
           break;
         }
 
         case 'string':
-          provider = new KeyWalletProvider(providerLike, this.getWalletProvider());
+          provider = new KeyWalletProvider(providerLike);
           break;
       }
     }
