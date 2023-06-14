@@ -1,4 +1,4 @@
-import { BytesLike, providers, Wallet } from 'ethers';
+import { BytesLike, Wallet } from 'ethers';
 import { UniqueSubject } from '../../common';
 import { NetworkNames } from '../../network';
 
@@ -11,7 +11,6 @@ export interface WalletProvider {
   readonly networkName$?: UniqueSubject<NetworkNames>;
 
   signMessage(message: BytesLike): Promise<string>;
-  sendTransaction(transaction: providers.TransactionRequest): Promise<providers.TransactionResponse>
 }
 
 export interface Web3Provider {
@@ -30,7 +29,6 @@ export interface WalletConnectConnector {
   accounts: string[];
   chainId: number;
   signPersonalMessage(params: any[]): Promise<any>;
-  sendTransaction(transaction: providers.TransactionRequest): Promise<any>;
   on(event: string, callback: (error: Error | null, payload: any | null) => void): void;
 }
 
@@ -38,4 +36,4 @@ export interface WalletLike {
   privateKey: string;
 }
 
-export type WalletProviderLike = WalletLike | Web3Provider | WalletConnectConnector | Web3eip1193Provider;
+export type WalletProviderLike = string | WalletLike | WalletProvider;

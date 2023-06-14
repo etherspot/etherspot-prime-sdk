@@ -1,4 +1,4 @@
-import { BytesLike, providers } from 'ethers';
+import { BytesLike } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
 import { WalletConnectConnector } from './interfaces';
@@ -60,9 +60,5 @@ export class WalletConnectWalletProvider extends DynamicWalletProvider {
 
     this.setAddress(address);
     this.setNetworkName(chainId);
-  }
-
-  async sendTransaction(transaction: providers.TransactionRequest): Promise<any> {
-    return this.connector.sendTransaction(transaction);
   }
 }

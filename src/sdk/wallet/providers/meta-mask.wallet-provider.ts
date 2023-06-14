@@ -1,4 +1,4 @@
-import { BytesLike, providers } from 'ethers';
+import { BytesLike } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
 
@@ -77,13 +77,6 @@ export class MetaMaskWalletProvider extends DynamicWalletProvider {
     } catch (err) {
       //
     }
-  }
-
-  async sendTransaction(transaction: providers.TransactionRequest): Promise<any> {
-    return this.sendRequest('eth_sendTransaction', [{
-      from: this.address, // The user's active address.
-      ...transaction,
-    }])
   }
 
   protected async sendRequest<T = any>(method: string, params?: any): Promise<T> {
