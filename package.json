@@ -1,7 +1,7 @@
 {
-  "name": "etherspot-lite",
-  "version": "0.0.1",
-  "description": "Etherspot-Lite SDK",
+  "name": "@etherspot/prime-sdk",
+  "version": "1.0.0",
+  "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
     "ethereum",
@@ -19,30 +19,44 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "start": "exit 1",
+    "01-get-address": "./node_modules/.bin/ts-node ./examples/01-get-address",
+    "02-transfer-funds": "./node_modules/.bin/ts-node ./examples/02-transfer-funds",
+    "03-transfer-erc20": "./node_modules/.bin/ts-node ./examples/03-transfer-erc20",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "prebuild": "rimraf ./dist",
     "build": "npm run compile",
     "compile": "tsc -p ./tsconfig.build.json",
-    "compile-watch": "npm run compile -- --watch"
+    "compile-watch": "npm run compile -- --watch",
+    "init": "ts-node examples/scripts/init.ts",
+    "command": "ts-node examples/scripts/commands/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/etherspot/etherspot-lite-sdk.git"
+    "url": "git+https://github.com/etherspot/etherspot-prime-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/etherspot/etherspot-lite-sdk/issues"
+    "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
-    "ethers": "^5.7.0",
-    "@thehubbleproject/bls": "^0.5.1"
+    "@thehubbleproject/bls": "0.5.1",
+    "axios": "1.3.4",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.0",
+    "commander": "^10.0.1",
+    "ethers": "5.7.0",
+    "prettier": "^2.8.8",
+    "reflect-metadata": "0.1.13"
   },
   "devDependencies": {
-    "@types/node": "13.13.9",
+    "@types/node": "18.11.9",
+    "@types/prettier": "2.7.3",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
-    "typescript": "4.5.2",
-    "ts-node": "8.10.2"
+    "dotenv": "16.0.3",
+    "npm": "9.6.4",
+    "ts-node": "8.10.2",
+    "typescript": "4.5.2"
   }
 }

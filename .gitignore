@@ -33,3 +33,9 @@ test.js
 
 # .env file
 .env
+
+# config
+examples/config.json
+
+# contracts exposed
+src/contracts/factories/contracts-exposed/
