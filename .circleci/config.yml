@@ -49,7 +49,7 @@ jobs:
           command: npm run build
       - run:
           name: Publish package to npm
-          command: npm publish
+          command: npm publish --access=public
       - run:
           name: Announce Publish
           command: |
@@ -88,6 +88,8 @@ workflows:
                   - master
       - publish-github-release:
           context: general-vars
+          requires:
+            - publish
           filters:
             branches:
               only:
