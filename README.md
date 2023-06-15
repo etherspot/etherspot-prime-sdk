@@ -1,9 +1,9 @@
-# Etherspot Lite SDK
-
+# Etherspot Prime SDK
+## Account Abstraction (ERC-4337) SDK
 ![MIT licensed][license-image]
 
 <a href="https://www.etherspot.io">
-<img src=".github/logo.png" width="100"/>
+<img src="https://public.etherspot.io/assets/etherspot.png" width="100"/>
 </a>
  
 
