@@ -32,7 +32,7 @@ export const Networks: {
     bundler: 'https://goerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -45,7 +45,7 @@ export const Networks: {
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -58,7 +58,7 @@ export const Networks: {
     bundler: 'https://basegoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -71,7 +71,7 @@ export const Networks: {
     bundler: 'https://sepolia-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -84,7 +84,7 @@ export const Networks: {
     bundler: 'https://optimism-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -97,7 +97,7 @@ export const Networks: {
     bundler: 'https://polygon-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
@@ -110,7 +110,7 @@ export const Networks: {
     bundler: 'https://arbitrum-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0xBabd8268f9579b05E6042661081eF6015E1d34dE',
+      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
       uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
