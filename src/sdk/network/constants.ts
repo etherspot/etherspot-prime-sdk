@@ -13,11 +13,11 @@ export enum NetworkNames {
   Fuse = 'fuse',
   FuseSparknet = 'fuseSparknet',
   Gnosis = 'gnosis',
-  Kroma = 'kroma',
+  KromaTestnet = 'kromaTestnet',
   Mainnet = 'mainnet',
   OptimismGoerli = 'optimismGoerli',
-  Rskt = 'rskt',
-  Verse = 'verse',
+  RSKTestnet = 'RSKTestnet',
+  VerseTestnet = 'verseTestnet',
 }
 
 export const SupportedNetworks = [5, 80001, 84531, 11155111, 10, 137, 42161, 421613, 10200, 122, 123, 100, 2357, 1, 420, 31, 20197 ]
@@ -37,11 +37,11 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Fuse]: 122,
   [NetworkNames.FuseSparknet]: 123,
   [NetworkNames.Gnosis]: 100,
-  [NetworkNames.Kroma]: 2357,
+  [NetworkNames.KromaTestnet]: 2357,
   [NetworkNames.Mainnet]: 1,
   [NetworkNames.OptimismGoerli]: 420,
-  [NetworkNames.Rskt]: 31,
-  [NetworkNames.Verse]: 20197,
+  [NetworkNames.RSKTestnet]: 31,
+  [NetworkNames.VerseTestnet]: 20197,
 };
 
 export const Networks: {
@@ -53,7 +53,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -66,7 +65,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -79,7 +77,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -92,7 +89,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -105,7 +101,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -118,7 +113,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -131,7 +125,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -144,7 +137,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -157,7 +149,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -170,7 +161,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -183,7 +173,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -196,7 +185,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -209,7 +197,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -222,7 +209,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -235,7 +221,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -248,7 +233,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
@@ -261,7 +245,6 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
     },
     paymaster: {
       use: false,
