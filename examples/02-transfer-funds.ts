@@ -1,6 +1,9 @@
 import { ethers } from 'ethers';
 import { PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const recipient: string = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value: string = '0.01'; // transfer value
