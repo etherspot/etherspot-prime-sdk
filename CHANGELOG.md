@@ -1,7 +1,7 @@
 # Changelog
 ## [1.0.3] - 2023-07-10
 ### Fixed
-- Fuse bundler url and native transfer funds example
+- Fuse and ArbitrumGoerli bundler url and native transfer funds example
 
 ## [1.0.2] - 2023-07-07
 ### New
