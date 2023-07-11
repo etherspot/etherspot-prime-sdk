@@ -145,7 +145,7 @@ export const Networks: {
   },
   [421613]: {
     chainId: 421613,
-    bundler: '',
+    bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
@@ -169,7 +169,7 @@ export const Networks: {
   },
   [122]: {
     chainId: 122,
-    bundler: '',
+    bundler: 'https://fuse-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
