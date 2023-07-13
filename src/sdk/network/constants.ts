@@ -18,9 +18,10 @@ export enum NetworkNames {
   OptimismGoerli = 'optimismGoerli',
   RSKTestnet = 'RSKTestnet',
   VerseTestnet = 'verseTestnet',
+  Mantle = 'Mantle',
 }
 
-export const SupportedNetworks = [5, 80001, 84531, 11155111, 10, 137, 42161, 421613, 10200, 122, 123, 100, 2357, 1, 420, 31, 20197 ]
+export const SupportedNetworks = [5, 80001, 84531, 11155111, 10, 137, 42161, 421613, 10200, 122, 123, 100, 2357, 1, 420, 31, 20197, 5000]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -42,6 +43,7 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.OptimismGoerli]: 420,
   [NetworkNames.RSKTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
+  [NetworkNames.Mantle]: 5000,
 };
 
 export const Networks: {
@@ -245,6 +247,18 @@ export const Networks: {
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [5000]: {
+    chainId: 5000,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,

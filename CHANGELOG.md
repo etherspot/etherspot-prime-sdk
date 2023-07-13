@@ -1,4 +1,8 @@
 # Changelog
+## [1.0.4] - 2023-07-14
+### New
+- Added Mantle Mainnet config as supported networks
+
 ## [1.0.3] - 2023-07-10
 ### Fixed
 - Fuse and ArbitrumGoerli bundler url and native transfer funds example
