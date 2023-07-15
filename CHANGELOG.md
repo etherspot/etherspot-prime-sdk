@@ -1,7 +1,7 @@
 # Changelog
 ## [1.0.4] - 2023-07-14
 ### New
-- Added Mantle Mainnet config as supported networks
+- Added Mantle Mainnet config as supported networks and changed all networks to new wallet factory address
 
 ## [1.0.3] - 2023-07-10
 ### Fixed
