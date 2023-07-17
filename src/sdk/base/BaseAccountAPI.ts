@@ -448,7 +448,17 @@ export abstract class BaseAccountAPI {
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (maxFeePerGas == null || maxPriorityFeePerGas == null) {
       const provider = this.services.walletService.getWalletProvider();
-      const feeData = await provider.getFeeData();
+      let feeData: any = {};
+      try {
+        feeData = await provider.getFeeData();
+      } catch (err) {
+        console.warn(
+          "getGas: eth_maxPriorityFeePerGas failed, falling back to legacy gas price."
+        );
+        const gas = await provider.getGasPrice();
+
+        feeData = { maxFeePerGas: gas, maxPriorityFeePerGas: gas };
+      }
       if (maxFeePerGas == null) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
       }
