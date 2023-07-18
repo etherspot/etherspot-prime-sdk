@@ -1,4 +1,5 @@
 import { BigNumberish, ethers } from 'ethers';
+import { bufferPercent } from './constants';
 
 export interface Gas {
   maxFeePerGas: BigNumberish;
@@ -9,7 +10,7 @@ export async function getGasFee(provider: ethers.providers.JsonRpcProvider): Pro
   try {
     const [fee, block] = await provider.send('eth_maxPriorityFeePerGas', []);
     const tip = ethers.BigNumber.from(fee);
-    const buffer = tip.div(100).mul(13);
+    const buffer = tip.div(100).mul(bufferPercent);
     const maxPriorityFeePerGas = tip.add(buffer);
     const maxFeePerGas =
       block.baseFeePerGas != null ? block.baseFeePerGas.mul(2).add(maxPriorityFeePerGas) : maxPriorityFeePerGas;

@@ -7,3 +7,5 @@ export enum HeaderNames {
   ProjectKey = 'x-project-key',
   ProjectMetadata = 'x-project-metadata',
 }
+
+export const bufferPercent = 13; // Buffer in percent

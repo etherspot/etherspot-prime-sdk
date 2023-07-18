@@ -1,7 +1,8 @@
 # Changelog
 ## [1.0.4] - 2023-07-14
 ### New
-- Added Mantle Mainnet config as supported networks and changed all networks to new wallet factory address
+- Added Mantle Mainnet config as supported networks
+- Changed the wallet factory address so the smart wallet address will generate a new address. Whoever wishes to access the old wallet should use version 1.0.3 to connect to the old smart wallet
 
 ## [1.0.3] - 2023-07-10
 ### Fixed

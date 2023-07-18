@@ -476,7 +476,6 @@ export abstract class BaseAccountAPI {
       verificationGasLimit,
       maxFeePerGas,
       maxPriorityFeePerGas,
-      chainId: 80001,
     };
 
 
