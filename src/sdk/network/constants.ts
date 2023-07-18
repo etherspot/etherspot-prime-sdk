@@ -21,7 +21,7 @@ export enum NetworkNames {
   Mantle = 'Mantle',
 }
 
-export const SupportedNetworks = [5, 80001, 84531, 11155111, 10, 137, 42161, 421613, 10200, 122, 123, 100, 2357, 1, 420, 31, 20197, 5000]
+export const SupportedNetworks = [1, 10, 100, 10200, 11155111, 122, 123, 137, 20197, 2357, 31, 420, 42161, 421613, 5, 5000, 80001, 84531]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
