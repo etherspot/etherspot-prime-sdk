@@ -58,6 +58,11 @@ export class HttpRpcClient {
     ]);
   }
 
+  async getUserOpsReceipt(uoHash: string): Promise<any> {
+    const response = await this.userOpJsonRpcProvider.send('eth_getUserOperationReceipt', [uoHash]);
+    return response;
+  }
+
   private async printUserOperation(
     method: string,
     [userOp1, entryPointAddress]: [UserOperationStruct, string],

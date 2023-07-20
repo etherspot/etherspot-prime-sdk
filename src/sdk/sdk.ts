@@ -119,7 +119,7 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async sign(gasDetails?: TransactionGasInfoForUserOp) {
+  async estimate(gasDetails?: TransactionGasInfoForUserOp) {
     const gas = await this.getGasFee();
 
     if (this.userOpsBatch.to.length < 1){
@@ -133,7 +133,7 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
-    let partialtx = await this.etherspotWallet.createSignedUserOp({
+    let partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
       ...gas,
     });
@@ -146,7 +146,7 @@ export class PrimeSdk {
       partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
-    return await this.etherspotWallet.signUserOp(partialtx);
+    return partialtx;
 
   }
 
@@ -155,7 +155,8 @@ export class PrimeSdk {
   }
 
   async send(userOp: UserOperationStruct) {
-    return this.bundler.sendUserOpToBundler(userOp);
+    const signedUserOp = await this.etherspotWallet.signUserOp(userOp);
+    return this.bundler.sendUserOpToBundler(signedUserOp);
   }
 
   async getNativeBalance() {
@@ -177,21 +178,8 @@ export class PrimeSdk {
     return ethers.utils.formatUnits(balance[0], dec);
   }
 
-  async getUserOpReceipt(userOpHash: string, timeout = 60000, interval = 5000): Promise<string | null> {
-    const block = await this.etherspotWallet.provider.getBlock('latest');
-    const endtime = Date.now() + timeout;
-    while (Date.now() < endtime) {
-      const events = await this.etherspotWallet.epView.queryFilter(
-        this.etherspotWallet.epView.filters.UserOperationEvent(userOpHash),
-        Math.max(100, block.number - 100),
-      );
-      if (events.length > 0) {
-        console.log(events[0].args.actualGasUsed.toString());
-        return events[0].transactionHash;
-      }
-      await new Promise((resolve) => setTimeout(resolve, interval));
-    }
-    return null;
+  async getUserOpReceipt(userOpHash: string) {
+    return this.bundler.getUserOpsReceipt(userOpHash);
   }
 
   async getUserOpHash(userOp: UserOperationStruct) {
@@ -201,6 +189,7 @@ export class PrimeSdk {
   async addUserOpsToBatch(
     tx: UserOpsRequest,
   ): Promise<BatchUserOpsRequest> {
+    if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
     this.userOpsBatch.to.push(tx.to);
     this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
     this.userOpsBatch.data.push(tx.data ?? '0x');

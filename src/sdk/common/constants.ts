@@ -8,4 +8,4 @@ export enum HeaderNames {
   ProjectMetadata = 'x-project-metadata',
 }
 
-export const bufferPercent = 13; // Buffer in percent
+export const bufferPercent:number = 13; // Buffer in percent
