@@ -1,4 +1,4 @@
-import { BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { bufferPercent } from './constants';
 
 export interface Gas {
@@ -9,6 +9,7 @@ export interface Gas {
 export async function getGasFee(provider: ethers.providers.JsonRpcProvider): Promise<Gas> {
   try {
     const [fee, block] = await provider.send('eth_maxPriorityFeePerGas', []);
+    if (BigNumber.from(0).eq(fee)) return { maxFeePerGas: BigNumber.from(1), maxPriorityFeePerGas: BigNumber.from(1) };
     const tip = ethers.BigNumber.from(fee);
     const buffer = tip.div(100).mul(bufferPercent);
     const maxPriorityFeePerGas = tip.add(buffer);

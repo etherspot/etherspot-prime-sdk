@@ -384,12 +384,7 @@ export abstract class BaseAccountAPI {
     }
     const provider = this.services.walletService.getWalletProvider();
     const callGasLimit =
-      parseNumber(detailsForUserOp.gasLimit) ??
-      (await provider.estimateGas({
-        from: this.entryPointAddress,
-        to: this.getAccountAddress(),
-        data: callData,
-      }));
+      parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000)
 
     return {
       callData,
