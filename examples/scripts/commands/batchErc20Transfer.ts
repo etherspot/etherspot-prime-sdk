@@ -4,6 +4,7 @@ import { ERC20_ABI } from '../../../src/sdk/helpers/abi/ERC20_ABI';
 import config from "../../config.json";
 import { PrimeSdk } from '../../../src';
 import { printOp } from "../../../src/sdk/common/OperationUtils";
+import { sleep } from "../../../src/sdk/common";
 
 // This example requires several layers of calls:
 // EntryPoint
@@ -52,15 +53,20 @@ export default async function main(
     await primeSdk.addUserOpsToBatch({to: dest[i], data: data[i]})
   }
 
-  const op = await primeSdk.sign();
-  console.log(`Signed UserOp: ${await printOp(op)}`);
+  const op = await primeSdk.estimate();
+  console.log(`Estimated UserOp: ${await printOp(op)}`);
 
-  // sending to the bundler...
+  // sign the userop and sending to the bundler...
   const uoHash = await primeSdk.send(op);
   console.log(`UserOpHash: ${uoHash}`);
 
   // get transaction hash...
   console.log('Waiting for transaction...');
-  const txHash = await primeSdk.getUserOpReceipt(uoHash);
-  console.log('\x1b[33m%s\x1b[0m', `Transaction hash: ${txHash}`);
+  let userOpsReceipt = null;
+  const timeout = Date.now() + 60000; // 1 minute timeout
+  while((userOpsReceipt == null) && (Date.now() < timeout)) {
+    await sleep(2);
+    userOpsReceipt = await primeSdk.getUserOpReceipt(uoHash);
+  }
+  console.log('\x1b[33m%s\x1b[0m', `Transaction Receipt: `, userOpsReceipt);
 }
