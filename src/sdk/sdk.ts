@@ -22,8 +22,9 @@ export class PrimeSdk {
 
   private etherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
+  private chainId: number;
 
-  private userOpsBatch: BatchUserOpsRequest = {to: [], data: [], value: []};
+  private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
@@ -35,6 +36,8 @@ export class PrimeSdk {
       chainId, //
       rpcProviderUrl,
     } = optionsLike;
+
+    this.chainId = chainId;
 
     if (!optionsLike.bundlerRpcUrl) {
       const networkConfig = getNetworkConfig(chainId);
@@ -122,7 +125,7 @@ export class PrimeSdk {
   async estimate(gasDetails?: TransactionGasInfoForUserOp) {
     const gas = await this.getGasFee();
 
-    if (this.userOpsBatch.to.length < 1){
+    if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
 
@@ -139,7 +142,7 @@ export class PrimeSdk {
     });
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
-    
+
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
@@ -151,6 +154,8 @@ export class PrimeSdk {
   }
 
   async getGasFee() {
+    if (this.bundler.bundlerUrl == Networks[this.chainId].bundler)
+      return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
 
