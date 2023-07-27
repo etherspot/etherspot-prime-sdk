@@ -4,6 +4,7 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import Debug from 'debug';
 import { deepHexlify } from '../common/ERC4337Utils';
+import { Gas } from '../common';
 
 const debug = Debug('aa.rpc');
 
@@ -56,6 +57,19 @@ export class HttpRpcClient {
       hexifiedUserOps,
       this.entryPointAddress,
     ]);
+  }
+
+  async getSkandhaGasPrice(): Promise<Gas> {
+    try {
+      const { maxFeePerGas, maxPriorityFeePerGas } = await this.userOpJsonRpcProvider.send('skandha_getGasPrice', []);
+      return { maxFeePerGas, maxPriorityFeePerGas };
+    } catch (err) {
+      console.warn(
+        "getGas: skandha_getGasPrice failed, falling back to legacy gas price."
+      );
+      const gas = await this.userOpJsonRpcProvider.getGasPrice();
+      return { maxFeePerGas: gas, maxPriorityFeePerGas: gas };
+    }
   }
 
   async getUserOpsReceipt(uoHash: string): Promise<any> {
