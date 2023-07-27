@@ -154,7 +154,8 @@ export class PrimeSdk {
   }
 
   async getGasFee() {
-    if (this.bundler.bundlerUrl == Networks[this.chainId].bundler)
+    const version = await this.bundler.getBundlerVersion();
+    if (version.includes('skandha'))
       return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
