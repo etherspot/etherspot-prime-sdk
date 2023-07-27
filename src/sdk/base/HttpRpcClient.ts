@@ -74,7 +74,6 @@ export class HttpRpcClient {
 
   async getBundlerVersion(): Promise<string> {
     const version = await this.userOpJsonRpcProvider.send('web3_clientVersion', []);
-    console.log(version);
     return version;
   }
 
