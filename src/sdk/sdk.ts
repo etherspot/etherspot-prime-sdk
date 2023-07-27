@@ -7,7 +7,7 @@ import { BatchUserOpsRequest, Exception, getGasFee, UserOpsRequest } from "./com
 import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
-import { EtherspotWalletAPI, HttpRpcClient } from './base';
+import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { CreateSessionDto, SignMessageDto, validateDto } from './dto';
 import { Session } from '.';
@@ -49,13 +49,18 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
+    let paymasterAPI = null;
+    if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+    }
+
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
       walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
-      paymasterAPI: optionsLike.paymasterApi,
+      paymasterAPI,
     })
 
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
