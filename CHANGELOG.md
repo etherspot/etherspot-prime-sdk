@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.2] - 2023-07-31
+### New
+- Added onRamper to get the url
+
 ## [1.1.1] - 2023-07-27
 ### New
 - Added skandha_getGasPrice from the bundler if the bundler url is skandha bundler url
