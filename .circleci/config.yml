@@ -5,9 +5,9 @@ orbs:
 
 jobs:
   install:
-    working_directory: ~/etherspot-prime-sdk
+    working_directory: ~/etherspot-sdk
     docker:
-      - image: cimg/node:18.16.0
+      - image: cimg/node:18.16.1
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-sdk/.npmrc
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -25,15 +25,15 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - slack/status:
-          fail_only: true
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          webhook: "${SLACK_WEBHOOK_URL}"
+      # - slack/status:
+      #     fail_only: true
+      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
+      #     webhook: "${SLACK_WEBHOOK_URL}"
 
   publish:
-    working_directory: ~/etherspot-prime-sdk
+    working_directory: ~/etherspot-sdk
     docker:
-      - image: cimg/node:18.16.0
+      - image: cimg/node:18.16.1
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
@@ -43,23 +43,37 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-sdk/.npmrc
       - run:
-          name: Build Etherpot Prime SDK
+          name: Build Etherpot-SDK
           command: npm run build
       - run:
-          name: Publish package to npm
-          command: npm publish --access=public
-      - run:
-          name: Announce Publish
+          name: Checkout e2e repo and run tests
           command: |
-            chmod +x .circleci/announcePublish.sh
-            .circleci/announcePublish.sh "Etherspot Prime SDK" "$(node -e "console.log(require('./package.json').version)")"
-      - slack/status:
-          fail_only: true
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          only_for_branches: master
-          webhook: "${SLACK_WEBHOOK_URL}"
+            cd ~
+            git clone https://github.com/etherspot/e2e-sdk-prime.git
+            cd e2e-sdk-prime
+            sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
+            mv package.json temp.json
+            jq -r '.dependencies.etherspot |= "file:../etherspot-prime-sdk"' temp.json > package.json
+            rm temp.json
+            npm i
+            npm run test-mainnet
+      # - run:
+      #     name: Publish package to npm
+      #     command: |
+      #       cd ~/etherspot-sdk
+      #       npm publish
+      # - run:
+      #     name: Announce Publish
+      #     command: |
+      #       chmod +x .circleci/announcePublish.sh
+      #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
+      # - slack/status:
+      #     fail_only: true
+      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
+      #     only_for_branches: master
+      #     webhook: "${SLACK_WEBHOOK_URL}"
   publish-github-release:
     docker:
       - image: ardd97/ghr
@@ -85,12 +99,10 @@ workflows:
           filters:
             branches:
               only:
-                  - master
-      - publish-github-release:
-          context: general-vars
-          requires:
-            - publish
-          filters:
-            branches:
-              only:
-                  - master
+                  - feature/e2e-prime-pipeline
+      # - publish-github-release:
+      #     context: general-vars
+      #     filters:
+      #       branches:
+      #         only:
+      #             - feature/e2e-prime-pipeline
