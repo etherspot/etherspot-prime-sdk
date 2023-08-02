@@ -5,7 +5,7 @@ orbs:
 
 jobs:
   install:
-    working_directory: ~/etherspot-sdk
+    working_directory: ~/etherspot-prime-sdk
     docker:
       - image: cimg/node:18.16.1
         auth:
