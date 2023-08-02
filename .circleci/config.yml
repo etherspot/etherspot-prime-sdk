@@ -43,7 +43,7 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-sdk/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - run:
           name: Build Etherpot-SDK
           command: npm run build
