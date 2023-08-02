@@ -31,7 +31,7 @@ jobs:
       #     webhook: "${SLACK_WEBHOOK_URL}"
 
   publish:
-    working_directory: ~/etherspot-sdk
+    working_directory: ~/etherspot-prime-sdk
     docker:
       - image: cimg/node:18.16.1
         auth:
