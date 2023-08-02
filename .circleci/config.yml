@@ -55,7 +55,7 @@ jobs:
             cd e2e-sdk-prime
             sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
             mv package.json temp.json
-            jq -r '.dependencies.etherspot |= "file:../etherspot-prime-sdk"' temp.json > package.json
+            jq -r '.dependencies.@etherspot/prime-sdk |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
             npm i
             npm run test-mainnet
