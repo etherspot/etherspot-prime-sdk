@@ -26,7 +26,6 @@ jobs:
           paths:
             - ./node_modules
       - slack/status:
-          fail_only: true
           failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
           webhook: "${SLACK_WEBHOOK_URL}"
 
@@ -70,7 +69,6 @@ jobs:
       #       chmod +x .circleci/announcePublish.sh
       #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
       - slack/status:
-          fail_only: true
           failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
           only_for_branches: master
           webhook: "${SLACK_WEBHOOK_URL}"
