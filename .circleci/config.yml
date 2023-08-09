@@ -65,10 +65,13 @@ jobs:
             pwd
             npm i >> /home/circleci/e2e-sdk-prime/logs.txt
             pwd
+            cp /home/circleci/e2e-sdk-prime/logs.txt ~/
             # npm run test-mainnet-transfertoken-matic |& tee /home/circleci/e2e-sdk-prime/logs.txt
+            ls -al ~
             ls -al
             pwd
             cat /home/circleci/e2e-sdk-prime/logs.txt
+            cat ~/logs.txt
             pwd
             echo 'export LOGS=$(cat /home/circleci/e2e-sdk-prime/logs.txt)' >> "$BASH_ENV"
             rm logs.txt
@@ -82,12 +85,12 @@ jobs:
       #     name: Announce Publish
       #     command: |
       #       chmod +x .circleci/announcePublish.sh
-      #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
-      - slack/status:
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
-          # only_for_branches: master
-          webhook: "${SLACK_WEBHOOK_URL}"
+      # #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
+      # - slack/status:
+      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
+      #     success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
+      #     # only_for_branches: master
+      #     webhook: "${SLACK_WEBHOOK_URL}"
   publish-github-release:
     docker:
       - image: ardd97/ghr
