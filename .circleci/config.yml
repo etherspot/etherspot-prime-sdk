@@ -81,6 +81,11 @@ jobs:
             rm ~/logs.txt
             source "$BASH_ENV"
             printenv
+      - run:
+          name: Publish package to npm
+          command: |
+            echo "new step"
+            echo $LOGS
       # - run:
       #     name: Publish package to npm
       #     command: |
