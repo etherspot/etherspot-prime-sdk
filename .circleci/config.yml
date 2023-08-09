@@ -25,9 +25,9 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - slack/status:
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          webhook: "${SLACK_WEBHOOK_URL}"
+      # - slack/status:
+      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
+      #     webhook: "${SLACK_WEBHOOK_URL}"
 
   publish:
     working_directory: ~/etherspot-prime-sdk
@@ -57,7 +57,10 @@ jobs:
             jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
             npm i
+            touch logs.txt
+            ls -al
             npm run test-mainnet |& tee logs.txt
+            ls -al
             cat logs.txt
             echo 'export LOGS=$(cat logs.txt)' >> "$BASH_ENV"
             rm logs.txt
