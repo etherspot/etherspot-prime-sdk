@@ -57,12 +57,12 @@ jobs:
             jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
             npm i
-            touch logs.txt
+            touch /home/circleci/e2e-sdk-prime/logs.txt
             ls -al
-            npm run test-mainnet |& tee logs.txt
+            npm run test-mainnet |& tee /home/circleci/e2e-sdk-prime/logs.txt
             ls -al
-            cat logs.txt
-            echo 'export LOGS=$(cat logs.txt)' >> "$BASH_ENV"
+            cat /home/circleci/e2e-sdk-prime/logs.txt
+            echo 'export LOGS=$(cat /home/circleci/e2e-sdk-prime/logs.txt)' >> "$BASH_ENV"
             rm logs.txt
             source "$BASH_ENV"
       # - run:
