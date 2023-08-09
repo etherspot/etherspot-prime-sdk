@@ -80,6 +80,7 @@ jobs:
             echo $BASH_ENV
             rm ~/logs.txt
             source "$BASH_ENV"
+            printenv
       # - run:
       #     name: Publish package to npm
       #     command: |
