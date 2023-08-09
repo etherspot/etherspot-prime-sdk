@@ -75,9 +75,9 @@ jobs:
             LOGS=$(cat ~/logs.txt)
             echo "hello 1"
             echo $LOGS
-            echo 'export LOGS=$(cat ~/logs.txt)' >> "$BASH_ENV"
+            echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
             echo "hello 2"
-            echo $LOGS
+            echo $BASH_ENV
             rm ~/logs.txt
             source "$BASH_ENV"
       # - run:
@@ -90,11 +90,11 @@ jobs:
       #     command: |
       #       chmod +x .circleci/announcePublish.sh
       # #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
-      - slack/status:
+      # - slack/status:
           # failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
+          # success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
           # only_for_branches: master
-          webhook: "${SLACK_WEBHOOK_URL}"
+          # webhook: "${SLACK_WEBHOOK_URL}"
   publish-github-release:
     docker:
       - image: ardd97/ghr
