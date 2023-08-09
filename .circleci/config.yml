@@ -63,7 +63,7 @@ jobs:
             pwd
             ls -al
             pwd
-            npm i |& tee ~/logs.txt
+            npm i >> tee ~/logs.txt
             pwd
             # npm run test-mainnet-transfertoken-matic |& tee /home/circleci/e2e-sdk-prime/logs.txt
             ls -al ~
