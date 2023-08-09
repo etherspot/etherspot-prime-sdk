@@ -70,8 +70,9 @@ jobs:
             ls -al ~
             ls -al
             pwd
-            cat /home/circleci/e2e-sdk-prime/logs.txt
+            chmod 755 ~/logs.txt
             cat ~/logs.txt
+            cat /home/circleci/e2e-sdk-prime/logs.txt
             pwd
             echo 'export LOGS=$(cat /home/circleci/e2e-sdk-prime/logs.txt)' >> "$BASH_ENV"
             rm logs.txt
