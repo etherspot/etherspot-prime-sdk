@@ -72,10 +72,13 @@ jobs:
             chmod 755 ~/logs.txt
             cat ~/logs.txt
             pwd
-            echo 'export LOGS=$(cat ~/logs.txt)' >> "$BASH_ENV"
-            echo "hello"
+            LOGS=$(cat ~/logs.txt)
+            echo "hello 1"
             echo $LOGS
-            rm logs.txt
+            echo 'export LOGS=$(cat ~/logs.txt)' >> "$BASH_ENV"
+            echo "hello 2"
+            echo $LOGS
+            rm ~/logs.txt
             source "$BASH_ENV"
       # - run:
       #     name: Publish package to npm
@@ -88,7 +91,7 @@ jobs:
       #       chmod +x .circleci/announcePublish.sh
       # #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
       - slack/status:
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
+          # failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
           success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
           # only_for_branches: master
           webhook: "${SLACK_WEBHOOK_URL}"
