@@ -59,22 +59,20 @@ jobs:
             rm temp.json
             # npm i
             pwd
-            touch /home/circleci/e2e-sdk-prime/logs.txt
+            touch ~/logs.txt
             pwd
             ls -al
             pwd
-            npm i >> /home/circleci/e2e-sdk-prime/logs.txt
+            npm i |& tee ~/logs.txt
             pwd
-            cp /home/circleci/e2e-sdk-prime/logs.txt ~/
             # npm run test-mainnet-transfertoken-matic |& tee /home/circleci/e2e-sdk-prime/logs.txt
             ls -al ~
             ls -al
             pwd
             chmod 755 ~/logs.txt
             cat ~/logs.txt
-            cat /home/circleci/e2e-sdk-prime/logs.txt
             pwd
-            echo 'export LOGS=$(cat /home/circleci/e2e-sdk-prime/logs.txt)' >> "$BASH_ENV"
+            echo 'export LOGS=$(cat ~/logs.txt)' >> "$BASH_ENV"
             rm logs.txt
             source "$BASH_ENV"
       # - run:
