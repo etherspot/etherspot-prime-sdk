@@ -57,26 +57,14 @@ jobs:
             mv package.json temp.json
             jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
-            # npm i
-            pwd
+            npm i
             touch ~/logs.txt
             pwd
-            ls -al
-            pwd
-            npm i |& tee ~/logs.txt
-            pwd
-            # npm run test-mainnet-transfertoken-matic |& tee /home/circleci/e2e-sdk-prime/logs.txt
+            npm run test-mainnet |& tee ~/logs.txt
             ls -al ~
-            ls -al
-            pwd
             chmod 755 ~/logs.txt
             cat ~/logs.txt
-            pwd
-            LOGS=$(cat ~/logs.txt)
-            echo "hello 1"
-            echo $LOGS
             echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
-            echo "hello 2"
             echo $BASH_ENV
             rm ~/logs.txt
             source "$BASH_ENV"
