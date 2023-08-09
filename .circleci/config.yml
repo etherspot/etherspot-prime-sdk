@@ -59,7 +59,7 @@ jobs:
             npm i
             touch /home/circleci/e2e-sdk-prime/logs.txt
             ls -al
-            npm run test-mainnet |& tee /home/circleci/e2e-sdk-prime/logs.txt
+            npm run test-mainnet-transfertoken-matic |& tee /home/circleci/e2e-sdk-prime/logs.txt
             ls -al
             cat /home/circleci/e2e-sdk-prime/logs.txt
             echo 'export LOGS=$(cat /home/circleci/e2e-sdk-prime/logs.txt)' >> "$BASH_ENV"
