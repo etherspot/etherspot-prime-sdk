@@ -57,7 +57,11 @@ jobs:
             jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
             npm i
-            npm run test-mainnet
+            npm run test-mainnet > logs.txt
+            cat logs.txt
+            echo 'export LOGS=$(cat logs.txt)' >> "$BASH_ENV"
+            rm logs.txt
+            source "$BASH_ENV"
       # - run:
       #     name: Publish package to npm
       #     command: |
@@ -70,7 +74,8 @@ jobs:
       #       .circleci/announcePublish.sh "Etherspot SDK" "$(node -e "console.log(require('./package.json').version)")"
       - slack/status:
           failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-          only_for_branches: master
+          success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job has suceeded! :circleci-pass: \n\n $LOGS"
+          # only_for_branches: master
           webhook: "${SLACK_WEBHOOK_URL}"
   publish-github-release:
     docker:
