@@ -1,5 +1,17 @@
 # Changelog
-## [1.1.2] - 2023-07-31
+
+## [1.1.3] - 2023-08-10
+### New
+- Added getAccountBalances to get account balances
+- Added getTransaction to get transaction
+- Added getTransactions to get transactions
+- Added getNftList to get NFT list belonging to account
+- Added getExchangeOffers to get exchange offers
+- Added getAdvanceRoutesLiFi to get advance routes
+- Added getStepTransaction to get step transaction from LIFI
+- Added getCrossChainQuotes to get multi chain quotes
+
+## [1.1.2] - 2023-07-31s
 ### New
 - Added onRamper to get the url
 

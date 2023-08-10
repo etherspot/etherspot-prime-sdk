@@ -9,12 +9,14 @@ export class WalletService extends Service {
   readonly wallet$ = new ObjectSubject<Wallet>();
   readonly walletAddress$: Observable<string>;
   readonly rpcBundlerUrl: string;
+  readonly chainId: number;
 
   provider: WalletProvider;
 
-  constructor(private providerLike: WalletProviderLike, private options: WalletOptions, public rpcUrl: string) {
+  constructor(private providerLike: WalletProviderLike, private options: WalletOptions, public rpcUrl: string, public chain: number) {
     super();
     this.rpcBundlerUrl = rpcUrl;
+    this.chainId = chain;
     this.walletAddress$ = this.wallet$.observeKey('address');
   }
 

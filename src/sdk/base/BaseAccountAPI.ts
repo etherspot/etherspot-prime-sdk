@@ -8,8 +8,9 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { AccountService, AccountTypes, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
+import { DataService } from '../data';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -77,6 +78,7 @@ export abstract class BaseAccountAPI {
       sessionStorage,
       rpcProviderUrl,
       bundlerRpcUrl,
+      graphqlEndpoint,
     } = optionsLike;
 
     // const { networkOptions } = env;
@@ -86,7 +88,7 @@ export abstract class BaseAccountAPI {
       walletService: new WalletService(params.walletProvider, {
         omitProviderNetworkCheck: omitWalletProviderNetworkCheck,
         provider: rpcProviderUrl,
-      }, optionsLike.bundlerRpcUrl),
+      }, optionsLike.bundlerRpcUrl, chainId),
       sessionService: new SessionService({
         storage: sessionStorage,
       }),
@@ -94,6 +96,11 @@ export abstract class BaseAccountAPI {
       stateService: new StateService({
         storage: stateStorage,
       }),
+      apiService: new ApiService({
+        host: graphqlEndpoint,
+        useSsl: true,
+      }),
+      dataService: new DataService(),
     };
 
     this.context = new Context(this.services);
@@ -187,9 +194,9 @@ export abstract class BaseAccountAPI {
       ...options,
     };
 
-    const { accountService, networkService, walletService, sessionService } = this.services;
+    const { accountService, walletService, sessionService } = this.services;
 
-    if (options.network && !networkService.chainId) {
+    if (options.network && !walletService.chainId) {
       throw new Exception('Unknown network');
     }
 
