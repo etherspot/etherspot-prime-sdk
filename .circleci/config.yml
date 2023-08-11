@@ -116,14 +116,6 @@ workflows:
     jobs:
       - install:
           context: general-vars
-      - publish:
-          context: general-vars
-          requires:
-            - install
-          filters:
-            branches:
-              only:
-                  - master
       - publish-npm-package:
           context: general-vars
           requires:
