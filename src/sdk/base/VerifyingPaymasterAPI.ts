@@ -9,7 +9,7 @@ const SIG_SIZE = 65;
 const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 
-interface paymasterResponse {
+interface PaymasterResponse {
   jsonrpc: string;
   id: number;
   result: BytesLike;
@@ -49,7 +49,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     return axios
-      .post<paymasterResponse>(this.paymasterUrl, {
+      .post<PaymasterResponse>(this.paymasterUrl, {
         jsonrpc: '2.0',
         id: 1,
         method: 'pm_sponsorUserOperation',

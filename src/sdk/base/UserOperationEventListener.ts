@@ -6,14 +6,14 @@ import Debug from 'debug'
 
 const debug = Debug('aa.listener')
 
-const DEFAULT_TRANSACTION_TIMEOUT: number = 10000
+const DEFAULT_TRANSACTION_TIMEOUT = 10000
 
 /**
  * This class encapsulates Ethers.js listener function and necessary UserOperation details to
  * discover a TransactionReceipt for the operation.
  */
 export class UserOperationEventListener {
-  resolved: boolean = false
+  resolved = false
   boundLisener: (this: any, ...param: any) => void
 
   constructor (
@@ -53,7 +53,9 @@ export class UserOperationEventListener {
     this.entryPoint.off('UserOperationEvent', this.boundLisener)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async listenerCallback (this: any, ...param: any): Promise<void> {
+    // eslint-disable-next-line prefer-rest-params
     const event = arguments[arguments.length - 1] as Event
     if (event.args == null) {
       console.error('got event without args', event)

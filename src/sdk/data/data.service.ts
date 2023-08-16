@@ -1,13 +1,40 @@
 import { gql } from '@apollo/client/core';
-import { Service } from '../common';
+import { HeaderNames, ObjectSubject, Service } from '../common';
 import { Route } from '@lifi/sdk';
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, StepTransaction, StepTransactions, Transaction, Transactions } from './classes';
 import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
 
 export class DataService extends Service {
-  constructor() {
+  readonly currentProject$ = new ObjectSubject<string>(null);
+
+  constructor(currentProject: string = null) {
     super();
+    this.switchCurrentProject(currentProject);
+  }
+
+  get currentProject(): string {
+    return this.currentProject$.value;
+  }
+
+  get headers(): { [key: string]: any } {
+    let result: { [key: string]: any } = {};
+
+    if (this.currentProject) {
+      const key = this.currentProject;
+
+      result = {
+        [HeaderNames.ProjectKey]: key,
+      }
+    }
+
+    return result;
+  }
+
+  switchCurrentProject(currentProject: string): string {
+    this.currentProject$.next(currentProject);
+
+    return this.currentProject;
   }
 
   async getAccountBalances(account: string, tokens: string[], ChainId: number, provider?: string): Promise<AccountBalances> {

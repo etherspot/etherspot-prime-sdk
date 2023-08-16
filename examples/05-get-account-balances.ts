@@ -5,7 +5,10 @@ dotenv.config();
 
 async function main() {
     // initializating sdk...
-    const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) });
+    const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
+        chainId: Number(process.env.CHAIN_ID),
+        projectKey: '', // project key
+    });
 
     const balances = await primeSdk.getAccountBalances({
         account: '', // account address

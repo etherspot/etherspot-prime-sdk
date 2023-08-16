@@ -10,6 +10,7 @@ export class PaymasterAPI {
    *  paymasterAndData value, which will only be returned by this method..
    * @returns the value to put into the PaymasterAndData, undefined to leave it empty
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<string | undefined> {
     return '0x';
   }

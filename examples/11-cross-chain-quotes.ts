@@ -1,4 +1,4 @@
-import { ethers, utils } from 'ethers';
+import { utils } from 'ethers';
 import { PrimeSdk } from '../src';
 import * as dotenv from 'dotenv';
 import { BridgingQuotes, CrossChainServiceProvider } from '../src/sdk/data';
@@ -6,13 +6,16 @@ dotenv.config();
 
 async function main(): Promise<void> {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) });
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
+    chainId: Number(process.env.CHAIN_ID),
+    projectKey: '', // project key
+  });
 
   const XdaiUSDC = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83'; // Xdai - USDC
   const MaticUSDC = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'; // Matic - USDC
 
-  const fromChainId: number = 137;
-  const toChainId: number = 100;
+  const fromChainId = 137;
+  const toChainId = 100;
   const fromTokenAddress: string = MaticUSDC;
   const toTokenAddress: string = XdaiUSDC;
 

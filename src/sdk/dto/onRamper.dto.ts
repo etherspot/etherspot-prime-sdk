@@ -32,7 +32,7 @@ export class OnRamperDto {
 
   @IsOptional()
   @IsBoolean()
-  isAmountEditable?: Boolean;
+  isAmountEditable?: boolean;
 
   @IsOptional()
   @IsString()

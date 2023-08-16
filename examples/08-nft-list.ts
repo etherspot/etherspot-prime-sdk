@@ -5,8 +5,10 @@ dotenv.config();
 
 async function main(): Promise<void> {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) });
-
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
+    chainId: Number(process.env.CHAIN_ID),
+    projectKey: '', // project key
+  });
   const chainId = 137;
   const account = '';  // account address
   const nfts = await primeSdk.getNftList({ chainId, account });

@@ -115,12 +115,14 @@ export class ApiService extends Service {
       const {
         accountService, //
         sessionService,
+        dataService,
       } = this.services;
 
       return {
         headers: {
           ...accountService.headers,
           ...sessionService.headers,
+          ...dataService.headers,
         },
       };
     });

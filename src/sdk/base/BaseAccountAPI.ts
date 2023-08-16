@@ -1,12 +1,12 @@
-import { ethers, BigNumber, BigNumberish, providers } from 'ethers';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { ethers, BigNumber, BigNumberish } from 'ethers';
+import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
 import { EntryPoint, EntryPoint__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
-import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service } from '../common';
+import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
@@ -79,6 +79,7 @@ export abstract class BaseAccountAPI {
       rpcProviderUrl,
       bundlerRpcUrl,
       graphqlEndpoint,
+      projectKey,
     } = optionsLike;
 
     // const { networkOptions } = env;
@@ -88,7 +89,7 @@ export abstract class BaseAccountAPI {
       walletService: new WalletService(params.walletProvider, {
         omitProviderNetworkCheck: omitWalletProviderNetworkCheck,
         provider: rpcProviderUrl,
-      }, optionsLike.bundlerRpcUrl, chainId),
+      }, bundlerRpcUrl, chainId),
       sessionService: new SessionService({
         storage: sessionStorage,
       }),
@@ -100,7 +101,7 @@ export abstract class BaseAccountAPI {
         host: graphqlEndpoint,
         useSsl: true,
       }),
-      dataService: new DataService(),
+      dataService: new DataService(projectKey),
     };
 
     this.context = new Context(this.services);
@@ -389,7 +390,7 @@ export abstract class BaseAccountAPI {
       }
       callData = await this.encodeBatch(target, detailsForUserOp.values, data);
     }
-    const provider = this.services.walletService.getWalletProvider();
+
     const callGasLimit =
       parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000)
 

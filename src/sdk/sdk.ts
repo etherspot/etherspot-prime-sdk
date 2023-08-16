@@ -140,7 +140,7 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
-    let partialtx = await this.etherspotWallet.createUnsignedUserOp({
+    const partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
       ...gas,
     });
