@@ -124,8 +124,6 @@ export class PrimeSdk {
   }
 
   async estimate(gasDetails?: TransactionGasInfoForUserOp) {
-    const gas = await this.getGasFee();
-
     if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
@@ -139,14 +137,25 @@ export class PrimeSdk {
 
     let partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      ...gas,
+      maxFeePerGas: 1,
+      maxPriorityFeePerGas: 1,
     });
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
+    // if estimation has gas prices use them, otherwise fetch them in a separate call
+    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
+    } else {
+      const gas = await this.getGasFee();
+      partialtx.maxFeePerGas = gas.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gas.maxPriorityFeePerGas;
+    }
+
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
-      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
+      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
