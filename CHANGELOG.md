@@ -1,4 +1,9 @@
 # Changelog
+## [1.1.4] - 2023-08-21
+### Breaking Changes
+- Changed the way of initialising the Paymaster url to string as before it was unreachable code to get VerifyingPaymasterApi class to pass on to the Prime-Sdk
+- Changed the response object got from the paymaster to be compatible with our Arka service
+
 ## [1.1.2] - 2023-07-31
 ### New
 - Added onRamper to get the url
