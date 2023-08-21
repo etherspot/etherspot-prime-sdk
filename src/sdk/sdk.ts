@@ -1,15 +1,16 @@
 import { BehaviorSubject } from 'rxjs';
+import * as open from 'openurl';
 import { State, StateService } from './state';
 import { isWalletProvider, WalletProviderLike } from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, UserOpsRequest } from "./common";
+import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
-import { getNetworkConfig, Networks } from './network/constants';
+import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, SignMessageDto, validateDto } from './dto';
+import { CreateSessionDto, OnRamperDto, SignMessageDto, validateDto } from './dto';
 import { Session } from '.';
 import { ERC20__factory } from './contracts';
 
@@ -22,8 +23,9 @@ export class PrimeSdk {
 
   private etherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
+  private chainId: number;
 
-  private userOpsBatch: BatchUserOpsRequest = {to: [], data: [], value: []};
+  private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
@@ -35,6 +37,8 @@ export class PrimeSdk {
       chainId, //
       rpcProviderUrl,
     } = optionsLike;
+
+    this.chainId = chainId;
 
     if (!optionsLike.bundlerRpcUrl) {
       const networkConfig = getNetworkConfig(chainId);
@@ -125,9 +129,7 @@ export class PrimeSdk {
   }
 
   async estimate(gasDetails?: TransactionGasInfoForUserOp) {
-    const gas = await this.getGasFee();
-
-    if (this.userOpsBatch.to.length < 1){
+    if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
 
@@ -140,14 +142,25 @@ export class PrimeSdk {
 
     let partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      ...gas,
+      maxFeePerGas: 1,
+      maxPriorityFeePerGas: 1,
     });
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
-    
+
+    // if estimation has gas prices use them, otherwise fetch them in a separate call
+    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
+    } else {
+      const gas = await this.getGasFee();
+      partialtx.maxFeePerGas = gas.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gas.maxPriorityFeePerGas;
+    }
+
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
-      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
+      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
@@ -156,6 +169,9 @@ export class PrimeSdk {
   }
 
   async getGasFee() {
+    const version = await this.bundler.getBundlerVersion();
+    if (version.includes('skandha'))
+      return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
 
@@ -216,6 +232,32 @@ export class PrimeSdk {
     const verificationGasLimit = BigNumber.from(await userOp.verificationGasLimit);
     const preVerificationGas = BigNumber.from(await userOp.preVerificationGas);
     return callGasLimit.add(verificationGasLimit).add(preVerificationGas);
+  }
+
+  async getFiatOnRamp(params: OnRamperDto = {}) {
+    if (!params.onlyCryptoNetworks) params.onlyCryptoNetworks = onRamperAllNetworks.join(',');
+    else {
+      const networks = params.onlyCryptoNetworks.split(',');
+      for (const network in networks) {
+        if (!onRamperAllNetworks.includes(network)) throw new Error('Included Networks which are not supported. Please Check');
+      }
+    }
+
+    const url = `https://buy.onramper.com/?networkWallets=ETHEREUM:${await this.getCounterFactualAddress()}` +
+      `&apiKey=${onRampApiKey}` +
+      `&onlyCryptoNetworks=${params.onlyCryptoNetworks}` +
+      `${params.defaultCrypto ? `&defaultCrypto=${params.defaultCrypto}` : ``}` +
+      `${params.excludeCryptos ? `&excludeCryptos=${params.excludeCryptos}` : ``}` +
+      `${params.onlyCryptos ? `&onlyCryptos=${params.onlyCryptos}` : ``}` +
+      `${params.excludeCryptoNetworks ? `&excludeCryptoNetworks=${params.excludeCryptoNetworks}` : ``}` +
+      `${params.defaultAmount ? `&defaultCrypto=${params.defaultAmount}` : ``}` +
+      `${params.defaultFiat ? `&defaultFiat=${params.defaultFiat}` : ``}` +
+      `${params.isAmountEditable ? `&isAmountEditable=${params.isAmountEditable}` : ``}` +
+      `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
+      `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
+      `&themeName=${params.themeName ?? 'dark'}`;
+    open.open(url)
+    return url;
   }
 
 }

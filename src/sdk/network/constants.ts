@@ -46,6 +46,8 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Mantle]: 5000,
 };
 
+export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
+
 export const Networks: {
   [key: string]: NetworkConfig
 } = {
