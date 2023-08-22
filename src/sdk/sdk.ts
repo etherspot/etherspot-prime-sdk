@@ -1,10 +1,9 @@
 import { BehaviorSubject } from 'rxjs';
-import * as open from 'openurl';
 import { State, StateService } from './state';
 import { isWalletProvider, WalletProviderLike } from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, UserOpsRequest } from "./common";
+import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
@@ -256,7 +255,13 @@ export class PrimeSdk {
       `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
       `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
       `&themeName=${params.themeName ?? 'dark'}`;
-    open.open(url)
+    
+    if (typeof window === 'undefined') {
+      openUrl(url);
+    } else {
+      window.open(url);
+    }
+
     return url;
   }
 
