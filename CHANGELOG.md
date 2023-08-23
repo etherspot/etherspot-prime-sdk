@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.3] - 2023-08-10
+## [1.1.6] - 2023-08-23
 ### New
 - Added getAccountBalances to get account balances
 - Added getTransaction to get transaction
