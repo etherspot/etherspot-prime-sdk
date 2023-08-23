@@ -1,14 +1,13 @@
 import { BehaviorSubject } from 'rxjs';
-import * as open from 'openurl';
 import { State, StateService } from './state';
 import { isWalletProvider, WalletProviderLike } from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, UserOpsRequest } from "./common";
+import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
-import { EtherspotWalletAPI, HttpRpcClient } from './base';
+import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, GetTransactionsDto, SignMessageDto, validateDto } from './dto';
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Transactions, Session } from './';
@@ -56,13 +55,18 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
+    let paymasterAPI = null;
+    if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+    }
+
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
       walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
-      paymasterAPI: optionsLike.paymasterApi,
+      paymasterAPI,
     })
 
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -127,8 +131,6 @@ export class PrimeSdk {
   }
 
   async estimate(gasDetails?: TransactionGasInfoForUserOp) {
-    const gas = await this.getGasFee();
-
     if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
@@ -142,14 +144,25 @@ export class PrimeSdk {
 
     const partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      ...gas,
+      maxFeePerGas: 1,
+      maxPriorityFeePerGas: 1,
     });
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
+    // if estimation has gas prices use them, otherwise fetch them in a separate call
+    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
+    } else {
+      const gas = await this.getGasFee();
+      partialtx.maxFeePerGas = gas.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gas.maxPriorityFeePerGas;
+    }
+
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
-      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
+      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
@@ -245,7 +258,13 @@ export class PrimeSdk {
       `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
       `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
       `&themeName=${params.themeName ?? 'dark'}`;
-    open.open(url)
+    
+    if (typeof window === 'undefined') {
+      openUrl(url);
+    } else {
+      window.open(url);
+    }
+
     return url;
   }
 

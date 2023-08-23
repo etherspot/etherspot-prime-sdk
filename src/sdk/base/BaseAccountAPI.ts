@@ -11,6 +11,7 @@ import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
 import { DataService } from '../data';
+import { paymasterResponse } from './VerifyingPaymasterAPI';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -482,16 +483,17 @@ export abstract class BaseAccountAPI {
     };
 
 
-    let paymasterAndData: string | undefined;
+    let paymasterAndData: paymasterResponse | undefined = null;
     if (this.paymasterAPI != null) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       const userOpForPm = {
         ...partialUserOp,
         preVerificationGas: this.getPreVerificationGas(partialUserOp),
       };
-      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOpForPm);
+      paymasterAndData = (await this.paymasterAPI.getPaymasterAndData(userOpForPm));
+      partialUserOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
     }
-    partialUserOp.paymasterAndData = paymasterAndData ?? '0x';
+    partialUserOp.paymasterAndData = paymasterAndData ? paymasterAndData.paymasterAndData : '0x';
     return {
       ...partialUserOp,
       preVerificationGas: this.getPreVerificationGas(partialUserOp),
@@ -505,6 +507,11 @@ export abstract class BaseAccountAPI {
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     const userOpHash = await this.getUserOpHash(userOp);
+    if (this.paymasterAPI != null) {
+      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
+      userOp.paymasterAndData = paymasterAndData.paymasterAndData;
+      userOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
+    }
     const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,
