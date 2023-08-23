@@ -11,7 +11,7 @@ import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
 import { DataService } from '../data';
-import { paymasterResponse } from './VerifyingPaymasterAPI';
+import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -483,7 +483,7 @@ export abstract class BaseAccountAPI {
     };
 
 
-    let paymasterAndData: paymasterResponse | undefined = null;
+    let paymasterAndData: PaymasterResponse | undefined = null;
     if (this.paymasterAPI != null) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       const userOpForPm = {

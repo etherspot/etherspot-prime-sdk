@@ -1,6 +1,5 @@
 import { StateStorage } from './state';
 import { SessionStorage } from './session';
-import { VerifyingPaymasterAPI } from './base';
 
 export interface PaymasterApi {
   url: string;

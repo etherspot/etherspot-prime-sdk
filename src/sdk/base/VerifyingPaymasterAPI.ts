@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ethers, BytesLike } from 'ethers';
+import { ethers } from 'ethers';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
@@ -9,7 +9,7 @@ const SIG_SIZE = 65;
 const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 
-export interface paymasterResponse {
+export interface PaymasterResponse {
   paymasterAndData: string;
   verificationGasLimit: string;
 }
@@ -25,7 +25,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     this.context = context;
   }
 
-  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<paymasterResponse> {
+  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse> {
     // Hack: userOp includes empty paymasterAndData which calcPreVerificationGas requires.
     try {
       // userOp.preVerificationGas contains a promise that will resolve to an error.
@@ -50,7 +50,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     const paymasterAndData = axios
-      .post<paymasterResponse>(this.paymasterUrl, {
+      .post<PaymasterResponse>(this.paymasterUrl, {
         jsonrpc: '2.0',
         id: 1,
         method: 'pm_sponsorUserOperation',
