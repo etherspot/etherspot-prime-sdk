@@ -506,12 +506,13 @@ export abstract class BaseAccountAPI {
    * @param userOp the UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
-    const userOpHash = await this.getUserOpHash(userOp);
     if (this.paymasterAPI != null) {
       const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
       userOp.paymasterAndData = paymasterAndData.paymasterAndData;
       userOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
+      userOp.preVerificationGas = paymasterAndData.preVerificationGas;
     }
+    const userOpHash = await this.getUserOpHash(userOp);
     const signature = await this.signUserOpHash(userOpHash);
     return {
       ...userOp,

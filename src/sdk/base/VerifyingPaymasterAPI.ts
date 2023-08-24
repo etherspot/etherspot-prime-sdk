@@ -12,6 +12,7 @@ const DUMMY_PAYMASTER_AND_DATA =
 export interface PaymasterResponse {
   paymasterAndData: string;
   verificationGasLimit: string;
+  preVerificationGas?: string;
 }
 
 export class VerifyingPaymasterAPI extends PaymasterAPI {
@@ -49,7 +50,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     op.preVerificationGas = calcPreVerificationGas(op);
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
-    const paymasterAndData = axios
+    const paymasterAndData = await axios
       .post<PaymasterResponse>(this.paymasterUrl, {
         jsonrpc: '2.0',
         id: 1,
@@ -60,7 +61,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
         return res.data
       });
 
-    return paymasterAndData;
+    return {paymasterAndData: paymasterAndData.paymasterAndData, verificationGasLimit: paymasterAndData.verificationGasLimit, preVerificationGas: op.preVerificationGas.toString()};
   }
 }
 
