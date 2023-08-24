@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 const platformCommands = {
     darwin: 'open',
     win32: 'explorer.exe',

@@ -2,3 +2,4 @@ node_modules
 dist
 coverage
 __snapshots__
+src/sdk/contracts/**/*.ts
