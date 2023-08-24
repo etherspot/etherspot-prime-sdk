@@ -10,6 +10,7 @@ import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { AccountService, AccountTypes, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
+import { paymasterResponse } from './VerifyingPaymasterAPI';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -384,12 +385,7 @@ export abstract class BaseAccountAPI {
     }
     const provider = this.services.walletService.getWalletProvider();
     const callGasLimit =
-      parseNumber(detailsForUserOp.gasLimit) ??
-      (await provider.estimateGas({
-        from: this.entryPointAddress,
-        to: this.getAccountAddress(),
-        data: callData,
-      }));
+      parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000)
 
     return {
       callData,
@@ -448,7 +444,17 @@ export abstract class BaseAccountAPI {
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
     if (maxFeePerGas == null || maxPriorityFeePerGas == null) {
       const provider = this.services.walletService.getWalletProvider();
-      const feeData = await provider.getFeeData();
+      let feeData: any = {};
+      try {
+        feeData = await provider.getFeeData();
+      } catch (err) {
+        console.warn(
+          "getGas: eth_maxPriorityFeePerGas failed, falling back to legacy gas price."
+        );
+        const gas = await provider.getGasPrice();
+
+        feeData = { maxFeePerGas: gas, maxPriorityFeePerGas: gas };
+      }
       if (maxFeePerGas == null) {
         maxFeePerGas = feeData.maxFeePerGas ?? undefined;
       }
@@ -466,20 +472,20 @@ export abstract class BaseAccountAPI {
       verificationGasLimit,
       maxFeePerGas,
       maxPriorityFeePerGas,
-      chainId: 80001,
     };
 
 
-    let paymasterAndData: string | undefined;
+    let paymasterAndData: paymasterResponse | undefined = null;
     if (this.paymasterAPI != null) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       const userOpForPm = {
         ...partialUserOp,
         preVerificationGas: this.getPreVerificationGas(partialUserOp),
       };
-      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOpForPm);
+      paymasterAndData = (await this.paymasterAPI.getPaymasterAndData(userOpForPm));
+      partialUserOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
     }
-    partialUserOp.paymasterAndData = paymasterAndData ?? '0x';
+    partialUserOp.paymasterAndData = paymasterAndData ? paymasterAndData.paymasterAndData : '0x';
     return {
       ...partialUserOp,
       preVerificationGas: this.getPreVerificationGas(partialUserOp),
@@ -492,6 +498,12 @@ export abstract class BaseAccountAPI {
    * @param userOp the UserOperation to sign (with signature field ignored)
    */
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
+    if (this.paymasterAPI != null) {
+      const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
+      userOp.paymasterAndData = paymasterAndData.paymasterAndData;
+      userOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
+      userOp.preVerificationGas = paymasterAndData.preVerificationGas;
+    }
     const userOpHash = await this.getUserOpHash(userOp);
     const signature = await this.signUserOpHash(userOpHash);
     return {

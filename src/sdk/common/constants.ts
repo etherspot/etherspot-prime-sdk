@@ -7,3 +7,7 @@ export enum HeaderNames {
   ProjectKey = 'x-project-key',
   ProjectMetadata = 'x-project-metadata',
 }
+
+export const bufferPercent:number = 13; // Buffer in percent
+
+export const onRampApiKey = 'pk_prod_01H66WYDRFM95JBTJ4VMGY1FAX';

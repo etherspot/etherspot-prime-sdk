@@ -8,9 +8,20 @@ export enum NetworkNames {
   Optimism = 'optimism',
   Polygon = 'polygon',
   Arbitrum = 'arbitrum',
+  ArbitrumGoerli = 'arbitrumGoerli',
+  Chiado = 'chiado',
+  Fuse = 'fuse',
+  FuseSparknet = 'fuseSparknet',
+  Gnosis = 'gnosis',
+  KromaTestnet = 'kromaTestnet',
+  Mainnet = 'mainnet',
+  OptimismGoerli = 'optimismGoerli',
+  RSKTestnet = 'RSKTestnet',
+  VerseTestnet = 'verseTestnet',
+  Mantle = 'Mantle',
 }
 
-export const SupportedNetworks = [5, 80001, 84531, 11155111, 10, 137, 42161 ]
+export const SupportedNetworks = [1, 5, 10, 31, 100, 122, 123, 137, 420, 2357, 5000, 10200, 20197, 42161, 80001, 84531, 421613, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -22,7 +33,20 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Optimism]: 10,
   [NetworkNames.Polygon]: 137,
   [NetworkNames.Arbitrum]: 42161,
+  [NetworkNames.ArbitrumGoerli]: 421613,
+  [NetworkNames.Chiado]: 10200,
+  [NetworkNames.Fuse]: 122,
+  [NetworkNames.FuseSparknet]: 123,
+  [NetworkNames.Gnosis]: 100,
+  [NetworkNames.KromaTestnet]: 2357,
+  [NetworkNames.Mainnet]: 1,
+  [NetworkNames.OptimismGoerli]: 420,
+  [NetworkNames.RSKTestnet]: 31,
+  [NetworkNames.VerseTestnet]: 20197,
+  [NetworkNames.Mantle]: 5000,
 };
+
+export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
 
 export const Networks: {
   [key: string]: NetworkConfig
@@ -32,8 +56,7 @@ export const Networks: {
     bundler: 'https://goerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -45,8 +68,7 @@ export const Networks: {
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -58,8 +80,7 @@ export const Networks: {
     bundler: 'https://basegoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -71,8 +92,7 @@ export const Networks: {
     bundler: 'https://sepolia-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -84,8 +104,7 @@ export const Networks: {
     bundler: 'https://optimism-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -97,8 +116,7 @@ export const Networks: {
     bundler: 'https://polygon-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
@@ -110,8 +128,139 @@ export const Networks: {
     bundler: 'https://arbitrum-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x2f771DCa6Ffa3879e48355E8A4aF5b81d82A6164',
-      uniswapV3SwapRouter: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [1]: {
+    chainId: 1,
+    bundler: 'https://ethereum-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [421613]: {
+    chainId: 421613,
+    bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [10200]: {
+    chainId: 10200,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [122]: {
+    chainId: 122,
+    bundler: 'https://fuse-bundler.etherspot.io',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [123]: {
+    chainId: 123,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [100]: {
+    chainId: 100,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [2357]: {
+    chainId: 2357,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [420]: {
+    chainId: 420,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [31]: {
+    chainId: 31,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [20197]: {
+    chainId: 20197,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+    },
+    paymaster: {
+      use: false,
+      url: '',
+    },
+  },
+  [5000]: {
+    chainId: 5000,
+    bundler: 'https://mantle-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
     },
     paymaster: {
       use: false,
