@@ -3,13 +3,13 @@ import { State, StateService } from './state';
 import { isWalletProvider, WalletProviderLike } from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, UserOpsRequest } from "./common";
+import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
-import { getNetworkConfig, Networks } from './network/constants';
+import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
-import { EtherspotWalletAPI, HttpRpcClient } from './base';
+import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, SignMessageDto, validateDto } from './dto';
+import { CreateSessionDto, OnRamperDto, SignMessageDto, validateDto } from './dto';
 import { Session } from '.';
 import { ERC20__factory } from './contracts';
 
@@ -22,8 +22,9 @@ export class PrimeSdk {
 
   private etherspotWallet: EtherspotWalletAPI;
   private bundler: HttpRpcClient;
+  private chainId: number;
 
-  private userOpsBatch: BatchUserOpsRequest = {to: [], data: [], value: []};
+  private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
@@ -36,9 +37,12 @@ export class PrimeSdk {
       rpcProviderUrl,
     } = optionsLike;
 
+    this.chainId = chainId;
+
     if (!optionsLike.bundlerRpcUrl) {
       const networkConfig = getNetworkConfig(chainId);
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
+      if (optionsLike.bundlerRpcUrl == '') throw new Exception('No bundler Rpc provided');
     }
 
 
@@ -48,13 +52,18 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
+    let paymasterAPI = null;
+    if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+    }
+
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
       walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
-      paymasterAPI: optionsLike.paymasterApi,
+      paymasterAPI,
     })
 
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -118,10 +127,8 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async sign(gasDetails?: TransactionGasInfoForUserOp) {
-    const gas = await this.getGasFee();
-
-    if (this.userOpsBatch.to.length < 1){
+  async estimate(gasDetails?: TransactionGasInfoForUserOp) {
+    if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
 
@@ -132,29 +139,44 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
-    let partialtx = await this.etherspotWallet.createSignedUserOp({
+    let partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      ...gas,
+      maxFeePerGas: 1,
+      maxPriorityFeePerGas: 1,
     });
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
-    
+
+    // if estimation has gas prices use them, otherwise fetch them in a separate call
+    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
+    } else {
+      const gas = await this.getGasFee();
+      partialtx.maxFeePerGas = gas.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gas.maxPriorityFeePerGas;
+    }
+
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
-      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGas);
+      partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
-    return await this.etherspotWallet.signUserOp(partialtx);
+    return partialtx;
 
   }
 
   async getGasFee() {
+    const version = await this.bundler.getBundlerVersion();
+    if (version.includes('skandha'))
+      return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
 
   async send(userOp: UserOperationStruct) {
-    return this.bundler.sendUserOpToBundler(userOp);
+    const signedUserOp = await this.etherspotWallet.signUserOp(userOp);
+    return this.bundler.sendUserOpToBundler(signedUserOp);
   }
 
   async getNativeBalance() {
@@ -176,21 +198,8 @@ export class PrimeSdk {
     return ethers.utils.formatUnits(balance[0], dec);
   }
 
-  async getUserOpReceipt(userOpHash: string, timeout = 60000, interval = 5000): Promise<string | null> {
-    const block = await this.etherspotWallet.provider.getBlock('latest');
-    const endtime = Date.now() + timeout;
-    while (Date.now() < endtime) {
-      const events = await this.etherspotWallet.epView.queryFilter(
-        this.etherspotWallet.epView.filters.UserOperationEvent(userOpHash),
-        Math.max(100, block.number - 100),
-      );
-      if (events.length > 0) {
-        console.log(events[0].args.actualGasUsed.toString());
-        return events[0].transactionHash;
-      }
-      await new Promise((resolve) => setTimeout(resolve, interval));
-    }
-    return null;
+  async getUserOpReceipt(userOpHash: string) {
+    return this.bundler.getUserOpsReceipt(userOpHash);
   }
 
   async getUserOpHash(userOp: UserOperationStruct) {
@@ -200,6 +209,7 @@ export class PrimeSdk {
   async addUserOpsToBatch(
     tx: UserOpsRequest,
   ): Promise<BatchUserOpsRequest> {
+    if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
     this.userOpsBatch.to.push(tx.to);
     this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
     this.userOpsBatch.data.push(tx.data ?? '0x');
@@ -221,6 +231,38 @@ export class PrimeSdk {
     const verificationGasLimit = BigNumber.from(await userOp.verificationGasLimit);
     const preVerificationGas = BigNumber.from(await userOp.preVerificationGas);
     return callGasLimit.add(verificationGasLimit).add(preVerificationGas);
+  }
+
+  async getFiatOnRamp(params: OnRamperDto = {}) {
+    if (!params.onlyCryptoNetworks) params.onlyCryptoNetworks = onRamperAllNetworks.join(',');
+    else {
+      const networks = params.onlyCryptoNetworks.split(',');
+      for (const network in networks) {
+        if (!onRamperAllNetworks.includes(network)) throw new Error('Included Networks which are not supported. Please Check');
+      }
+    }
+
+    const url = `https://buy.onramper.com/?networkWallets=ETHEREUM:${await this.getCounterFactualAddress()}` +
+      `&apiKey=${onRampApiKey}` +
+      `&onlyCryptoNetworks=${params.onlyCryptoNetworks}` +
+      `${params.defaultCrypto ? `&defaultCrypto=${params.defaultCrypto}` : ``}` +
+      `${params.excludeCryptos ? `&excludeCryptos=${params.excludeCryptos}` : ``}` +
+      `${params.onlyCryptos ? `&onlyCryptos=${params.onlyCryptos}` : ``}` +
+      `${params.excludeCryptoNetworks ? `&excludeCryptoNetworks=${params.excludeCryptoNetworks}` : ``}` +
+      `${params.defaultAmount ? `&defaultCrypto=${params.defaultAmount}` : ``}` +
+      `${params.defaultFiat ? `&defaultFiat=${params.defaultFiat}` : ``}` +
+      `${params.isAmountEditable ? `&isAmountEditable=${params.isAmountEditable}` : ``}` +
+      `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
+      `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
+      `&themeName=${params.themeName ?? 'dark'}`;
+    
+    if (typeof window === 'undefined') {
+      openUrl(url);
+    } else {
+      window.open(url);
+    }
+
+    return url;
   }
 
 }

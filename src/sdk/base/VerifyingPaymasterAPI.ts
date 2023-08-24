@@ -9,22 +9,24 @@ const SIG_SIZE = 65;
 const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 
-interface paymasterResponse {
-  jsonrpc: string;
-  id: number;
-  result: BytesLike;
+export interface paymasterResponse {
+  paymasterAndData: string;
+  verificationGasLimit: string;
+  preVerificationGas?: string;
 }
 
 export class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
-  constructor(paymasterUrl: string, entryPoint: string) {
+  private context: any;
+  constructor(paymasterUrl: string, entryPoint: string, context: any) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
+    this.context = context;
   }
 
-  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<string> {
+  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<paymasterResponse> {
     // Hack: userOp includes empty paymasterAndData which calcPreVerificationGas requires.
     try {
       // userOp.preVerificationGas contains a promise that will resolve to an error.
@@ -48,16 +50,20 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     op.preVerificationGas = calcPreVerificationGas(op);
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
-    return axios
+    const paymasterAndData = await axios
       .post<paymasterResponse>(this.paymasterUrl, {
         jsonrpc: '2.0',
         id: 1,
         method: 'pm_sponsorUserOperation',
-        params: [await toJSON(op), this.entryPoint],
+        params: [await toJSON(op), this.entryPoint, this.context],
       })
-      .then((res) => res.data.result.toString());
+      .then((res) => {
+        return res.data
+      });
+
+    return {paymasterAndData: paymasterAndData.paymasterAndData, verificationGasLimit: paymasterAndData.verificationGasLimit, preVerificationGas: op.preVerificationGas.toString()};
   }
 }
 
-export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string) =>
-  new VerifyingPaymasterAPI(paymasterUrl, entryPoint);
+export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string, context: any) =>
+  new VerifyingPaymasterAPI(paymasterUrl, entryPoint, context);

@@ -11,7 +11,6 @@ export interface NetworkConfig {
   contracts: {
     entryPoint: string;
     walletFactory: string;
-    uniswapV3SwapRouter: string;
   };
   paymaster: {
     use: boolean;
