@@ -1,4 +1,8 @@
 # Changelog
+## [1.1.6] - 2023-08-24
+### Bug Fixes
+- Fixes on User hash was created before initialising the paymaster response if given which leads to "Invalid signature or paymaster signature"
+
 ## [1.1.4] - 2023-08-21
 ### Breaking Changes
 - Changed the way of initialising the Paymaster url to string as before it was unreachable code to get VerifyingPaymasterApi class to pass on to the Prime-Sdk
