@@ -1,4 +1,5 @@
 import { BytesLike, Wallet } from 'ethers';
+import type UniversalProvider from '@walletconnect/universal-provider';
 import { UniqueSubject } from '../../common';
 import { NetworkNames } from '../../network';
 
@@ -36,4 +37,18 @@ export interface WalletLike {
   privateKey: string;
 }
 
-export type WalletProviderLike = string | WalletLike | WalletProvider;
+export declare class EthereumProvider {
+  accounts: string[];
+  signer: InstanceType<typeof UniversalProvider>;
+  chainId: number;
+  request<T = unknown>(args: RequestArguments): Promise<T>;
+  sendAsync(args: RequestArguments, callback: (error: Error | null, response: any) => void): void;
+  disconnect(): Promise<void>;
+  on(event: string, callback: (error: Error | null, payload: any | null) => void): void;
+  once(event: string, callback: (error: Error | null, payload: any | null) => void): void;
+  removeListener(event: string, callback: (error: Error | null, payload: any | null) => void): void;
+  off(event: string, callback: (error: Error | null, payload: any | null) => void): void;
+  readonly isWalletConnect?: boolean;
+}
+
+export type WalletProviderLike = string | WalletLike | WalletProvider | EthereumProvider;
