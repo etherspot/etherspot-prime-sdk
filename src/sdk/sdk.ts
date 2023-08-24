@@ -34,11 +34,10 @@ export class PrimeSdk {
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
+    let walletConnectProvider;
     if (isWalletConnectProvider(walletProvider)) {
-      walletProvider = new WalletConnect2WalletProvider(walletProvider as EthereumProvider);
-    }
-
-    if (!isWalletProvider(walletProvider)) {
+      walletConnectProvider = new WalletConnect2WalletProvider(walletProvider as EthereumProvider);
+    } else if (!isWalletProvider(walletProvider)) {
       throw new Exception('Invalid wallet provider');
     }
 
@@ -69,7 +68,7 @@ export class PrimeSdk {
 
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
-      walletProvider,
+      walletProvider: walletConnectProvider ?? walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
