@@ -1,5 +1,4 @@
 import { Subscription } from 'rxjs';
-import { EtherspotWalletAPI } from '../base';
 import { Context } from '../context';
 
 export abstract class Service {

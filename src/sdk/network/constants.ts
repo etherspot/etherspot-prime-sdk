@@ -62,6 +62,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [80001]: {
     chainId: 80001,
@@ -74,6 +75,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [84531]: {
     chainId: 84531,
@@ -86,6 +88,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [11155111]: {
     chainId: 11155111,
@@ -98,6 +101,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [10]: {
     chainId: 10,
@@ -110,6 +114,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [137]: {
     chainId: 137,
@@ -122,6 +127,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [42161]: {
     chainId: 42161,
@@ -134,6 +140,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [1]: {
     chainId: 1,
@@ -146,6 +153,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [421613]: {
     chainId: 421613,
@@ -158,6 +166,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [10200]: {
     chainId: 10200,
@@ -170,6 +179,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [122]: {
     chainId: 122,
@@ -182,6 +192,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [123]: {
     chainId: 123,
@@ -194,6 +205,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [100]: {
     chainId: 100,
@@ -206,6 +218,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [2357]: {
     chainId: 2357,
@@ -218,6 +231,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [420]: {
     chainId: 420,
@@ -230,6 +244,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [31]: {
     chainId: 31,
@@ -242,6 +257,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [20197]: {
     chainId: 20197,
@@ -254,6 +270,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
   [5000]: {
     chainId: 5000,
@@ -266,6 +283,7 @@ export const Networks: {
       use: false,
       url: '',
     },
+    graphqlEndpoint: '',
   },
 };
 
