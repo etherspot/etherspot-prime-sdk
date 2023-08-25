@@ -25,6 +25,17 @@ export class ObjectSubject<T extends {}, K extends keyof T = keyof T> extends Be
     }
   }
 
+  nextData(value: T): void {
+    if (!value) {
+      super.next('' as any);
+    } else if (
+      !this.value || //
+      !deepCompare(this.prepareForCompare(this.value), this.prepareForCompare(value))
+    ) {
+      super.next(this.prepareForNext(value));
+    }
+  }
+
   prepareForNext(value: T): T {
     return value;
   }

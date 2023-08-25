@@ -6,9 +6,9 @@ import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
 
 export class DataService extends Service {
-  readonly currentProject$ = new ObjectSubject<string>(null);
+  readonly currentProject$ = new ObjectSubject<string>('');
 
-  constructor(currentProject: string = null) {
+  constructor(currentProject = '') {
     super();
     this.switchCurrentProject(currentProject);
   }
@@ -19,8 +19,7 @@ export class DataService extends Service {
 
   get headers(): { [key: string]: any } {
     let result: { [key: string]: any } = {};
-
-    if (this.currentProject) {
+    if (this.currentProject || this.currentProject === '') {
       const key = this.currentProject;
 
       result = {
@@ -32,7 +31,7 @@ export class DataService extends Service {
   }
 
   switchCurrentProject(currentProject: string): string {
-    this.currentProject$.next(currentProject);
+    this.currentProject$.nextData(currentProject);
 
     return this.currentProject;
   }
