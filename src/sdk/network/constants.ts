@@ -56,7 +56,7 @@ export const Networks: {
     bundler: 'https://goerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -69,7 +69,7 @@ export const Networks: {
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -82,7 +82,7 @@ export const Networks: {
     bundler: 'https://basegoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -95,7 +95,7 @@ export const Networks: {
     bundler: 'https://sepolia-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -108,7 +108,7 @@ export const Networks: {
     bundler: 'https://optimism-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -121,7 +121,7 @@ export const Networks: {
     bundler: 'https://polygon-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -134,7 +134,7 @@ export const Networks: {
     bundler: 'https://arbitrum-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -147,7 +147,7 @@ export const Networks: {
     bundler: 'https://ethereum-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -160,7 +160,7 @@ export const Networks: {
     bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -173,7 +173,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -186,7 +186,7 @@ export const Networks: {
     bundler: 'https://fuse-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -199,7 +199,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -212,7 +212,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -225,7 +225,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -238,7 +238,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -251,7 +251,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -264,7 +264,7 @@ export const Networks: {
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
@@ -277,7 +277,7 @@ export const Networks: {
     bundler: 'https://mantle-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
     paymaster: {
       use: false,
