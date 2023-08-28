@@ -1,4 +1,7 @@
 # Changelog
+## [1.2.0] - 2023-08-28
+### Breaking Changes
+- Changed the wallet factory address so the smart wallet address will generate a new address. Whoever wishes to access the old wallet should use version 1.1.7 to connect to the old smart wallet
 
 ## [1.1.7] - 2023-08-24
 ### New
