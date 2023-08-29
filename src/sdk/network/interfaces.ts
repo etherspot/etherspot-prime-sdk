@@ -16,5 +16,5 @@ export interface NetworkConfig {
     use: boolean;
     url: string;
   };
-  graphqlEndpoint: string;
+  graphqlEndpoint?: string;
 };
