@@ -43,9 +43,7 @@ export class PrimeSdk {
       const networkConfig = getNetworkConfig(chainId);
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
       if (optionsLike.bundlerRpcUrl == '') throw new Exception('No bundler Rpc provided');
-
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
-      if (optionsLike.graphqlEndpoint == '') throw new Exception('No graphql endpoint provided');
     }
 
 
