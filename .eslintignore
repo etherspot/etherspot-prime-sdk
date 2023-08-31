@@ -2,3 +2,6 @@ node_modules
 dist
 coverage
 __snapshots__
+src/sdk/contracts/**/*.ts
+src/sdk/base/HttpRpcClient.ts
+src/sdk/state/state.service.ts

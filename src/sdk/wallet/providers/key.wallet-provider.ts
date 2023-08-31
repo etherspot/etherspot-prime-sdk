@@ -1,4 +1,4 @@
-import { Wallet, BytesLike, providers } from 'ethers';
+import { Wallet, BytesLike } from 'ethers';
 import { WalletProvider } from './interfaces';
 
 export class KeyWalletProvider implements WalletProvider {

@@ -1,5 +1,5 @@
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
-import { paymasterResponse } from './VerifyingPaymasterAPI';
+import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
 /**
  * an API to external a UserOperation with paymaster info
@@ -11,7 +11,8 @@ export class PaymasterAPI {
    *  paymasterAndData value, which will only be returned by this method..
    * @returns the value to put into the PaymasterAndData, undefined to leave it empty
    */
-  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<paymasterResponse | undefined> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse | undefined> {
     return { paymasterAndData: '0x', verificationGasLimit: '0x' };
   }
 }

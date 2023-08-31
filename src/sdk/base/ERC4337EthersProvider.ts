@@ -112,6 +112,7 @@ export class ERC4337EthersProvider extends BaseProvider {
       value: BigNumber.from(0),
       data: hexValue(userOp.callData), // should extract the actual called method from this "execFromEntryPoint()" call
       chainId: this.chainId,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       wait: async (confirmations?: number): Promise<TransactionReceipt> => {
         const transactionReceipt = await waitPromise;
         if (userOp.initCode.length !== 0) {
