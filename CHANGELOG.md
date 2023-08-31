@@ -1,4 +1,15 @@
 # Changelog
+
+## [1.1.7] - 2023-08-24
+### New
+- Added getAccountBalances to get account balances
+- Added getTransaction to get transaction
+- Added getTransactions to get transactions
+- Added getNftList to get NFT list belonging to account
+- Added getExchangeOffers to get exchange offers
+- Added getAdvanceRoutesLiFi to get advance routes
+- Added getStepTransaction to get step transaction from LIFI
+- Added getCrossChainQuotes to get multi chain quotes
 ## [1.1.6] - 2023-08-24
 ### Bug Fixes
 - Fixes on User hash was created before initialising the paymaster response if given which leads to "Invalid signature or paymaster signature"

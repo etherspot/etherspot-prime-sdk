@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { resolveProperties } from 'ethers/lib/utils';
 import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
 import Debug from 'debug';

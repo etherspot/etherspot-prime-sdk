@@ -5,6 +5,7 @@ import { Session } from './classes';
 import { createSessionMessage } from './utils';
 import { SessionOptions, SessionStorageLike } from './interfaces';
 import { SessionStorage } from './session.storage';
+import { gql } from '@apollo/client/core';
 
 export class SessionService extends Service {
   private readonly storage: SessionStorageLike;
@@ -51,7 +52,7 @@ export class SessionService extends Service {
   }
 
   async createSession(ttl?: number, fcmToken?: string): Promise<Session> {
-    const { walletService } = this.services;
+    const { apiService, walletService } = this.services;
     const { walletAddress } = walletService;
 
     let session: Session;
@@ -59,12 +60,74 @@ export class SessionService extends Service {
     let signerAddress: string;
 
     try {
-      const message = createSessionMessage("Etherspot 4337");
+      const { code } = await apiService.mutate<{
+        code: string;
+      }>(
+        gql`
+          mutation($chainId: Int, $account: String!) {
+            code: createSessionCode(chainId: $chainId, account: $account)
+          }
+        `,
+        {
+          variables: {
+            account: walletAddress,
+          },
+        },
+      );
+
+      const message = createSessionMessage(code);
       const messageHash = utils.arrayify(utils.hashMessage(message));
 
       const signature = await walletService.signMessage(message);
 
       signerAddress = utils.recoverAddress(messageHash, signature);
+
+      ({ session } = await apiService.mutate<{
+        session: Session;
+      }>(
+        gql`
+          mutation(
+            $chainId: Int
+            $account: String!
+            $code: String!
+            $signature: String!
+            $ttl: Int
+            $fcmToken: String
+          ) {
+            session: createSession(
+              chainId: $chainId
+              account: $account
+              code: $code
+              signature: $signature
+              ttl: $ttl
+              fcmToken: $fcmToken
+            ) {
+              token
+              ttl
+              account {
+                address
+                type
+                state
+                store
+                createdAt
+                updatedAt
+              }
+            }
+          }
+        `,
+        {
+          variables: {
+            code,
+            signature,
+            ttl,
+            account: walletAddress,
+            fcmToken,
+          },
+          models: {
+            session: Session,
+          },
+        },
+      ));
     } catch (err) {
       session = null;
       error = err;
