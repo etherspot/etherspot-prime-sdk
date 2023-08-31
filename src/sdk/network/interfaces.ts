@@ -12,5 +12,5 @@ export interface NetworkConfig {
     entryPoint: string;
     walletFactory: string;
   };
-  graphqlEndpoint: string;
+  graphqlEndpoint?: string;
 };
