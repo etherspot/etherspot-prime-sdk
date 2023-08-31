@@ -1,6 +1,12 @@
 import { BehaviorSubject } from 'rxjs';
 import { State, StateService } from './state';
-import { isWalletProvider, WalletProviderLike } from './wallet';
+import {
+  EthereumProvider,
+  isWalletConnectProvider,
+  isWalletProvider,
+  WalletConnect2WalletProvider,
+  WalletProviderLike
+} from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
@@ -28,7 +34,10 @@ export class PrimeSdk {
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
-    if (!isWalletProvider(walletProvider)) {
+    let walletConnectProvider;
+    if (isWalletConnectProvider(walletProvider)) {
+      walletConnectProvider = new WalletConnect2WalletProvider(walletProvider as EthereumProvider);
+    } else if (!isWalletProvider(walletProvider)) {
       throw new Exception('Invalid wallet provider');
     }
 
@@ -60,7 +69,7 @@ export class PrimeSdk {
 
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
-      walletProvider,
+      walletProvider: walletConnectProvider ?? walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
@@ -256,7 +265,7 @@ export class PrimeSdk {
       `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
       `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
       `&themeName=${params.themeName ?? 'dark'}`;
-    
+
     if (typeof window === 'undefined') {
       openUrl(url);
     } else {
