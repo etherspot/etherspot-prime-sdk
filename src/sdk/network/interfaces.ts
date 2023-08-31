@@ -12,9 +12,5 @@ export interface NetworkConfig {
     entryPoint: string;
     walletFactory: string;
   };
-  paymaster: {
-    use: boolean;
-    url: string;
-  };
   graphqlEndpoint?: string;
 };
