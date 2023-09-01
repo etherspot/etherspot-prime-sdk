@@ -12,64 +12,142 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers';
-import type { FunctionFragment, Result } from '@ethersproject/abi';
-import type { Listener, Provider } from '@ethersproject/providers';
+} from "ethers";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from '../../common';
+} from "../../common";
 
 export interface EtherspotWalletFactoryInterface extends utils.Interface {
   functions: {
-    'accountImplementation()': FunctionFragment;
-    'createAccount(address,address,uint256)': FunctionFragment;
-    'getAddress(address,address,uint256)': FunctionFragment;
+    "accountCreationCode()": FunctionFragment;
+    "accountImplementation()": FunctionFragment;
+    "changeOwner(address)": FunctionFragment;
+    "checkImplementation(address)": FunctionFragment;
+    "createAccount(address,uint256)": FunctionFragment;
+    "getAddress(address,uint256)": FunctionFragment;
+    "owner()": FunctionFragment;
+    "setImplementation(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'accountImplementation'
-      | 'createAccount'
-      | 'getAddress'
+      | "accountCreationCode"
+      | "accountImplementation"
+      | "changeOwner"
+      | "checkImplementation"
+      | "createAccount"
+      | "getAddress"
+      | "owner"
+      | "setImplementation"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: 'accountImplementation',
+    functionFragment: "accountCreationCode",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: 'createAccount',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "accountImplementation",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: 'getAddress',
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "changeOwner",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkImplementation",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createAccount",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAddress",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "setImplementation",
+    values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: 'accountImplementation',
+    functionFragment: "accountCreationCode",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'createAccount',
+    functionFragment: "accountImplementation",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: 'getAddress', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "changeOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "checkImplementation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createAccount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getAddress", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setImplementation",
+    data: BytesLike
+  ): Result;
 
-  events: {};
+  events: {
+    "AccountCreation(address,address,uint256)": EventFragment;
+    "ImplementationSet(address)": EventFragment;
+    "OwnerChanged(address)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "AccountCreation"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ImplementationSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnerChanged"): EventFragment;
 }
+
+export interface AccountCreationEventObject {
+  wallet: string;
+  owner: string;
+  index: BigNumber;
+}
+export type AccountCreationEvent = TypedEvent<
+  [string, string, BigNumber],
+  AccountCreationEventObject
+>;
+
+export type AccountCreationEventFilter = TypedEventFilter<AccountCreationEvent>;
+
+export interface ImplementationSetEventObject {
+  newImplementation: string;
+}
+export type ImplementationSetEvent = TypedEvent<
+  [string],
+  ImplementationSetEventObject
+>;
+
+export type ImplementationSetEventFilter =
+  TypedEventFilter<ImplementationSetEvent>;
+
+export interface OwnerChangedEventObject {
+  newOwner: string;
+}
+export type OwnerChangedEvent = TypedEvent<[string], OwnerChangedEventObject>;
+
+export type OwnerChangedEventFilter = TypedEventFilter<OwnerChangedEvent>;
 
 export interface EtherspotWalletFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -98,94 +176,200 @@ export interface EtherspotWalletFactory extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    accountCreationCode(overrides?: CallOverrides): Promise<[string]>;
+
     accountImplementation(overrides?: CallOverrides): Promise<[string]>;
 
+    changeOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    checkImplementation(
+      _impl: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     createAccount(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     getAddress(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string]>;
+    ): Promise<[string] & { proxy: string }>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    setImplementation(
+      _newImpl: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  accountCreationCode(overrides?: CallOverrides): Promise<string>;
 
   accountImplementation(overrides?: CallOverrides): Promise<string>;
 
+  changeOwner(
+    _newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  checkImplementation(
+    _impl: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   createAccount(
-    _entryPoint: PromiseOrValue<string>,
-    owner: PromiseOrValue<string>,
-    salt: PromiseOrValue<BigNumberish>,
+    _owner: PromiseOrValue<string>,
+    _index: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   getAddress(
-    _entryPoint: PromiseOrValue<string>,
-    owner: PromiseOrValue<string>,
-    salt: PromiseOrValue<BigNumberish>,
+    _owner: PromiseOrValue<string>,
+    _index: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  setImplementation(
+    _newImpl: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    accountCreationCode(overrides?: CallOverrides): Promise<string>;
+
     accountImplementation(overrides?: CallOverrides): Promise<string>;
 
+    changeOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    checkImplementation(
+      _impl: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     createAccount(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     getAddress(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    setImplementation(
+      _newImpl: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "AccountCreation(address,address,uint256)"(
+      wallet?: PromiseOrValue<string> | null,
+      owner?: PromiseOrValue<string> | null,
+      index?: null
+    ): AccountCreationEventFilter;
+    AccountCreation(
+      wallet?: PromiseOrValue<string> | null,
+      owner?: PromiseOrValue<string> | null,
+      index?: null
+    ): AccountCreationEventFilter;
+
+    "ImplementationSet(address)"(
+      newImplementation?: null
+    ): ImplementationSetEventFilter;
+    ImplementationSet(newImplementation?: null): ImplementationSetEventFilter;
+
+    "OwnerChanged(address)"(newOwner?: null): OwnerChangedEventFilter;
+    OwnerChanged(newOwner?: null): OwnerChangedEventFilter;
+  };
 
   estimateGas: {
+    accountCreationCode(overrides?: CallOverrides): Promise<BigNumber>;
+
     accountImplementation(overrides?: CallOverrides): Promise<BigNumber>;
 
+    changeOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    checkImplementation(
+      _impl: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     createAccount(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getAddress(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setImplementation(
+      _newImpl: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    accountCreationCode(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     accountImplementation(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    changeOwner(
+      _newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    checkImplementation(
+      _impl: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     createAccount(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getAddress(
-      _entryPoint: PromiseOrValue<string>,
-      owner: PromiseOrValue<string>,
-      salt: PromiseOrValue<BigNumberish>,
+      _owner: PromiseOrValue<string>,
+      _index: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setImplementation(
+      _newImpl: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

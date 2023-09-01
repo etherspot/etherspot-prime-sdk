@@ -14,11 +14,81 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "bool",
-        name: "success",
-        type: "bool",
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
       },
+      {
+        indexed: true,
+        internalType: "address[]",
+        name: "accounts",
+        type: "address[]",
+      },
+    ],
+    name: "AddedBatchToWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "AddedToWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address[]",
+        name: "accounts",
+        type: "address[]",
+      },
+    ],
+    name: "RemovedBatchFromWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "RemovedFromWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: false,
         internalType: "address",
@@ -31,15 +101,48 @@ const _abi = [
         name: "sender",
         type: "address",
       },
+    ],
+    name: "SponsorSuccessful",
+    type: "event",
+  },
+  {
+    inputs: [
       {
-        indexed: false,
-        internalType: "bytes",
-        name: "userOpHash",
-        type: "bytes",
+        internalType: "address[]",
+        name: "_accounts",
+        type: "address[]",
       },
     ],
-    name: "SponsorTransaction",
-    type: "event",
+    name: "addBatchToWhitelist",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "unstakeDelaySec",
+        type: "uint32",
+      },
+    ],
+    name: "addStake",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_account",
+        type: "address",
+      },
+    ],
+    name: "addToWhitelist",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
@@ -48,13 +151,18 @@ const _abi = [
         name: "_sponsor",
         type: "address",
       },
+      {
+        internalType: "address",
+        name: "_account",
+        type: "address",
+      },
     ],
-    name: "checkSponsorFunds",
+    name: "check",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "bool",
         name: "",
-        type: "uint256",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -65,6 +173,19 @@ const _abi = [
     name: "depositFunds",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getDeposit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -131,6 +252,16 @@ const _abi = [
         name: "userOp",
         type: "tuple",
       },
+      {
+        internalType: "uint48",
+        name: "validUntil",
+        type: "uint48",
+      },
+      {
+        internalType: "uint48",
+        name: "validAfter",
+        type: "uint48",
+      },
     ],
     name: "getHash",
     outputs: [
@@ -138,6 +269,54 @@ const _abi = [
         internalType: "bytes32",
         name: "",
         type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_sponsor",
+        type: "address",
+      },
+    ],
+    name: "getSponsorBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "paymasterAndData",
+        type: "bytes",
+      },
+    ],
+    name: "parsePaymasterAndData",
+    outputs: [
+      {
+        internalType: "uint48",
+        name: "validUntil",
+        type: "uint48",
+      },
+      {
+        internalType: "uint48",
+        name: "validAfter",
+        type: "uint48",
+      },
+      {
+        internalType: "bytes",
+        name: "signature",
+        type: "bytes",
       },
     ],
     stateMutability: "pure",
@@ -162,6 +341,39 @@ const _abi = [
       },
     ],
     name: "postOp",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "_accounts",
+        type: "address[]",
+      },
+    ],
+    name: "removeBatchFromWhitelist",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_account",
+        type: "address",
+      },
+    ],
+    name: "removeFromWhitelist",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "unlockStake",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -254,6 +466,37 @@ const _abi = [
         type: "uint256",
       },
     ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "_sponsor",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "withdrawAddress",
+        type: "address",
+      },
+    ],
+    name: "withdrawStake",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

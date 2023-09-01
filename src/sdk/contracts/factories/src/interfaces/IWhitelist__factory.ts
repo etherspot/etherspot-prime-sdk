@@ -11,17 +11,80 @@ import type {
 
 const _abi = [
   {
+    anonymous: false,
     inputs: [
       {
+        indexed: true,
         internalType: "address",
-        name: "_account",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address[]",
+        name: "accounts",
+        type: "address[]",
+      },
+    ],
+    name: "AddedBatchToWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
         type: "address",
       },
     ],
-    name: "add",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    name: "AddedToWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address[]",
+        name: "accounts",
+        type: "address[]",
+      },
+    ],
+    name: "RemovedBatchFromWhitelist",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "paymaster",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "RemovedFromWhitelist",
+    type: "event",
   },
   {
     inputs: [
@@ -31,7 +94,20 @@ const _abi = [
         type: "address[]",
       },
     ],
-    name: "addBatch",
+    name: "addBatchToWhitelist",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_account",
+        type: "address",
+      },
+    ],
+    name: "addToWhitelist",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -63,12 +139,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_account",
-        type: "address",
+        internalType: "address[]",
+        name: "_accounts",
+        type: "address[]",
       },
     ],
-    name: "remove",
+    name: "removeBatchFromWhitelist",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -76,12 +152,12 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address[]",
-        name: "_accounts",
-        type: "address[]",
+        internalType: "address",
+        name: "_account",
+        type: "address",
       },
     ],
-    name: "removeBatch",
+    name: "removeFromWhitelist",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

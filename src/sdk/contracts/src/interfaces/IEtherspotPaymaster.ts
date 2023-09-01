@@ -13,20 +13,20 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers';
+} from "ethers";
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from '@ethersproject/abi';
-import type { Listener, Provider } from '@ethersproject/providers';
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from '../../common';
+} from "../../common";
 
 export type UserOperationStruct = {
   sender: PromiseOrValue<string>;
@@ -70,36 +70,86 @@ export type UserOperationStructOutput = [
 
 export interface IEtherspotPaymasterInterface extends utils.Interface {
   functions: {
-    'checkSponsorFunds(address)': FunctionFragment;
-    'depositFunds()': FunctionFragment;
-    'getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))': FunctionFragment;
-    'postOp(uint8,bytes,uint256)': FunctionFragment;
-    'validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)': FunctionFragment;
+    "addBatchToWhitelist(address[])": FunctionFragment;
+    "addStake(uint32)": FunctionFragment;
+    "addToWhitelist(address)": FunctionFragment;
+    "check(address,address)": FunctionFragment;
+    "depositFunds()": FunctionFragment;
+    "getDeposit()": FunctionFragment;
+    "getHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),uint48,uint48)": FunctionFragment;
+    "getSponsorBalance(address)": FunctionFragment;
+    "parsePaymasterAndData(bytes)": FunctionFragment;
+    "postOp(uint8,bytes,uint256)": FunctionFragment;
+    "removeBatchFromWhitelist(address[])": FunctionFragment;
+    "removeFromWhitelist(address)": FunctionFragment;
+    "unlockStake()": FunctionFragment;
+    "validatePaymasterUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    "withdrawFunds(address,uint256)": FunctionFragment;
+    "withdrawStake(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'checkSponsorFunds'
-      | 'depositFunds'
-      | 'getHash'
-      | 'postOp'
-      | 'validatePaymasterUserOp'
+      | "addBatchToWhitelist"
+      | "addStake"
+      | "addToWhitelist"
+      | "check"
+      | "depositFunds"
+      | "getDeposit"
+      | "getHash"
+      | "getSponsorBalance"
+      | "parsePaymasterAndData"
+      | "postOp"
+      | "removeBatchFromWhitelist"
+      | "removeFromWhitelist"
+      | "unlockStake"
+      | "validatePaymasterUserOp"
+      | "withdrawFunds"
+      | "withdrawStake"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: 'checkSponsorFunds',
+    functionFragment: "addBatchToWhitelist",
+    values: [PromiseOrValue<string>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addStake",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "addToWhitelist",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: 'depositFunds',
+    functionFragment: "check",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositFunds",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: 'getHash',
-    values: [UserOperationStruct]
+    functionFragment: "getDeposit",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: 'postOp',
+    functionFragment: "getHash",
+    values: [
+      UserOperationStruct,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSponsorBalance",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "parsePaymasterAndData",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "postOp",
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>,
@@ -107,49 +157,158 @@ export interface IEtherspotPaymasterInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: 'validatePaymasterUserOp',
+    functionFragment: "removeBatchFromWhitelist",
+    values: [PromiseOrValue<string>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeFromWhitelist",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unlockStake",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "validatePaymasterUserOp",
     values: [
       UserOperationStruct,
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawFunds",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawStake",
+    values: [PromiseOrValue<string>]
+  ): string;
 
   decodeFunctionResult(
-    functionFragment: 'checkSponsorFunds',
+    functionFragment: "addBatchToWhitelist",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addToWhitelist",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "check", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "depositFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getDeposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getHash", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getSponsorBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'depositFunds',
+    functionFragment: "parsePaymasterAndData",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: 'getHash', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'postOp', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "postOp", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'validatePaymasterUserOp',
+    functionFragment: "removeBatchFromWhitelist",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removeFromWhitelist",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unlockStake",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "validatePaymasterUserOp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawStake",
     data: BytesLike
   ): Result;
 
   events: {
-    'SponsorTransaction(bool,address,address,bytes)': EventFragment;
+    "AddedBatchToWhitelist(address,address[])": EventFragment;
+    "AddedToWhitelist(address,address)": EventFragment;
+    "RemovedBatchFromWhitelist(address,address[])": EventFragment;
+    "RemovedFromWhitelist(address,address)": EventFragment;
+    "SponsorSuccessful(address,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: 'SponsorTransaction'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AddedBatchToWhitelist"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AddedToWhitelist"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RemovedBatchFromWhitelist"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RemovedFromWhitelist"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SponsorSuccessful"): EventFragment;
 }
 
-export interface SponsorTransactionEventObject {
-  success: boolean;
+export interface AddedBatchToWhitelistEventObject {
   paymaster: string;
-  sender: string;
-  userOpHash: string;
+  accounts: string[];
 }
-export type SponsorTransactionEvent = TypedEvent<
-  [boolean, string, string, string],
-  SponsorTransactionEventObject
+export type AddedBatchToWhitelistEvent = TypedEvent<
+  [string, string[]],
+  AddedBatchToWhitelistEventObject
 >;
 
-export type SponsorTransactionEventFilter =
-  TypedEventFilter<SponsorTransactionEvent>;
+export type AddedBatchToWhitelistEventFilter =
+  TypedEventFilter<AddedBatchToWhitelistEvent>;
+
+export interface AddedToWhitelistEventObject {
+  paymaster: string;
+  account: string;
+}
+export type AddedToWhitelistEvent = TypedEvent<
+  [string, string],
+  AddedToWhitelistEventObject
+>;
+
+export type AddedToWhitelistEventFilter =
+  TypedEventFilter<AddedToWhitelistEvent>;
+
+export interface RemovedBatchFromWhitelistEventObject {
+  paymaster: string;
+  accounts: string[];
+}
+export type RemovedBatchFromWhitelistEvent = TypedEvent<
+  [string, string[]],
+  RemovedBatchFromWhitelistEventObject
+>;
+
+export type RemovedBatchFromWhitelistEventFilter =
+  TypedEventFilter<RemovedBatchFromWhitelistEvent>;
+
+export interface RemovedFromWhitelistEventObject {
+  paymaster: string;
+  account: string;
+}
+export type RemovedFromWhitelistEvent = TypedEvent<
+  [string, string],
+  RemovedFromWhitelistEventObject
+>;
+
+export type RemovedFromWhitelistEventFilter =
+  TypedEventFilter<RemovedFromWhitelistEvent>;
+
+export interface SponsorSuccessfulEventObject {
+  paymaster: string;
+  sender: string;
+}
+export type SponsorSuccessfulEvent = TypedEvent<
+  [string, string],
+  SponsorSuccessfulEventObject
+>;
+
+export type SponsorSuccessfulEventFilter =
+  TypedEventFilter<SponsorSuccessfulEvent>;
 
 export interface IEtherspotPaymaster extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -178,24 +337,74 @@ export interface IEtherspotPaymaster extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    checkSponsorFunds(
+    addBatchToWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addStake(
+      unstakeDelaySec: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addToWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    check(
       _sponsor: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[boolean]>;
 
     depositFunds(
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    getDeposit(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getHash(
       userOp: UserOperationStruct,
+      validUntil: PromiseOrValue<BigNumberish>,
+      validAfter: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getSponsorBalance(
+      _sponsor: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    parsePaymasterAndData(
+      paymasterAndData: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [number, number, string] & {
+        validUntil: number;
+        validAfter: number;
+        signature: string;
+      }
+    >;
 
     postOp(
       mode: PromiseOrValue<BigNumberish>,
       context: PromiseOrValue<BytesLike>,
       actualGasCost: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeBatchFromWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    removeFromWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    unlockStake(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -205,26 +414,87 @@ export interface IEtherspotPaymaster extends BaseContract {
       maxCost: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    withdrawFunds(
+      _sponsor: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawStake(
+      withdrawAddress: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  checkSponsorFunds(
+  addBatchToWhitelist(
+    _accounts: PromiseOrValue<string>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addStake(
+    unstakeDelaySec: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addToWhitelist(
+    _account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  check(
     _sponsor: PromiseOrValue<string>,
+    _account: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<boolean>;
 
   depositFunds(
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  getDeposit(overrides?: CallOverrides): Promise<BigNumber>;
+
   getHash(
     userOp: UserOperationStruct,
+    validUntil: PromiseOrValue<BigNumberish>,
+    validAfter: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getSponsorBalance(
+    _sponsor: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  parsePaymasterAndData(
+    paymasterAndData: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<
+    [number, number, string] & {
+      validUntil: number;
+      validAfter: number;
+      signature: string;
+    }
+  >;
 
   postOp(
     mode: PromiseOrValue<BigNumberish>,
     context: PromiseOrValue<BytesLike>,
     actualGasCost: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeBatchFromWhitelist(
+    _accounts: PromiseOrValue<string>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  removeFromWhitelist(
+    _account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  unlockStake(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -235,18 +505,65 @@ export interface IEtherspotPaymaster extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawFunds(
+    _sponsor: PromiseOrValue<string>,
+    _amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawStake(
+    withdrawAddress: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    checkSponsorFunds(
+    addBatchToWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addStake(
+      unstakeDelaySec: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    addToWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    check(
+      _sponsor: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    depositFunds(overrides?: CallOverrides): Promise<void>;
+
+    getDeposit(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getHash(
+      userOp: UserOperationStruct,
+      validUntil: PromiseOrValue<BigNumberish>,
+      validAfter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getSponsorBalance(
       _sponsor: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    depositFunds(overrides?: CallOverrides): Promise<void>;
-
-    getHash(
-      userOp: UserOperationStruct,
+    parsePaymasterAndData(
+      paymasterAndData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<
+      [number, number, string] & {
+        validUntil: number;
+        validAfter: number;
+        signature: string;
+      }
+    >;
 
     postOp(
       mode: PromiseOrValue<BigNumberish>,
@@ -254,6 +571,18 @@ export interface IEtherspotPaymaster extends BaseContract {
       actualGasCost: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    removeBatchFromWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    removeFromWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    unlockStake(overrides?: CallOverrides): Promise<void>;
 
     validatePaymasterUserOp(
       userOp: UserOperationStruct,
@@ -263,26 +592,85 @@ export interface IEtherspotPaymaster extends BaseContract {
     ): Promise<
       [string, BigNumber] & { context: string; validationData: BigNumber }
     >;
+
+    withdrawFunds(
+      _sponsor: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawStake(
+      withdrawAddress: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
-    'SponsorTransaction(bool,address,address,bytes)'(
-      success?: null,
+    "AddedBatchToWhitelist(address,address[])"(
+      paymaster?: PromiseOrValue<string> | null,
+      accounts?: PromiseOrValue<string>[] | null
+    ): AddedBatchToWhitelistEventFilter;
+    AddedBatchToWhitelist(
+      paymaster?: PromiseOrValue<string> | null,
+      accounts?: PromiseOrValue<string>[] | null
+    ): AddedBatchToWhitelistEventFilter;
+
+    "AddedToWhitelist(address,address)"(
+      paymaster?: PromiseOrValue<string> | null,
+      account?: PromiseOrValue<string> | null
+    ): AddedToWhitelistEventFilter;
+    AddedToWhitelist(
+      paymaster?: PromiseOrValue<string> | null,
+      account?: PromiseOrValue<string> | null
+    ): AddedToWhitelistEventFilter;
+
+    "RemovedBatchFromWhitelist(address,address[])"(
+      paymaster?: PromiseOrValue<string> | null,
+      accounts?: PromiseOrValue<string>[] | null
+    ): RemovedBatchFromWhitelistEventFilter;
+    RemovedBatchFromWhitelist(
+      paymaster?: PromiseOrValue<string> | null,
+      accounts?: PromiseOrValue<string>[] | null
+    ): RemovedBatchFromWhitelistEventFilter;
+
+    "RemovedFromWhitelist(address,address)"(
+      paymaster?: PromiseOrValue<string> | null,
+      account?: PromiseOrValue<string> | null
+    ): RemovedFromWhitelistEventFilter;
+    RemovedFromWhitelist(
+      paymaster?: PromiseOrValue<string> | null,
+      account?: PromiseOrValue<string> | null
+    ): RemovedFromWhitelistEventFilter;
+
+    "SponsorSuccessful(address,address)"(
       paymaster?: null,
-      sender?: null,
-      userOpHash?: null
-    ): SponsorTransactionEventFilter;
-    SponsorTransaction(
-      success?: null,
+      sender?: null
+    ): SponsorSuccessfulEventFilter;
+    SponsorSuccessful(
       paymaster?: null,
-      sender?: null,
-      userOpHash?: null
-    ): SponsorTransactionEventFilter;
+      sender?: null
+    ): SponsorSuccessfulEventFilter;
   };
 
   estimateGas: {
-    checkSponsorFunds(
+    addBatchToWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addStake(
+      unstakeDelaySec: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addToWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    check(
       _sponsor: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -290,8 +678,22 @@ export interface IEtherspotPaymaster extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    getDeposit(overrides?: CallOverrides): Promise<BigNumber>;
+
     getHash(
       userOp: UserOperationStruct,
+      validUntil: PromiseOrValue<BigNumberish>,
+      validAfter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSponsorBalance(
+      _sponsor: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    parsePaymasterAndData(
+      paymasterAndData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -302,17 +704,58 @@ export interface IEtherspotPaymaster extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    removeBatchFromWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    removeFromWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    unlockStake(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     validatePaymasterUserOp(
       userOp: UserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       maxCost: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawFunds(
+      _sponsor: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    withdrawStake(
+      withdrawAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    checkSponsorFunds(
+    addBatchToWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addStake(
+      unstakeDelaySec: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addToWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    check(
       _sponsor: PromiseOrValue<string>,
+      _account: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -320,8 +763,22 @@ export interface IEtherspotPaymaster extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    getDeposit(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     getHash(
       userOp: UserOperationStruct,
+      validUntil: PromiseOrValue<BigNumberish>,
+      validAfter: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getSponsorBalance(
+      _sponsor: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    parsePaymasterAndData(
+      paymasterAndData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -332,10 +789,35 @@ export interface IEtherspotPaymaster extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    removeBatchFromWhitelist(
+      _accounts: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeFromWhitelist(
+      _account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unlockStake(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     validatePaymasterUserOp(
       userOp: UserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       maxCost: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawFunds(
+      _sponsor: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawStake(
+      withdrawAddress: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

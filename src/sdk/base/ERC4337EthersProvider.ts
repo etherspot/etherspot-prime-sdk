@@ -7,8 +7,8 @@ import { ClientConfig } from './ClientConfig';
 import { ERC4337EthersSigner } from './ERC4337EthersSigner';
 import { UserOperationEventListener } from './UserOperationEventListener';
 import { HttpRpcClient } from './HttpRpcClient';
-import { EntryPoint } from '../contracts';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import type { EntryPoint } from '../contracts';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { getUserOpHash } from '../common';
 import { BaseAccountAPI } from './BaseAccountAPI';
 
