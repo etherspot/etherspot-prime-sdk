@@ -2,7 +2,7 @@ import { ethers, BigNumber, BigNumberish } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
 import { EntryPoint, EntryPoint__factory } from '../contracts';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';

@@ -6,6 +6,6 @@ export { ERC4337EthersProvider } from './ERC4337EthersProvider';
 export { ClientConfig } from './ClientConfig';
 export { HttpRpcClient } from './HttpRpcClient';
 export { DeterministicDeployer } from './DeterministicDeployer';
-export { BLSAccountAPI } from './BLSAccountAPI';
+// export { BLSAccountAPI } from './BLSAccountAPI';
 export { VerifyingPaymasterAPI } from './VerifyingPaymasterAPI';
 export * from './calcPreVerificationGas';

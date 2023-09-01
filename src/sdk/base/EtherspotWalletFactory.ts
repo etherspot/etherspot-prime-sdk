@@ -1,10 +1,8 @@
 import { Contract } from 'ethers';
-import { IEntryPoint } from '../contracts';
 
 export class EtherspotWalletFactoryAPI {
   static createAccount(
     factoryAddress: string,
-    entryPoint: IEntryPoint,
     registry: string,
     owner: string,
     salt: number,
@@ -14,7 +12,6 @@ export class EtherspotWalletFactoryAPI {
     ]);
 
     const encodedData = walletFactory.interface.encodeFunctionData('createAccount', [
-      entryPoint,
       registry,
       owner,
       salt,

@@ -12,12 +12,11 @@ import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
-import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, GetTransactionsDto, SignMessageDto, validateDto } from './dto';
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Transactions, Session } from './';
-import { ERC20__factory } from './contracts';
 
 /**
  * Prime-Sdk
@@ -195,17 +194,6 @@ export class PrimeSdk {
     }
     const balance = await this.etherspotWallet.provider.getBalance(this.etherspotWallet.accountAddress);
     return ethers.utils.formatEther(balance);
-  }
-
-  async getTokenBalance(tokenAddress: string) {
-    if (!this.etherspotWallet.accountAddress) {
-      await this.getCounterFactualAddress();
-    }
-    const token = ethers.utils.getAddress(tokenAddress);
-    const erc20Contract = ERC20__factory.connect(token, this.etherspotWallet.services.walletService.getWalletProvider());
-    const dec = await erc20Contract.functions.decimals();
-    const balance = await erc20Contract.functions.balanceOf(this.etherspotWallet.accountAddress)
-    return ethers.utils.formatUnits(balance[0], dec);
   }
 
   async getUserOpReceipt(userOpHash: string) {

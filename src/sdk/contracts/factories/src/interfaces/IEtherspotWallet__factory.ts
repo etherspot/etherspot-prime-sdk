@@ -14,25 +14,6 @@ const _abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "address",
-        name: "oldEntryPoint",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "newEntryPoint",
-        type: "address",
-      },
-    ],
-    name: "EntryPointChanged",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "contract IEntryPoint",
         name: "entryPoint",
@@ -73,14 +54,34 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "newOwner",
+        name: "newGuardian",
         type: "address",
       },
+    ],
+    name: "GuardianAdded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "blockFrom",
-        type: "uint256",
+        internalType: "address",
+        name: "removedGuardian",
+        type: "address",
+      },
+    ],
+    name: "GuardianRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
       },
     ],
     name: "OwnerAdded",
@@ -95,14 +96,90 @@ const _abi = [
         name: "removedOwner",
         type: "address",
       },
+    ],
+    name: "OwnerRemoved",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: false,
         internalType: "uint256",
-        name: "blockFrom",
+        name: "proposalId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "discardedBy",
+        type: "address",
+      },
+    ],
+    name: "ProposalDiscarded",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newOwnerProposed",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "proposer",
+        type: "address",
+      },
+    ],
+    name: "ProposalSubmitted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newTimelock",
         type: "uint256",
       },
     ],
-    name: "OwnerRemoved",
+    name: "ProposalTimelockChanged",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "proposalId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "newOwnerProposed",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "approvalCount",
+        type: "uint256",
+      },
+    ],
+    name: "QuorumNotReached",
     type: "event",
   },
   {
@@ -110,6 +187,52 @@ const _abi = [
     name: "addDeposit",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newGuardian",
+        type: "address",
+      },
+    ],
+    name: "addGuardian",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newOwner",
+        type: "address",
+      },
+    ],
+    name: "addOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newTimelock",
+        type: "uint256",
+      },
+    ],
+    name: "changeProposalTimelock",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "discardCurrentProposal",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -156,6 +279,11 @@ const _abi = [
         type: "address[]",
       },
       {
+        internalType: "uint256[]",
+        name: "value",
+        type: "uint256[]",
+      },
+      {
         internalType: "bytes[]",
         name: "func",
         type: "bytes[]",
@@ -182,8 +310,86 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_proposalId",
+        type: "uint256",
+      },
+    ],
+    name: "getProposal",
+    outputs: [
+      {
         internalType: "address",
-        name: "_owner",
+        name: "ownerProposed_",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "approvalCount_",
+        type: "uint256",
+      },
+      {
+        internalType: "address[]",
+        name: "guardiansApproved_",
+        type: "address[]",
+      },
+      {
+        internalType: "bool",
+        name: "resolved_",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "proposedAt_",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "guardianCosign",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newOwner",
+        type: "address",
+      },
+    ],
+    name: "guardianPropose",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "isGuardian",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
         type: "address",
       },
     ],
@@ -199,13 +405,24 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "nonce",
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "hash",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "signature",
+        type: "bytes",
+      },
+    ],
+    name: "isValidSignature",
     outputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        internalType: "bytes4",
+        name: "magicValue",
+        type: "bytes4",
       },
     ],
     stateMutability: "view",
@@ -215,11 +432,42 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_newEntryPoint",
+        name: "_guardian",
         type: "address",
       },
     ],
-    name: "updateEntryPoint",
+    name: "removeGuardian",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+    ],
+    name: "removeOwner",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "withdrawAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawDepositTo",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

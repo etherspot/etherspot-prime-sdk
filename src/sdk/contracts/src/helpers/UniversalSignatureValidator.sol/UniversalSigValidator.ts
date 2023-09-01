@@ -11,33 +11,33 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers';
-import type { FunctionFragment, Result } from '@ethersproject/abi';
-import type { Listener, Provider } from '@ethersproject/providers';
+} from "ethers";
+import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from '../../../common';
+} from "../../../common";
 
 export interface UniversalSigValidatorInterface extends utils.Interface {
   functions: {
-    'isValidSig(address,bytes32,bytes)': FunctionFragment;
-    'isValidSigImpl(address,bytes32,bytes,bool)': FunctionFragment;
-    'isValidSigWithSideEffects(address,bytes32,bytes)': FunctionFragment;
+    "isValidSig(address,bytes32,bytes)": FunctionFragment;
+    "isValidSigImpl(address,bytes32,bytes,bool)": FunctionFragment;
+    "isValidSigWithSideEffects(address,bytes32,bytes)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | 'isValidSig'
-      | 'isValidSigImpl'
-      | 'isValidSigWithSideEffects'
+      | "isValidSig"
+      | "isValidSigImpl"
+      | "isValidSigWithSideEffects"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: 'isValidSig',
+    functionFragment: "isValidSig",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BytesLike>,
@@ -45,7 +45,7 @@ export interface UniversalSigValidatorInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: 'isValidSigImpl',
+    functionFragment: "isValidSigImpl",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BytesLike>,
@@ -54,7 +54,7 @@ export interface UniversalSigValidatorInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: 'isValidSigWithSideEffects',
+    functionFragment: "isValidSigWithSideEffects",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BytesLike>,
@@ -62,13 +62,13 @@ export interface UniversalSigValidatorInterface extends utils.Interface {
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: 'isValidSig', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isValidSig", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'isValidSigImpl',
+    functionFragment: "isValidSigImpl",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: 'isValidSigWithSideEffects',
+    functionFragment: "isValidSigWithSideEffects",
     data: BytesLike
   ): Result;
 
