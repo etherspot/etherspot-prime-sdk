@@ -14,7 +14,7 @@ const tokenAddress = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: '' })
 
   console.log('address: ', primeSdk.state.walletAddress)
 

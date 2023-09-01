@@ -1,4 +1,4 @@
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
 /**
