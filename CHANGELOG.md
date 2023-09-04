@@ -1,5 +1,6 @@
 # Changelog
 ## [1.2.3] - 2023-09-04
+### New
 - Added Mantle testnet
 ## [1.2.2] - 2023-08-31
 ### Breaking Changes
