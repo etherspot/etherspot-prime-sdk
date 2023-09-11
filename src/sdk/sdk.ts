@@ -63,7 +63,7 @@ export class PrimeSdk {
 
     let paymasterAPI = null;
     if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
-      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {}, optionsLike.paymasterApi.api_key, chainId)
     }
 
     this.etherspotWallet = new EtherspotWalletAPI({

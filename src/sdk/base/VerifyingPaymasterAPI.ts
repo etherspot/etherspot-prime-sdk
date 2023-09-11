@@ -10,20 +10,27 @@ const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 
 export interface PaymasterResponse {
-  paymasterAndData: string;
-  verificationGasLimit: string;
-  preVerificationGas?: string;
+  result: {
+    paymasterAndData: string;
+    verificationGasLimit: string;
+    preVerificationGas: string;
+    callGasLimit: string;
+  }
 }
 
 export class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
   private context: any;
-  constructor(paymasterUrl: string, entryPoint: string, context: any) {
+  private api_key: string;
+  private chainId: number;
+  constructor(paymasterUrl: string, entryPoint: string, context: any, api_key: string, chainId: number) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
     this.context = context;
+    this.api_key = api_key;
+    this.chainId = chainId;
   }
 
   async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse> {
@@ -55,15 +62,15 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
         jsonrpc: '2.0',
         id: 1,
         method: 'pm_sponsorUserOperation',
-        params: [await toJSON(op), this.entryPoint, this.context],
+        params: [await toJSON(op), this.entryPoint, this.context, this.chainId, this.api_key],
       })
       .then((res) => {
         return res.data
-      });
+      })
 
-    return {paymasterAndData: paymasterAndData.paymasterAndData, verificationGasLimit: paymasterAndData.verificationGasLimit, preVerificationGas: op.preVerificationGas.toString()};
+    return paymasterAndData;
   }
 }
 
-export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string, context: any) =>
-  new VerifyingPaymasterAPI(paymasterUrl, entryPoint, context);
+export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string, context: any, api_key: string, chainId: number) =>
+  new VerifyingPaymasterAPI(paymasterUrl, entryPoint, context, api_key, chainId);
