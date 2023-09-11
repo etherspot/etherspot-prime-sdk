@@ -3,7 +3,8 @@ import { SessionStorage } from './session';
 
 export interface PaymasterApi {
   url: string;
-  context: any;
+  api_key: string;
+  context?: any;
 }
 
 export interface SdkOptions {

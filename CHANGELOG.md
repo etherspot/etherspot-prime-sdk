@@ -1,4 +1,9 @@
 # Changelog
+## [1.2.4] - 2023-09-11
+### Breaking Changes
+- Changed the paymasterApi to include api_key for ARKA
+- Changed paymaster response object to return paymasterAndData, VerificationGasLimit, PreVerificationGas, callGasLimit to set to the userOp before sending to the bundler
+
 ## [1.2.2] - 2023-08-31
 ### Breaking Changes
 - Changed the wallet factory address so the smart wallet address will generate a new address. Whoever wishes to access the old wallet should use version 1.2.0 to connect to the old smart wallet
