@@ -156,8 +156,13 @@ export class PrimeSdk {
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
+    // if user has specified the gas prices then use them
+    if (gasDetails?.maxFeePerGas && gasDetails?.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = gasDetails.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gasDetails.maxPriorityFeePerGas;
+    }
     // if estimation has gas prices use them, otherwise fetch them in a separate call
-    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+    else if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
       partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
       partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
     } else {
