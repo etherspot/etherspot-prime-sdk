@@ -1,4 +1,8 @@
 # Changelog
+## [1.2.6] - 2023-09-12
+### Fixes
+- Fixed the issue on setting gas prices by the user if specified on estimate step
+
 ## [1.2.4] - 2023-09-11
 ### Breaking Changes
 - Changed the paymasterApi to include api_key for ARKA
