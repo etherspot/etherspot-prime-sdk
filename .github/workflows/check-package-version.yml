@@ -1,4 +1,4 @@
-name: Check if package version is updated
+name: npm package version bump and changelog check
 
 on:
   pull_request:
@@ -7,18 +7,38 @@ on:
 jobs:
   start:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check if version has been updated
+      - name: Check if package version has been updated
         id: check
         uses: EndBug/version-check@v2.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           file-name: ./package.json
-      - name: Log when changed
+      - name: Log when package version changed
         if: steps.check.outputs.changed == 'true'
         run: 'echo "Yayy!! Version change found in commit ${{ steps.check.outputs.commit }}! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
-      - name: Log when unchanged
+      - name: Log when package version unchanged
+        if: steps.check.outputs.changed == 'false'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **Yooo! You forgot to bump the version in package.json!**
+          allow-repeats: true
+      - name: Exit if package version is not changed
         if: steps.check.outputs.changed == 'false'
         run: echo "No version change :/ Please update version in package.json!" && exit 1
+      - name: Check if CHANGELOG.md is updated
+        id: changelog-status
+        run: |
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
+          changed_files=$(git diff --name-only ${{ github.base_ref }} ${{ github.sha }} | grep CHANGELOG.md)
+          if [ -n "$changed_files" ]; then
+            echo "CHANGELOG.md has been changed."
+            echo "$changed_files"
+          else
+            echo "CHANGELOG.md has not been changed." && exit 1
+          fi
