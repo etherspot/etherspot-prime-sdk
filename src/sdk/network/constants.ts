@@ -73,7 +73,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [80001]: {
     chainId: 80001,
@@ -82,7 +82,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [84531]: {
     chainId: 84531,
@@ -91,7 +91,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [11155111]: {
     chainId: 11155111,
@@ -145,7 +145,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [10200]: {
     chainId: 10200,
@@ -154,7 +154,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [122]: {
     chainId: 122,
@@ -199,7 +199,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    graphqlEndpoint: '',
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [31]: {
     chainId: 31,
@@ -262,7 +262,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
     },
-    graphqlEndpoint: ''
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
   },
   [43113]: {
     chainId: 43113,
@@ -271,7 +271,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
     },
-    graphqlEndpoint: ''
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
   },
   [59144]: {
     chainId: 59144,
