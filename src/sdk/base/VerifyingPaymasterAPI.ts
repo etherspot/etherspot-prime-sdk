@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { ethers } from 'ethers';
+import fetch from 'cross-fetch';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
@@ -39,7 +39,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
       // userOp.preVerificationGas contains a promise that will resolve to an error.
       await ethers.utils.resolveProperties(userOp);
       // eslint-disable-next-line no-empty
-    } catch (_) {}
+    } catch (_) { }
     const pmOp: Partial<UserOperationStruct> = {
       sender: userOp.sender,
       nonce: userOp.nonce,
@@ -57,15 +57,23 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     op.preVerificationGas = calcPreVerificationGas(op);
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
-    const paymasterAndData = await axios
-      .post<PaymasterResponse>(this.paymasterUrl, {
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'pm_sponsorUserOperation',
-        params: [await toJSON(op), this.entryPoint, this.context, this.chainId, this.api_key],
+    const paymasterAndData = await fetch(this.paymasterUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ params: [await toJSON(op), this.entryPoint, this.context, this.chainId, this.api_key], jsonrpc: '2', id: 2 }),
+    })
+      .then(async (res) => {
+        const response = await await res.json();
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response
       })
-      .then((res) => {
-        return res.data
+      .catch((err) => {
+        throw new Error(err.message);
       })
 
     return paymasterAndData;
