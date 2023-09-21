@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core';
 import { HeaderNames, ObjectSubject, Service } from '../common';
 import { Route } from '@lifi/sdk';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, StepTransaction, StepTransactions, Transaction, Transactions } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, StepTransaction, StepTransactions, Transaction } from './classes';
 import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
 
@@ -105,62 +105,6 @@ export class DataService extends Service {
         },
         models: {
           result: Transaction,
-        },
-      },
-    );
-
-    return result;
-  }
-
-  async getTransactions(account: string, ChainId: number): Promise<Transactions> {
-    const { apiService } = this.services;
-
-    const { result } = await apiService.query<{
-      result: Transactions;
-    }>(
-      gql`
-        query($ChainId: Int, $account: String!) {
-          result: transactions(chainId: $ChainId, account: $account) {
-            items {
-              blockNumber
-              timestamp
-              from
-              gasLimit
-              gasPrice
-              gasUsed
-              hash
-              logs
-              status
-              to
-              value
-              direction
-              internalTransactions
-              internalTransactionsFetched
-              mainTransactionDataFetched
-              batch
-              asset {
-                from
-                to
-                name
-                symbol
-                category
-                type
-                value
-                decimal
-                contract
-              }
-              blockExplorerUrl
-            }
-          }
-        }
-      `,
-      {
-        variables: {
-          account,
-          ChainId,
-        },
-        models: {
-          result: Transactions,
         },
       },
     );
