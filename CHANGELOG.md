@@ -1,4 +1,10 @@
 # Changelog
+
+## [1.2.8] - 2023-09-21
+### Fixes
+- Fixed the issue with getExchangeOffers endpoint (Account must need to be deployed to access this endpoint)
+- Removed getTransactions endpoint
+
 ## [1.2.7] - 2023-09-20
 ### Fixes
 - Fixed the issue on usage of axios when paymaster is called via react native by replacing it to fetch.

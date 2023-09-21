@@ -4,7 +4,6 @@ export * from './create-session.dto';
 export * from './onRamper.dto';
 export * from './get-account-balances.dto';
 export * from './get-transaction.dto';
-export * from './get-transactions.dto';
 export * from './get-nft-list.dto';
 export * from './join-contract-account.dto';
 export * from './get-exchange-offers.dto';

@@ -15,8 +15,8 @@ import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/const
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, GetTransactionsDto, SignMessageDto, validateDto } from './dto';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Transactions, Session } from './';
+import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto } from './dto';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session } from './';
 
 /**
  * Prime-Sdk
@@ -308,31 +308,6 @@ export class PrimeSdk {
   }
 
   /**
-   * gets transactions
-   * @param dto
-   * @return Promise<Transactions>
-   */
-  async getTransactions(dto: GetTransactionsDto): Promise<Transactions> {
-    const { account, chainId } = await validateDto(dto, GetTransactionsDto, {
-      addressKeys: ['account'],
-    });
-
-    this.etherspotWallet.services.accountService.joinContractAccount(account);
-
-    await this.etherspotWallet.require({
-      wallet: !account,
-      contractAccount: true,
-    });
-
-    const ChainId = chainId ? chainId : this.etherspotWallet.services.walletService.chainId;
-
-    return this.etherspotWallet.services.dataService.getTransactions(
-      this.etherspotWallet.prepareAccountAddress(account),
-      ChainId,
-    );
-  }
-
-  /**
   * gets NFT list belonging to account
   * @param dto
   * @return Promise<NftList>
@@ -366,14 +341,13 @@ export class PrimeSdk {
 
     let { toAddress, fromAddress } = dto;
 
-    if (!fromAddress) fromAddress = this.etherspotWallet.services.walletService.walletAddress;
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
 
     if (!toAddress) toAddress = fromAddress;
 
     this.etherspotWallet.services.accountService.joinContractAccount(fromAddress);
 
     await this.etherspotWallet.require({
-      session: true,
       contractAccount: true,
     });
 
@@ -428,7 +402,7 @@ export class PrimeSdk {
   }
 
   async getStepTransaction(dto: GetStepTransactionsLiFiDto): Promise<StepTransactions> {
-    const accountAddress = this.etherspotWallet.services.walletService.walletAddress;
+    const accountAddress = await this.getCounterFactualAddress();
 
     return this.etherspotWallet.services.dataService.getStepTransaction(dto.route, accountAddress);
   }
@@ -455,11 +429,7 @@ export class PrimeSdk {
 
     let { fromAddress } = dto;
 
-    await this.etherspotWallet.require({
-      session: true,
-    });
-
-    if (!fromAddress) fromAddress = this.etherspotWallet.services.walletService.walletAddress;
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
 
     let { chainId } = this.etherspotWallet.services.walletService;
 
