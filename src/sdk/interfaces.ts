@@ -16,5 +16,4 @@ export interface SdkOptions {
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
   projectKey: string;
-  paymasterApi?: PaymasterApi;
 }
