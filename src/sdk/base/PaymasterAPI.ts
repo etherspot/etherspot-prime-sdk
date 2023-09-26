@@ -13,6 +13,6 @@ export class PaymasterAPI {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse | undefined> {
-    return { paymasterAndData: '0x', verificationGasLimit: '0x' };
+    return { result: {paymasterAndData: '0x', verificationGasLimit: '0x', preVerificationGas: '0x', callGasLimit: '0x' }};
   }
 }

@@ -7,7 +7,6 @@ export * from './transaction-log';
 export * from './decoded-log-param';
 export * from './transaction-log-decoded';
 export * from './transaction';
-export * from './transactions';
 export * from './nft-collection';
 export * from './nft-list';
 export * from './nft';

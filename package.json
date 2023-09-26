@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.2.3",
+  "version": "1.2.9",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -27,7 +27,6 @@
     "03-transfer-erc20": "./node_modules/.bin/ts-node ./examples/03-transfer-erc20",
     "05-get-account-balances": "./node_modules/.bin/ts-node ./examples/05-get-account-balances",
     "06-transaction": "./node_modules/.bin/ts-node ./examples/06-transaction",
-    "07-transactions": "./node_modules/.bin/ts-node ./examples/07-transactions",
     "08-nft-list": "./node_modules/.bin/ts-node ./examples/08-nft-list",
     "09-exchange": "./node_modules/.bin/ts-node ./examples/09-exchange",
     "10-advance-routes-lifi": "./node_modules/.bin/ts-node ./examples/10-advance-routes-lifi",
@@ -51,18 +50,17 @@
   },
   "dependencies": {
     "@apollo/client": "3.4.0",
-    "@lifi/sdk": "^2.2.3",
+    "@lifi/sdk": "2.2.3",
     "@nerdwallet/apollo-cache-policies": "1.2.1",
     "@thehubbleproject/bls": "0.5.1",
-    "apollo-link-ws": "^1.0.20",
-    "@walletconnect/universal-provider": "^2.10.0",
-    "axios": "1.3.4",
+    "apollo-link-ws": "1.0.20",
+    "@walletconnect/universal-provider": "2.10.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
-    "commander": "^10.0.1",
+    "commander": "10.0.1",
     "cross-fetch": "3.1.5",
     "ethers": "5.7.0",
-    "prettier": "^2.8.8",
+    "prettier": "2.8.8",
     "reflect-metadata": "0.1.13"
   },
   "devDependencies": {

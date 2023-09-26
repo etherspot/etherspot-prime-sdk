@@ -15,8 +15,8 @@ import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/const
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, GetTransactionsDto, SignMessageDto, validateDto } from './dto';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Transactions, Session } from './';
+import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto } from './dto';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session } from './';
 
 /**
  * Prime-Sdk
@@ -63,7 +63,7 @@ export class PrimeSdk {
 
     let paymasterAPI = null;
     if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
-      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {}, optionsLike.paymasterApi.api_key, chainId)
     }
 
     this.etherspotWallet = new EtherspotWalletAPI({
@@ -156,8 +156,13 @@ export class PrimeSdk {
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
+    // if user has specified the gas prices then use them
+    if (gasDetails?.maxFeePerGas && gasDetails?.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = gasDetails.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gasDetails.maxPriorityFeePerGas;
+    }
     // if estimation has gas prices use them, otherwise fetch them in a separate call
-    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+    else if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
       partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
       partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
     } else {
@@ -303,31 +308,6 @@ export class PrimeSdk {
   }
 
   /**
-   * gets transactions
-   * @param dto
-   * @return Promise<Transactions>
-   */
-  async getTransactions(dto: GetTransactionsDto): Promise<Transactions> {
-    const { account, chainId } = await validateDto(dto, GetTransactionsDto, {
-      addressKeys: ['account'],
-    });
-
-    this.etherspotWallet.services.accountService.joinContractAccount(account);
-
-    await this.etherspotWallet.require({
-      wallet: !account,
-      contractAccount: true,
-    });
-
-    const ChainId = chainId ? chainId : this.etherspotWallet.services.walletService.chainId;
-
-    return this.etherspotWallet.services.dataService.getTransactions(
-      this.etherspotWallet.prepareAccountAddress(account),
-      ChainId,
-    );
-  }
-
-  /**
   * gets NFT list belonging to account
   * @param dto
   * @return Promise<NftList>
@@ -361,14 +341,13 @@ export class PrimeSdk {
 
     let { toAddress, fromAddress } = dto;
 
-    if (!fromAddress) fromAddress = this.etherspotWallet.services.walletService.walletAddress;
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
 
     if (!toAddress) toAddress = fromAddress;
 
     this.etherspotWallet.services.accountService.joinContractAccount(fromAddress);
 
     await this.etherspotWallet.require({
-      session: true,
       contractAccount: true,
     });
 
@@ -423,7 +402,7 @@ export class PrimeSdk {
   }
 
   async getStepTransaction(dto: GetStepTransactionsLiFiDto): Promise<StepTransactions> {
-    const accountAddress = this.etherspotWallet.services.walletService.walletAddress;
+    const accountAddress = await this.getCounterFactualAddress();
 
     return this.etherspotWallet.services.dataService.getStepTransaction(dto.route, accountAddress);
   }
@@ -450,11 +429,7 @@ export class PrimeSdk {
 
     let { fromAddress } = dto;
 
-    await this.etherspotWallet.require({
-      session: true,
-    });
-
-    if (!fromAddress) fromAddress = this.etherspotWallet.services.walletService.walletAddress;
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
 
     let { chainId } = this.etherspotWallet.services.walletService;
 
