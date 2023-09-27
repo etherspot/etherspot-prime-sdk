@@ -1,7 +1,7 @@
 # Changelog
-## [1.2.9] - 2023-09-20
-### Breaking Changes
-- Removed paymaster initialisation from sdk init place and added to estimate step to specify how each userOp is submitted rather than global paymaster initialisation 
+## [1.2.11] - 2023-09-20
+### Breaking Changes 
+- Removed paymaster initialisation from sdk init place and added to estimate step to specify how each userOp is submitted rather than global paymaster initialisation
 
 ## [1.2.10] - 2023-09-27
 ### Fixes
