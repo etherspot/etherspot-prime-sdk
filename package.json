@@ -31,6 +31,7 @@
     "09-exchange": "./node_modules/.bin/ts-node ./examples/09-exchange",
     "10-advance-routes-lifi": "./node_modules/.bin/ts-node ./examples/10-advance-routes-lifi",
     "11-cross-chain-quotes": "./node_modules/.bin/ts-node ./examples/11-cross-chain-quotes",
+    "12-add-guardians": "./node_modules/.bin/ts-node ./examples/12-add-guardians",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
