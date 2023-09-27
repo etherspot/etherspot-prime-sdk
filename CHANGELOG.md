@@ -3,6 +3,14 @@
 ### Breaking Changes
 - Removed paymaster initialisation from sdk init place and added to estimate step to specify how each userOp is submitted rather than global paymaster initialisation 
 
+## [1.2.10] - 2023-09-27
+### Fixes
+- Added `buffer` dependency to support both node and browser environments
+
+## [1.2.9] - 2023-09-26
+### New
+- Added Mantle testnet
+
 ## [1.2.8] - 2023-09-21
 ### Fixes
 - Fixed the issue with getExchangeOffers endpoint (Account must need to be deployed to access this endpoint)

@@ -2,6 +2,7 @@ import { UserOperationStruct } from '../contracts/account-abstraction/contracts/
 
 import { NotPromise, packUserOp } from '../common';
 import { arrayify, hexlify } from 'ethers/lib/utils';
+import { Buffer } from 'buffer';
 
 export interface GasOverheads {
   /**

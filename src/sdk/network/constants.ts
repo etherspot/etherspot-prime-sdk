@@ -19,6 +19,7 @@ export enum NetworkNames {
   RSKTestnet = 'RSKTestnet',
   VerseTestnet = 'verseTestnet',
   Mantle = 'Mantle',
+  MantleTestnet = 'MantleTestnet',
   Avalanche = 'avalanche',
   Base = 'base',
   Bsc = 'bsc',
@@ -29,7 +30,7 @@ export enum NetworkNames {
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 31, 56, 97, 100, 122, 123, 137, 420, 2357, 5000, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
+  [1, 5, 10, 31, 56, 97, 100, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -52,6 +53,7 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.RSKTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
   [NetworkNames.Mantle]: 5000,
+  [NetworkNames.MantleTestnet]: 5001,
   [NetworkNames.Avalanche]: 43114,
   [NetworkNames.Base]: 8453,
   [NetworkNames.Bsc]: 56,
@@ -222,6 +224,15 @@ export const Networks: {
   [5000]: {
     chainId: 5000,
     bundler: 'https://mantle-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+    },
+    graphqlEndpoint: '',
+  },
+  [5001]: {
+    chainId: 5001,
+    bundler: 'https://mantletestnet-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',

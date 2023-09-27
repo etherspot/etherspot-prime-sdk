@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import fetch from 'cross-fetch';
+import { Buffer } from 'buffer';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
