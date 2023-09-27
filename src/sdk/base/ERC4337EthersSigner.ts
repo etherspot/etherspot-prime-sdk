@@ -6,7 +6,7 @@ import { Bytes } from 'ethers';
 import { ERC4337EthersProvider } from './ERC4337EthersProvider';
 import { ClientConfig } from './ClientConfig';
 import { HttpRpcClient } from './HttpRpcClient';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { BaseAccountAPI } from './BaseAccountAPI';
 
 export class ERC4337EthersSigner extends Signer {
@@ -48,7 +48,7 @@ export class ERC4337EthersSigner extends Signer {
   unwrapError(errorIn: any): Error {
     if (errorIn.body != null) {
       const errorBody = JSON.parse(errorIn.body);
-      let paymasterInfo: string = '';
+      let paymasterInfo = '';
       let failedOpMessage: string | undefined = errorBody?.error?.message;
       if (failedOpMessage?.includes('FailedOp') === true) {
         // TODO: better error extraction methods will be needed
@@ -78,6 +78,7 @@ export class ERC4337EthersSigner extends Signer {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   connect(provider: Provider): Signer {
     throw new Error('changing providers is not supported');
   }
@@ -93,6 +94,7 @@ export class ERC4337EthersSigner extends Signer {
     return await this.originalSigner.signMessage(message);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signTransaction(transaction: Deferrable<TransactionRequest>): Promise<string> {
     throw new Error('not implemented');
   }

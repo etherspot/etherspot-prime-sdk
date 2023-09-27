@@ -7,13 +7,13 @@ import { sleep } from '../src/sdk/common';
 dotenv.config();
 
 // add/change these values
-const recipient: string = '0xD129dB5e418e389c3F7D3ae0B8771B3f76799A52'; // recipient wallet address
-const tokenAddress: string = '0xe55C5793a52AF819fBf3e87a23B36708E6FDd2Cc';
+const recipient = '0xD129dB5e418e389c3F7D3ae0B8771B3f76799A52'; // recipient wallet address
+const tokenAddress = '0xe55C5793a52AF819fBf3e87a23B36708E6FDd2Cc';
 const tokenId = 4;
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: '' })
 
   console.log('address: ', primeSdk.state.walletAddress)
 
@@ -31,7 +31,7 @@ async function main() {
   await primeSdk.clearUserOpsFromBatch();
 
   // add transactions to the batch
-  let userOpsBatch = await primeSdk.addUserOpsToBatch({to: tokenAddress, data: erc721Data});
+  const userOpsBatch = await primeSdk.addUserOpsToBatch({to: tokenAddress, data: erc721Data});
   console.log('transactions: ', userOpsBatch);
 
   // sign transactions added to the batch

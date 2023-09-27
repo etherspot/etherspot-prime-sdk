@@ -1,10 +1,10 @@
 import { StateStorage } from './state';
 import { SessionStorage } from './session';
-import { VerifyingPaymasterAPI } from './base';
 
 export interface PaymasterApi {
   url: string;
-  context: any;
+  api_key: string;
+  context?: any;
 }
 
 export interface SdkOptions {
@@ -14,5 +14,7 @@ export interface SdkOptions {
   omitWalletProviderNetworkCheck?: boolean;
   bundlerRpcUrl?: string;
   rpcProviderUrl?: string;
+  graphqlEndpoint?: string;
+  projectKey: string;
   paymasterApi?: PaymasterApi;
 }

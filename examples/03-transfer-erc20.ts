@@ -8,13 +8,13 @@ import { sleep } from '../src/sdk/common';
 dotenv.config();
 
 // add/change these values
-const recipient: string = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
-const value: string = '0.1'; // transfer value
-const tokenAddress: string = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
+const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
+const value = '0.1'; // transfer value
+const tokenAddress = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID) })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: '' })
 
   console.log('address: ', primeSdk.state.walletAddress)
 
@@ -36,7 +36,7 @@ async function main() {
   await primeSdk.clearUserOpsFromBatch();
 
   // add transactions to the batch
-  let userOpsBatch = await primeSdk.addUserOpsToBatch({to: tokenAddress, data: transactionData});
+  const userOpsBatch = await primeSdk.addUserOpsToBatch({to: tokenAddress, data: transactionData});
   console.log('transactions: ', userOpsBatch);
 
   // estimate transactions added to the batch and get the fee data for the UserOp

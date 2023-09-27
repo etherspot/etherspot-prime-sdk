@@ -7,8 +7,8 @@ import { ClientConfig } from './ClientConfig';
 import { ERC4337EthersSigner } from './ERC4337EthersSigner';
 import { UserOperationEventListener } from './UserOperationEventListener';
 import { HttpRpcClient } from './HttpRpcClient';
-import { EntryPoint } from '../contracts';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import type { EntryPoint } from '../contracts';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { getUserOpHash } from '../common';
 import { BaseAccountAPI } from './BaseAccountAPI';
 
@@ -112,6 +112,7 @@ export class ERC4337EthersProvider extends BaseProvider {
       value: BigNumber.from(0),
       data: hexValue(userOp.callData), // should extract the actual called method from this "execFromEntryPoint()" call
       chainId: this.chainId,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       wait: async (confirmations?: number): Promise<TransactionReceipt> => {
         const transactionReceipt = await waitPromise;
         if (userOp.initCode.length !== 0) {

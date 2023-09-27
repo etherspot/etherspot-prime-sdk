@@ -19,9 +19,18 @@ export enum NetworkNames {
   RSKTestnet = 'RSKTestnet',
   VerseTestnet = 'verseTestnet',
   Mantle = 'Mantle',
+  MantleTestnet = 'MantleTestnet',
+  Avalanche = 'avalanche',
+  Base = 'base',
+  Bsc = 'bsc',
+  BscTestnet = 'bscTestnet',
+  Fuji = 'fuji',
+  Linea = 'linea',
+  LineaTestnet = 'lineaTestnet',
 }
 
-export const SupportedNetworks = [1, 5, 10, 31, 100, 122, 123, 137, 420, 2357, 5000, 10200, 20197, 42161, 80001, 84531, 421613, 11155111]
+export const SupportedNetworks =
+  [1, 5, 10, 31, 56, 97, 100, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -44,6 +53,14 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.RSKTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
   [NetworkNames.Mantle]: 5000,
+  [NetworkNames.MantleTestnet]: 5001,
+  [NetworkNames.Avalanche]: 43114,
+  [NetworkNames.Base]: 8453,
+  [NetworkNames.Bsc]: 56,
+  [NetworkNames.BscTestnet]: 97,
+  [NetworkNames.Fuji]: 43113,
+  [NetworkNames.Linea]: 59144,
+  [NetworkNames.LineaTestnet]: 59140,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -56,216 +73,234 @@ export const Networks: {
     bundler: 'https://goerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [80001]: {
     chainId: 80001,
     bundler: 'https://mumbai-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [84531]: {
     chainId: 84531,
     bundler: 'https://basegoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [11155111]: {
     chainId: 11155111,
     bundler: 'https://sepolia-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [10]: {
     chainId: 10,
     bundler: 'https://optimism-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [137]: {
     chainId: 137,
     bundler: 'https://polygon-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [42161]: {
     chainId: 42161,
     bundler: 'https://arbitrum-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [1]: {
     chainId: 1,
     bundler: 'https://ethereum-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [421613]: {
     chainId: 421613,
     bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [10200]: {
     chainId: 10200,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [122]: {
     chainId: 122,
     bundler: 'https://fuse-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [123]: {
     chainId: 123,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [100]: {
     chainId: 100,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [2357]: {
     chainId: 2357,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [420]: {
     chainId: 420,
-    bundler: '',
+    bundler: 'https://optimismgoerli-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [31]: {
     chainId: 31,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [20197]: {
     chainId: 20197,
     bundler: '',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
-    },
+    graphqlEndpoint: '',
   },
   [5000]: {
     chainId: 5000,
     bundler: 'https://mantle-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: '0x27f11918740060bd9Be146086F6836e18eedBB8C',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
-    paymaster: {
-      use: false,
-      url: '',
+    graphqlEndpoint: '',
+  },
+  [5001]: {
+    chainId: 5001,
+    bundler: 'https://mantletestnet-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
     },
+    graphqlEndpoint: '',
+  },
+  [43114]: {
+    chainId: 43114,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: 'etherspot.pillarproject.io'
+  },
+  [8453]: {
+    chainId: 8453,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: ''
+  },
+  [56]: {
+    chainId: 56,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: 'etherspot.pillarproject.io'
+  },
+  [97]: {
+    chainId: 97,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
+  },
+  [43113]: {
+    chainId: 43113,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
+  },
+  [59144]: {
+    chainId: 59144,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: ''
+  },
+  [59140]: {
+    chainId: 59140,
+    bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E'
+    },
+    graphqlEndpoint: ''
   },
 };
 

@@ -1,16 +1,17 @@
-import { ethers, BigNumber, BigNumberish, providers } from 'ethers';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { ethers, BigNumber, BigNumberish } from 'ethers';
+import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
 import { EntryPoint, EntryPoint__factory } from '../contracts';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
-import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, Service } from '../common';
+import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { AccountService, AccountTypes, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
-import { paymasterResponse } from './VerifyingPaymasterAPI';
+import { DataService } from '../data';
+import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
 export interface BaseApiParams {
   provider: Provider;
@@ -78,6 +79,8 @@ export abstract class BaseAccountAPI {
       sessionStorage,
       rpcProviderUrl,
       bundlerRpcUrl,
+      graphqlEndpoint,
+      projectKey,
     } = optionsLike;
 
     // const { networkOptions } = env;
@@ -87,7 +90,7 @@ export abstract class BaseAccountAPI {
       walletService: new WalletService(params.walletProvider, {
         omitProviderNetworkCheck: omitWalletProviderNetworkCheck,
         provider: rpcProviderUrl,
-      }, optionsLike.bundlerRpcUrl),
+      }, bundlerRpcUrl, chainId),
       sessionService: new SessionService({
         storage: sessionStorage,
       }),
@@ -95,6 +98,11 @@ export abstract class BaseAccountAPI {
       stateService: new StateService({
         storage: stateStorage,
       }),
+      apiService: new ApiService({
+        host: graphqlEndpoint,
+        useSsl: true,
+      }),
+      dataService: new DataService(projectKey),
     };
 
     this.context = new Context(this.services);
@@ -188,9 +196,9 @@ export abstract class BaseAccountAPI {
       ...options,
     };
 
-    const { accountService, networkService, walletService, sessionService } = this.services;
+    const { accountService, walletService, sessionService } = this.services;
 
-    if (options.network && !networkService.chainId) {
+    if (options.network && !walletService.chainId) {
       throw new Exception('Unknown network');
     }
 
@@ -383,7 +391,7 @@ export abstract class BaseAccountAPI {
       }
       callData = await this.encodeBatch(target, detailsForUserOp.values, data);
     }
-    const provider = this.services.walletService.getWalletProvider();
+
     const callGasLimit =
       parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000)
 
@@ -475,7 +483,7 @@ export abstract class BaseAccountAPI {
     };
 
 
-    let paymasterAndData: paymasterResponse | undefined = null;
+    let paymasterAndData: PaymasterResponse | undefined = null;
     if (this.paymasterAPI != null) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
       const userOpForPm = {
@@ -483,9 +491,11 @@ export abstract class BaseAccountAPI {
         preVerificationGas: this.getPreVerificationGas(partialUserOp),
       };
       paymasterAndData = (await this.paymasterAPI.getPaymasterAndData(userOpForPm));
-      partialUserOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
+      partialUserOp.verificationGasLimit = paymasterAndData.result.verificationGasLimit;
+      partialUserOp.preVerificationGas = paymasterAndData.result.preVerificationGas;
+      partialUserOp.callGasLimit = paymasterAndData.result.callGasLimit;
     }
-    partialUserOp.paymasterAndData = paymasterAndData ? paymasterAndData.paymasterAndData : '0x';
+    partialUserOp.paymasterAndData = paymasterAndData ? paymasterAndData.result.paymasterAndData : '0x';
     return {
       ...partialUserOp,
       preVerificationGas: this.getPreVerificationGas(partialUserOp),
@@ -500,9 +510,10 @@ export abstract class BaseAccountAPI {
   async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
     if (this.paymasterAPI != null) {
       const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
-      userOp.paymasterAndData = paymasterAndData.paymasterAndData;
-      userOp.verificationGasLimit = BigNumber.from(paymasterAndData.verificationGasLimit);
-      userOp.preVerificationGas = paymasterAndData.preVerificationGas;
+      userOp.paymasterAndData = paymasterAndData.result.paymasterAndData;
+      userOp.verificationGasLimit = paymasterAndData.result.verificationGasLimit;
+      userOp.preVerificationGas = paymasterAndData.result.preVerificationGas;
+      userOp.callGasLimit = paymasterAndData.result.callGasLimit;
     }
     const userOpHash = await this.getUserOpHash(userOp);
     const signature = await this.signUserOpHash(userOpHash);

@@ -1,8 +1,7 @@
 import { defaultAbiCoder, hexConcat, hexlify, keccak256 } from 'ethers/lib/utils';
 import { EntryPoint__factory } from '../contracts';
-import { UserOperationStruct } from '../contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { ethers } from 'ethers';
-import { BytesLike } from '@ethersproject/bytes';
 
 const entryPointAbi: any = EntryPoint__factory.abi;
 
@@ -20,6 +19,7 @@ if (UserOpType == null) {
 
 export const AddressZero = ethers.constants.AddressZero;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function encode(typevalues: Array<{ type: string; val: any }>, forSignature: boolean): string {
   const types = typevalues.map((typevalue) =>
     typevalue.type === 'bytes' && forSignature ? 'bytes32' : typevalue.type,
@@ -93,12 +93,12 @@ export function decodeErrorReason(error: string): DecodedError | undefined {
     const [message] = defaultAbiCoder.decode(['string'], '0x' + error.substring(10));
     return { message };
   } else if (error.startsWith(FailedOpSig)) {
-    let [opIndex, message] = defaultAbiCoder.decode(['uint256', 'string'], '0x' + error.substring(10));
-    message = `FailedOp: ${message as string}`;
+    const [opIndex, message] = defaultAbiCoder.decode(['uint256', 'string'], '0x' + error.substring(10));
+    const formattedMessage = `FailedOp: ${message as string}`;
     return {
-      message,
+      message: formattedMessage,
       opIndex,
-    };
+    };    
   }
 }
 

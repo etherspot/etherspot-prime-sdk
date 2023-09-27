@@ -25,10 +25,10 @@ export class AccountService extends Service {
   }
 
   get headers(): { [key: string]: any } {
-    return this.accountAddress
+    return this.services.walletService.walletAddress
       ? {
-          [HeaderNames.AnalyticsToken]: keccak256(this.accountAddress),
-        }
+        [HeaderNames.AnalyticsToken]: keccak256(this.services.walletService.walletAddress),
+      }
       : {};
   }
 

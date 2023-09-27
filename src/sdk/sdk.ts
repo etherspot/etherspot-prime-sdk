@@ -1,17 +1,22 @@
 import { BehaviorSubject } from 'rxjs';
 import { State, StateService } from './state';
-import { isWalletProvider, WalletProviderLike } from './wallet';
+import {
+  EthereumProvider,
+  isWalletConnectProvider,
+  isWalletProvider,
+  WalletConnect2WalletProvider,
+  WalletProviderLike
+} from './wallet';
 import { SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
-import { UserOperationStruct } from './contracts/src/aa-4337/core/BaseAccount';
+import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, OnRamperDto, SignMessageDto, validateDto } from './dto';
-import { Session } from '.';
-import { ERC20__factory } from './contracts';
+import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto } from './dto';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session } from './';
 
 /**
  * Prime-Sdk
@@ -28,7 +33,10 @@ export class PrimeSdk {
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
-    if (!isWalletProvider(walletProvider)) {
+    let walletConnectProvider;
+    if (isWalletConnectProvider(walletProvider)) {
+      walletConnectProvider = new WalletConnect2WalletProvider(walletProvider as EthereumProvider);
+    } else if (!isWalletProvider(walletProvider)) {
       throw new Exception('Invalid wallet provider');
     }
 
@@ -43,6 +51,7 @@ export class PrimeSdk {
       const networkConfig = getNetworkConfig(chainId);
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
       if (optionsLike.bundlerRpcUrl == '') throw new Exception('No bundler Rpc provided');
+      optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
 
@@ -54,12 +63,12 @@ export class PrimeSdk {
 
     let paymasterAPI = null;
     if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
-      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {})
+      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {}, optionsLike.paymasterApi.api_key, chainId)
     }
 
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
-      walletProvider,
+      walletProvider: walletConnectProvider ?? walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
@@ -139,7 +148,7 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
-    let partialtx = await this.etherspotWallet.createUnsignedUserOp({
+    const partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
       maxFeePerGas: 1,
       maxPriorityFeePerGas: 1,
@@ -147,8 +156,13 @@ export class PrimeSdk {
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
+    // if user has specified the gas prices then use them
+    if (gasDetails?.maxFeePerGas && gasDetails?.maxPriorityFeePerGas) {
+      partialtx.maxFeePerGas = gasDetails.maxFeePerGas;
+      partialtx.maxPriorityFeePerGas = gasDetails.maxPriorityFeePerGas;
+    }
     // if estimation has gas prices use them, otherwise fetch them in a separate call
-    if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
+    else if (bundlerGasEstimate.maxFeePerGas && bundlerGasEstimate.maxPriorityFeePerGas) {
       partialtx.maxFeePerGas = bundlerGasEstimate.maxFeePerGas;
       partialtx.maxPriorityFeePerGas = bundlerGasEstimate.maxPriorityFeePerGas;
     } else {
@@ -185,17 +199,6 @@ export class PrimeSdk {
     }
     const balance = await this.etherspotWallet.provider.getBalance(this.etherspotWallet.accountAddress);
     return ethers.utils.formatEther(balance);
-  }
-
-  async getTokenBalance(tokenAddress: string) {
-    if (!this.etherspotWallet.accountAddress) {
-      await this.getCounterFactualAddress();
-    }
-    const token = ethers.utils.getAddress(tokenAddress);
-    const erc20Contract = ERC20__factory.connect(token, this.etherspotWallet.services.walletService.getWalletProvider());
-    const dec = await erc20Contract.functions.decimals();
-    const balance = await erc20Contract.functions.balanceOf(this.etherspotWallet.accountAddress)
-    return ethers.utils.formatUnits(balance[0], dec);
   }
 
   async getUserOpReceipt(userOpHash: string) {
@@ -255,7 +258,7 @@ export class PrimeSdk {
       `${params.onlyFiats ? `&onlyFiats=${params.onlyFiats}` : ``}` +
       `${params.excludeFiats ? `&excludeFiats=${params.excludeFiats}` : ``}` +
       `&themeName=${params.themeName ?? 'dark'}`;
-    
+
     if (typeof window === 'undefined') {
       openUrl(url);
     } else {
@@ -265,4 +268,184 @@ export class PrimeSdk {
     return url;
   }
 
+  /**
+ * gets account balances
+ * @param dto
+ * @return Promise<AccountBalances>
+ */
+  async getAccountBalances(dto: GetAccountBalancesDto = {}): Promise<AccountBalances> {
+    const { account, tokens, chainId, provider } = await validateDto(dto, GetAccountBalancesDto, {
+      addressKeys: ['account', 'tokens'],
+    });
+
+    await this.etherspotWallet.require({
+      wallet: !account,
+    });
+
+    const ChainId = chainId ? chainId : this.etherspotWallet.services.walletService.chainId;
+
+    return this.etherspotWallet.services.dataService.getAccountBalances(
+      this.etherspotWallet.prepareAccountAddress(account),
+      tokens,
+      ChainId,
+      provider,
+    );
+  }
+
+  /**
+ * gets transaction
+ * @param dto
+ * @return Promise<Transaction>
+ */
+  async getTransaction(dto: GetTransactionDto): Promise<Transaction> {
+    const { hash } = await validateDto(dto, GetTransactionDto);
+
+    await this.etherspotWallet.require({
+      wallet: false,
+    });
+
+    return this.etherspotWallet.services.dataService.getTransaction(hash);
+  }
+
+  /**
+  * gets NFT list belonging to account
+  * @param dto
+  * @return Promise<NftList>
+  */
+  async getNftList(dto: GetNftListDto): Promise<NftList> {
+    const { account, chainId } = await validateDto(dto, GetNftListDto, {
+      addressKeys: ['account'],
+    });
+
+    await this.etherspotWallet.require({
+      wallet: !account,
+    });
+
+    const ChainId = chainId ? chainId : this.etherspotWallet.services.walletService.chainId;
+
+    return this.etherspotWallet.services.dataService.getNftList(
+      this.etherspotWallet.prepareAccountAddress(account),
+      ChainId,
+    );
+  }
+
+  /**
+ * gets exchange offers
+ * @param dto
+ * @return Promise<ExchangeOffer[]>
+ */
+  async getExchangeOffers(dto: GetExchangeOffersDto): Promise<ExchangeOffer[]> {
+    const { fromTokenAddress, toTokenAddress, fromAmount, fromChainId, showZeroUsd } = await validateDto(dto, GetExchangeOffersDto, {
+      addressKeys: ['fromTokenAddress', 'toTokenAddress'],
+    });
+
+    let { toAddress, fromAddress } = dto;
+
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
+
+    if (!toAddress) toAddress = fromAddress;
+
+    this.etherspotWallet.services.accountService.joinContractAccount(fromAddress);
+
+    await this.etherspotWallet.require({
+      contractAccount: true,
+    });
+
+    let { chainId } = this.etherspotWallet.services.walletService;
+    chainId = fromChainId ? fromChainId : chainId;
+
+    return this.etherspotWallet.services.dataService.getExchangeOffers(
+      fromTokenAddress,
+      toTokenAddress,
+      BigNumber.from(fromAmount),
+      chainId,
+      toAddress,
+      fromAddress,
+      showZeroUsd,
+    );
+  }
+
+  async getAdvanceRoutesLiFi(dto: GetAdvanceRoutesLiFiDto): Promise<AdvanceRoutesLiFi> {
+    const {
+      fromChainId,
+      toChainId,
+      fromTokenAddress,
+      toTokenAddress,
+      fromAmount,
+      allowSwitchChain,
+      showZeroUsd,
+    } = await validateDto(dto, GetAdvanceRoutesLiFiDto, {
+      addressKeys: ['fromTokenAddress', 'toTokenAddress'],
+    });
+
+    let { toAddress, fromAddress } = dto;
+
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
+    if (!toAddress) toAddress = fromAddress;
+
+    let { chainId } = this.etherspotWallet.services.walletService;
+    chainId = fromChainId ? fromChainId : chainId;
+
+    const data = await this.etherspotWallet.services.dataService.getAdvanceRoutesLiFi(
+      fromTokenAddress,
+      toTokenAddress,
+      chainId,
+      toChainId,
+      BigNumber.from(fromAmount),
+      toAddress,
+      allowSwitchChain,
+      fromAddress,
+      showZeroUsd,
+    );
+
+    return data;
+  }
+
+  async getStepTransaction(dto: GetStepTransactionsLiFiDto): Promise<StepTransactions> {
+    const accountAddress = await this.getCounterFactualAddress();
+
+    return this.etherspotWallet.services.dataService.getStepTransaction(dto.route, accountAddress);
+  }
+
+  /**
+ * gets multi chain quotes
+ * @param dto
+ * @return Promise<MutliChainQuotes>
+ */
+  async getCrossChainQuotes(dto: GetExchangeCrossChainQuoteDto): Promise<BridgingQuotes> {
+    const {
+      fromChainId,
+      toChainId,
+      fromTokenAddress,
+      toTokenAddress,
+      fromAmount,
+      serviceProvider,
+      lifiBridges,
+      toAddress,
+      showZeroUsd,
+    } = await validateDto(dto, GetExchangeCrossChainQuoteDto, {
+      addressKeys: ['fromTokenAddress', 'toTokenAddress'],
+    });
+
+    let { fromAddress } = dto;
+
+    if (!fromAddress) fromAddress = await this.getCounterFactualAddress();
+
+    let { chainId } = this.etherspotWallet.services.walletService;
+
+    chainId = fromChainId ? fromChainId : chainId;
+
+    return this.etherspotWallet.services.dataService.getCrossChainQuotes(
+      fromTokenAddress,
+      toTokenAddress,
+      chainId,
+      toChainId,
+      BigNumber.from(fromAmount),
+      serviceProvider,
+      lifiBridges,
+      toAddress,
+      fromAddress,
+      showZeroUsd,
+    );
+  }
 }

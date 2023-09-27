@@ -1,4 +1,44 @@
 # Changelog
+
+## [1.2.9] - 2023-09-26
+### New
+- Added Mantle testnet
+## [1.2.8] - 2023-09-21
+### Fixes
+- Fixed the issue with getExchangeOffers endpoint (Account must need to be deployed to access this endpoint)
+- Removed getTransactions endpoint
+
+## [1.2.7] - 2023-09-20
+### Fixes
+- Fixed the issue on usage of axios when paymaster is called via react native by replacing it to fetch.
+
+## [1.2.6] - 2023-09-12
+### Fixes
+- Fixed the issue on setting gas prices by the user if specified on estimate step
+
+## [1.2.4] - 2023-09-11
+### Breaking Changes
+- Changed the paymasterApi to include api_key for ARKA
+- Changed paymaster response object to return paymasterAndData, VerificationGasLimit, PreVerificationGas, callGasLimit to set to the userOp before sending to the bundler
+
+## [1.2.2] - 2023-08-31
+### Breaking Changes
+- Changed the wallet factory address so the smart wallet address will generate a new address. Whoever wishes to access the old wallet should use version 1.2.0 to connect to the old smart wallet
+
+## [1.2.0] - 2023-08-31
+### New
+- Added wallet connect 2.0 support
+
+## [1.1.7] - 2023-08-24
+### New
+- Added getAccountBalances to get account balances
+- Added getTransaction to get transaction
+- Added getTransactions to get transactions
+- Added getNftList to get NFT list belonging to account
+- Added getExchangeOffers to get exchange offers
+- Added getAdvanceRoutesLiFi to get advance routes
+- Added getStepTransaction to get step transaction from LIFI
+- Added getCrossChainQuotes to get multi chain quotes
 ## [1.1.6] - 2023-08-24
 ### Bug Fixes
 - Fixes on User hash was created before initialising the paymaster response if given which leads to "Invalid signature or paymaster signature"

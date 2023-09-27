@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 import {
   EtherspotWallet,
   EtherspotWallet__factory,
@@ -68,7 +68,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return hexConcat([
       this.factory.address,
       this.factory.interface.encodeFunctionData('createAccount', [
-        this.entryPointAddress,
         this.services.walletService.walletAddress,
         this.index,
       ]),
@@ -78,7 +77,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   async getCounterFactualAddress(): Promise<string> {
     this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
     this.accountAddress = await this.factory.getAddress(
-      this.entryPointAddress,
       this.services.walletService.walletAddress,
       this.index,
     );
@@ -109,10 +107,10 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return await this.services.walletService.signMessage(arrayify(userOpHash));
   }
 
-  async updateEntryPoint(newEntryPoint: string) {
-    const accountContract = await this._getAccountContract();
-    return accountContract.updateEntryPoint(newEntryPoint);
-  }
+  // async updateEntryPoint(newEntryPoint: string) {
+  //   const accountContract = await this._getAccountContract();
+  //   return accountContract.updateEntryPoint(newEntryPoint);
+  // }
 
   get epView() {
     return this.entryPointView;
