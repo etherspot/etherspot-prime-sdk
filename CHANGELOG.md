@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.9] - 2023-09-26
+### New
+- Added Mantle testnet
 ## [1.2.8] - 2023-09-21
 ### Fixes
 - Fixed the issue with getExchangeOffers endpoint (Account must need to be deployed to access this endpoint)
