@@ -2,6 +2,7 @@ import { defaultAbiCoder, hexConcat, hexlify, keccak256 } from 'ethers/lib/utils
 import { EntryPoint__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { ethers } from 'ethers';
+import { Buffer } from 'buffer';
 
 const entryPointAbi: any = EntryPoint__factory.abi;
 
@@ -98,7 +99,7 @@ export function decodeErrorReason(error: string): DecodedError | undefined {
     return {
       message: formattedMessage,
       opIndex,
-    };    
+    };
   }
 }
 
