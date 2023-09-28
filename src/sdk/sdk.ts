@@ -7,7 +7,7 @@ import {
   WalletConnect2WalletProvider,
   WalletProviderLike
 } from './wallet';
-import { SdkOptions } from './interfaces';
+import { PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
@@ -61,18 +61,12 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
-    let paymasterAPI = null;
-    if (optionsLike.paymasterApi && optionsLike.paymasterApi.url) {
-      paymasterAPI = new VerifyingPaymasterAPI(optionsLike.paymasterApi.url, Networks[chainId].contracts.entryPoint, optionsLike.paymasterApi.context ?? {}, optionsLike.paymasterApi.api_key, chainId)
-    }
-
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
       walletProvider: walletConnectProvider ?? walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
       factoryAddress: Networks[chainId].contracts.walletFactory,
-      paymasterAPI,
     })
 
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -136,10 +130,15 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async estimate(gasDetails?: TransactionGasInfoForUserOp) {
+  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
     if (this.userOpsBatch.to.length < 1) {
       throw new Error("cannot sign empty transaction batch");
     }
+
+    if (paymasterDetails?.url) {
+      const paymasterAPI = new VerifyingPaymasterAPI(paymasterDetails.url, Networks[this.chainId].contracts.entryPoint, paymasterDetails.context ?? {}, paymasterDetails.api_key, this.chainId)
+      this.etherspotWallet.setPaymasterApi(paymasterAPI)
+    } else this.etherspotWallet.setPaymasterApi(null);
 
     const tx: TransactionDetailsForUserOp = {
       target: this.userOpsBatch.to,

@@ -18,7 +18,6 @@ export interface BaseApiParams {
   entryPointAddress: string;
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
-  paymasterAPI?: PaymasterAPI;
   walletProvider: WalletProviderLike, 
   optionsLike?: SdkOptions
 }
@@ -112,7 +111,6 @@ export abstract class BaseAccountAPI {
     this.overheads = params.overheads;
     this.entryPointAddress = params.entryPointAddress;
     this.accountAddress = params.accountAddress;
-    this.paymasterAPI = params.paymasterAPI;
 
     // factory "connect" define the contract address. the contract "connect" defines the "from" address.
     this.entryPointView = EntryPoint__factory.connect(params.entryPointAddress, params.provider).connect(
@@ -176,6 +174,10 @@ export abstract class BaseAccountAPI {
     await this.require();
 
     return this.services.sessionService.createSession(ttl, fcmToken);
+  }
+
+  async setPaymasterApi(paymaster: PaymasterAPI | null) {
+    this.paymasterAPI = paymaster;
   }
 
 
