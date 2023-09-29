@@ -16,8 +16,8 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
-      # - restore_cache:
-      #     key: dependency-cache-{{ checksum "package.json" }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command: npm install
@@ -38,8 +38,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      # - restore_cache:
-      #     key: dependency-cache-{{ checksum "package.json" }}
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
