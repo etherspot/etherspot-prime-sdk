@@ -54,6 +54,7 @@ jobs:
             git clone https://github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
             sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
+            sed -i.bak "s/_project_key_/$PROJECT_KEY/g" .env
             mv package.json temp.json
             jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
             rm temp.json
