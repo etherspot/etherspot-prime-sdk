@@ -68,13 +68,13 @@ jobs:
       #       rm ~/logs.txt
       #       source "$BASH_ENV"
       - store_artifacts:
-          path: /home/circleci/e2e-sdk-prime/example.env
+          path: /home/circleci/etherspot-prime-sdk/example.env
           when: always
-      - slack/status:
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job e2e tests failed! :circleci-fail:"
-          success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job e2e tests completed successfully! :circleci-pass: \n\n $LOGS"
-          # only_for_branches: master
-          webhook: "${SLACK_WEBHOOK_URL}"
+      # - slack/status:
+      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job e2e tests failed! :circleci-fail:"
+      #     success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job e2e tests completed successfully! :circleci-pass: \n\n $LOGS"
+      #     # only_for_branches: master
+      #     webhook: "${SLACK_WEBHOOK_URL}"
   publish-npm-package:
     working_directory: ~/etherspot-prime-sdk
     docker:
@@ -126,19 +126,19 @@ workflows:
             branches:
               only:
                   - feature/e2e-prime-pipeline
-      - publish-npm-package:
-          context: general-vars
-          requires:
-            - e2e-tests
-          filters:
-            branches:
-              only:
-                  - feature/e2e-prime-pipeline
-      - publish-github-release:
-          context: general-vars
-          requires:
-            - e2e-tests
-          filters:
-            branches:
-              only:
-                  - feature/e2e-prime-pipeline
+      # - publish-npm-package:
+      #     context: general-vars
+      #     requires:
+      #       - e2e-tests
+      #     filters:
+      #       branches:
+      #         only:
+      #             - feature/e2e-prime-pipeline
+      # - publish-github-release:
+      #     context: general-vars
+      #     requires:
+      #       - e2e-tests
+      #     filters:
+      #       branches:
+      #         only:
+      #             - feature/e2e-prime-pipeline
