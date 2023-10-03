@@ -67,7 +67,10 @@ jobs:
             echo $BASH_ENV
             rm ~/logs.txt
             source "$BASH_ENV"
-            mv /home/circleci/e2e-sdk-prime/mochawesome-report/mochawesome.html /tmp/report.html
+      - run:
+          name: Move test report
+          command: |
+            mv /home/circleci/e2e-sdk-prime/mochawesome-report/mochawesome.html /tmp/report.html         
       - store_artifacts:
           path: /tmp/report.html
           when: always
