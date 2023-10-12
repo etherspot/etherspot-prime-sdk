@@ -17,6 +17,8 @@ import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto } from './dto';
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session } from './';
+import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
+import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 
 /**
  * Prime-Sdk
@@ -25,9 +27,10 @@ import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftL
  */
 export class PrimeSdk {
 
-  private etherspotWallet: EtherspotWalletAPI;
+  private etherspotWallet: EtherspotWalletAPI | ZeroDevWalletAPI | SimpleAccountAPI;
   private bundler: HttpRpcClient;
   private chainId: number;
+  private factoryUsed: Factory;
 
   private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
 
@@ -64,15 +67,32 @@ export class PrimeSdk {
 
     if (Networks[chainId].contracts.walletFactory[factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
 
-    this.etherspotWallet = new EtherspotWalletAPI({
-      provider,
-      walletProvider: walletConnectProvider ?? walletProvider,
-      optionsLike,
-      entryPointAddress: Networks[chainId].contracts.entryPoint,
-      factoryUsed: factoryUsed,
-      factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
-    })
-
+    if (factoryUsed === Factory.ZERO_DEV) {
+      this.etherspotWallet = new ZeroDevWalletAPI({
+        provider,
+        walletProvider: walletConnectProvider ?? walletProvider,
+        optionsLike,
+        entryPointAddress: Networks[chainId].contracts.entryPoint,
+        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+      })
+    } else if (factoryUsed === Factory.SIMPLE_ACCOUNT) {
+      this.etherspotWallet = new SimpleAccountAPI({
+        provider,
+        walletProvider: walletConnectProvider ?? walletProvider,
+        optionsLike,
+        entryPointAddress: Networks[chainId].contracts.entryPoint,
+        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+      })
+    }
+    else {
+      this.etherspotWallet = new EtherspotWalletAPI({
+        provider,
+        walletProvider: walletConnectProvider ?? walletProvider,
+        optionsLike,
+        entryPointAddress: Networks[chainId].contracts.entryPoint,
+        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+      })
+    }
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
 
   }
@@ -160,7 +180,7 @@ export class PrimeSdk {
     /**
      * Dummy signature used only in the case of zeroDev factory contract
      */
-    if (this.etherspotWallet.factoryUsed === Factory.ZERO_DEV) {
+    if (this.factoryUsed === Factory.ZERO_DEV) {
       partialtx.signature = "0x00000000870fe151d548a1c527c3804866fab30abf28ed17b79d5fc5149f19ca0819fefc3c57f3da4fdf9b10fab3f2f3dca536467ae44943b9dbb8433efe7760ddd72aaa1c"
     }
 

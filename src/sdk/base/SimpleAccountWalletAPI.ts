@@ -1,12 +1,11 @@
-import { BigNumber, BigNumberish, Contract } from 'ethers';
+import { BigNumber, BigNumberish, Contract, ethers } from 'ethers';
 import {
-  EtherspotWallet,
-  EtherspotWallet__factory,
-  EtherspotWalletFactory,
-  EtherspotWalletFactory__factory,
+  EntryPoint__factory,
 } from '../contracts';
 import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
+import { SimpleAccountAbi } from '../contracts/SimpleAccount/SimpleAccountAbi';
+import { SimpleAccountFactoryAbi } from '../contracts/SimpleAccount/SimpleAccountFactoryAbi';
 
 /**
  * constructor params, added no top of base params:
@@ -14,19 +13,19 @@ import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
  * @param factoryAddress address of contract "factory" to deploy new contracts (not needed if account already deployed)
  * @param index nonce value used when creating multiple accounts for the same owner
  */
-export interface EtherspotWalletApiParams extends BaseApiParams {
+export interface SimpleAccountApiParams extends BaseApiParams {
   factoryAddress?: string;
   index?: number;
 }
 
 /**
- * An implementation of the BaseAccountAPI using the EtherspotWallet contract.
+ * An implementation of the BaseAccountAPI using the SimpleAccountWallet contract.
  * - contract deployer gets "entrypoint", "owner" addresses and "index" nonce
  * - owner signs requests using normal "Ethereum Signed Message" (ether's signer.signMessage())
  * - nonce method is "nonce()"
  * - execute method is "execFromEntryPoint()"
  */
-export class EtherspotWalletAPI extends BaseAccountAPI {
+export class SimpleAccountAPI extends BaseAccountAPI {
   factoryAddress?: string;
   index: number;
   accountAddress?: string;
@@ -35,20 +34,18 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    * our account contract.
    * should support the "execFromEntryPoint" and "nonce" methods
    */
-  accountContract?: EtherspotWallet;
+  accountContract?: Contract;
 
-  factory?: EtherspotWalletFactory;
+  factory?: Contract;
 
-  constructor(params: EtherspotWalletApiParams) {
+  constructor(params: SimpleAccountApiParams) {
     super(params);
     this.factoryAddress = params.factoryAddress;
     this.index = params.index ?? 0;
   }
 
-  async _getAccountContract(): Promise<EtherspotWallet | Contract> {
-    if (this.accountContract == null) {
-      this.accountContract = EtherspotWallet__factory.connect(await this.getAccountAddress(), this.provider);
-    }
+  async _getAccountContract(): Promise<Contract> {
+    this.accountContract = new ethers.Contract(this.accountAddress, SimpleAccountAbi, this.provider);
     return this.accountContract;
   }
 
@@ -57,11 +54,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    * this value holds the "factory" address, followed by this account's information
    */
   async getAccountInitCode(): Promise<string> {
-    if (this.factoryAddress != null && this.factoryAddress !== '') {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
-    } else {
-      throw new Error('no factory to get initCode');
-    }
+    this.factory = new ethers.Contract(this.factoryAddress, SimpleAccountFactoryAbi, this.provider);
 
     return hexConcat([
       this.factoryAddress,
@@ -73,11 +66,19 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async getCounterFactualAddress(): Promise<string> {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
-      this.accountAddress = await this.factory.getAddress(
-        this.services.walletService.walletAddress,
-        this.index,
-      );
+    try {
+      const initCode = await this.getAccountInitCode();
+      const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
+      await entryPoint.callStatic.getSenderAddress(initCode);
+
+      throw new Error("getSenderAddress: unexpected result");
+    } catch (error: any) {
+      const addr = error?.errorArgs?.sender;
+      if (!addr) throw error;
+      if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id');
+      this.accountContract = new ethers.Contract(addr, SimpleAccountAbi, this.provider);
+      this.accountAddress = addr;
+    }
     return this.accountAddress;
   }
 
@@ -112,6 +113,6 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   async encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string> {
     const accountContract = await this._getAccountContract();
-    return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, datas]);
+    return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
   }
 }
