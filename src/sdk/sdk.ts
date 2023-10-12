@@ -7,7 +7,7 @@ import {
   WalletConnect2WalletProvider,
   WalletProviderLike
 } from './wallet';
-import { PaymasterApi, SdkOptions } from './interfaces';
+import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, ethers, providers } from 'ethers';
@@ -54,6 +54,7 @@ export class PrimeSdk {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
+    const factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
 
     let provider;
 
@@ -61,12 +62,15 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
+    if (Networks[chainId].contracts.walletFactory[factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
+
     this.etherspotWallet = new EtherspotWalletAPI({
       provider,
       walletProvider: walletConnectProvider ?? walletProvider,
       optionsLike,
       entryPointAddress: Networks[chainId].contracts.entryPoint,
-      factoryAddress: Networks[chainId].contracts.walletFactory,
+      factoryUsed: factoryUsed,
+      factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
     })
 
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -152,6 +156,13 @@ export class PrimeSdk {
       maxFeePerGas: 1,
       maxPriorityFeePerGas: 1,
     });
+
+    /**
+     * Dummy signature used only in the case of zeroDev factory contract
+     */
+    if (this.etherspotWallet.factoryUsed === Factory.ZERO_DEV) {
+      partialtx.signature = "0x00000000870fe151d548a1c527c3804866fab30abf28ed17b79d5fc5149f19ca0819fefc3c57f3da4fdf9b10fab3f2f3dca536467ae44943b9dbb8433efe7760ddd72aaa1c"
+    }
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 

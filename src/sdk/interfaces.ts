@@ -7,6 +7,12 @@ export interface PaymasterApi {
   context?: any;
 }
 
+export enum Factory {
+  ZERO_DEV = 'zeroDev',
+  ETHERSPOT = 'etherspot',
+  SIMPLE_ACCOUNT = 'simpleAccount'
+}
+
 export interface SdkOptions {
   chainId: number;
   stateStorage?: StateStorage;
@@ -16,4 +22,5 @@ export interface SdkOptions {
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
   projectKey: string;
+  factoryWallet?: Factory;
 }

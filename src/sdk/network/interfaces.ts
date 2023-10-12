@@ -10,7 +10,11 @@ export interface NetworkConfig {
   bundler: string;
   contracts: {
     entryPoint: string;
-    walletFactory: string;
+    walletFactory: {
+      etherspot: string;
+      zeroDev: string;
+      simpleAccount: string;
+    };
   };
   graphqlEndpoint?: string;
 };
