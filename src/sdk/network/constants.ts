@@ -88,7 +88,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -101,7 +101,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -114,7 +114,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -127,7 +127,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -140,7 +140,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -153,7 +153,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -166,7 +166,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -179,7 +179,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -192,7 +192,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -231,7 +231,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -257,7 +257,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -322,7 +322,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -335,7 +335,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -348,7 +348,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
@@ -374,7 +374,7 @@ export const Networks: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0xD49a72cb78C44c6bfbf0d471581B7635cF62E81e',
+        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },

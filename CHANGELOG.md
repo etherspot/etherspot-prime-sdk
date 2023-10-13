@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.1] - 2023-10-13
+### Fixes
+- Updated all chains to the latest zeroDev factory contract as previously only goerli chain has the latest factory(0x5de4839a76cf55d0c90e2061ef4386d962E15ae3) and others was on previous factory contract which doesn't work on the latest changes made by zeroDev
+
 ## [1.3.0] - 2023-10-12
 ### New
 - Added latest zeroDev wallet Factory(0x5de4839a76cf55d0c90e2061ef4386d962E15ae3) and simpleAccount wallet factory(0x9406Cc6185a346906296840746125a0E44976454)
