@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.2.11",
+  "version": "1.3.0",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -32,6 +32,9 @@
     "10-advance-routes-lifi": "./node_modules/.bin/ts-node ./examples/10-advance-routes-lifi",
     "11-cross-chain-quotes": "./node_modules/.bin/ts-node ./examples/11-cross-chain-quotes",
     "12-add-guardians": "./node_modules/.bin/ts-node ./examples/12-add-guardians",
+    "13-paymaster": "./node_modules/.bin/ts-node ./examples/13-paymaster",
+    "14-zeroDev-address": "./node_modules/.bin/ts-node ./examples/14-zeroDev-address",
+    "15-simpleAccount-address": "./node_modules/.bin/ts-node ./examples/15-simpleAccount-address",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",

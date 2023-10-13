@@ -1,4 +1,9 @@
 # Changelog
+## [1.3.0] - 2023-10-12
+### New
+- Added latest zeroDev wallet Factory(0x5de4839a76cf55d0c90e2061ef4386d962E15ae3) and simpleAccount wallet factory(0x9406Cc6185a346906296840746125a0E44976454)
+- Updated network config to include bundler urls deployed
+
 ## [1.2.11] - 2023-09-20
 ### Breaking Changes 
 - Removed paymaster initialisation from sdk init place and added to estimate step to specify how each userOp is submitted rather than global paymaster initialisation
