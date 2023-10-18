@@ -1,4 +1,9 @@
 # Changelog
+## [1.3.2] - 2023-10-18
+### New
+- Added Flare testnet and Mainnet network support
+- Added an example to execute token paymasters using ARKA
+
 ## [1.3.1] - 2023-10-13
 ### Fixes
 - Updated all chains to the latest zeroDev factory contract as previously only goerli chain has the latest factory(0x5de4839a76cf55d0c90e2061ef4386d962E15ae3) and others was on previous factory contract which doesn't work on the latest changes made by zeroDev
