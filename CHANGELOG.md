@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.3] - 2023-10-18
+### New
+- Added Scroll testnet and Mainnet network support
+
 ## [1.3.2] - 2023-10-18
 ### New
 - Added Flare testnet and Mainnet network support
