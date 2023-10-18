@@ -28,11 +28,13 @@ export enum NetworkNames {
   Linea = 'linea',
   LineaTestnet = 'lineaTestnet',
   FlareTestnet = 'flareTestnet',
-  Flare = 'flare'
+  Flare = 'flare',
+  ScrollSepolia = 'scrollSepolia',
+  Scroll = 'scroll',
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
+  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 534351, 534352, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -65,6 +67,8 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.LineaTestnet]: 59140,
   [NetworkNames.FlareTestnet]: 114,
   [NetworkNames.Flare]: 14,
+  [NetworkNames.ScrollSepolia]: 534351,
+  [NetworkNames.Scroll]: 534352,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -426,6 +430,32 @@ export const Networks: {
   [14]: {
     chainId: 14,
     bundler: 'https://flare-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    },
+    graphqlEndpoint: ''
+  },
+  [534351]: {
+    chainId: 534351,
+    bundler: 'https://scrollsepolia-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    },
+    graphqlEndpoint: ''
+  },
+  [534352]: {
+    chainId: 534352,
+    bundler: 'https://scroll-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
