@@ -27,10 +27,12 @@ export enum NetworkNames {
   Fuji = 'fuji',
   Linea = 'linea',
   LineaTestnet = 'lineaTestnet',
+  FlareTestnet = 'flareTestnet',
+  Flare = 'flare'
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 31, 56, 97, 100, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
+  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -61,6 +63,8 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Fuji]: 43113,
   [NetworkNames.Linea]: 59144,
   [NetworkNames.LineaTestnet]: 59140,
+  [NetworkNames.FlareTestnet]: 114,
+  [NetworkNames.Flare]: 14,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -396,6 +400,32 @@ export const Networks: {
   [59140]: {
     chainId: 59140,
     bundler: '',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    },
+    graphqlEndpoint: ''
+  },
+  [114]: {
+    chainId: 114,
+    bundler: 'https://flaretestnet-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    },
+    graphqlEndpoint: ''
+  },
+  [14]: {
+    chainId: 14,
+    bundler: 'https://flare-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
