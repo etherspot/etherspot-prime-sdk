@@ -493,7 +493,7 @@ export class DataService extends Service {
       },
     );
 
-    return result.items;
+    return result ? result.items : [];
   }
 
   async getTokenListTokens(name: string = null): Promise<TokenListToken[]> {
@@ -527,7 +527,7 @@ export class DataService extends Service {
       },
     );
 
-    return result ? result.tokens : null;
+    return result ? result.tokens : [];
   }
 
   async fetchExchangeRates(tokens: string[], ChainId: number): Promise<RateData> {
@@ -562,6 +562,6 @@ export class DataService extends Service {
       },
     );
 
-    return result;
+    return result ?? null;
   }
 }

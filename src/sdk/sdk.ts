@@ -516,7 +516,7 @@ export class PrimeSdk {
     let data: RateData;
     const promises = [];
 
-    //Create a batch of 50
+    // Create a batch of 50
     const batches = [...Array(Math.ceil(tokens.length / 50))].map(() => tokens.splice(0, 50));
     batches.forEach((batch) => {
       promises.push(this.etherspotWallet.services.dataService.fetchExchangeRates(batch, chainId));
@@ -535,7 +535,7 @@ export class PrimeSdk {
         }),
       );
 
-    //Return Unique tokens
+    // Return Unique tokens
     if (data && data.items && data.items.length) {
       data.error = ''
       data.errored = false
