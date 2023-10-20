@@ -10,3 +10,5 @@ export * from './get-exchange-offers.dto';
 export * from './advance-routes-lifi.dto';
 export * from './get-step-transactions-lifi.dto';
 export * from './get-exchange-cross-chain-quote.dto';
+export * from './fetch-exchange-rates.dto';
+export * from './get-token-list.dto';
