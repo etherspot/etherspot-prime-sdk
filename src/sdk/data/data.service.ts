@@ -496,7 +496,7 @@ export class DataService extends Service {
 
       return result ? result.items : [];
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return [];
     }
   }
@@ -535,7 +535,7 @@ export class DataService extends Service {
 
       return result ? result.tokens : [];
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return [];
     }
   }
@@ -574,7 +574,7 @@ export class DataService extends Service {
 
       return result ?? null;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return null;
     }
   }
