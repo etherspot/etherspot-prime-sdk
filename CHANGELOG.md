@@ -1,4 +1,10 @@
 # Changelog
+
+## [1.3.4] - 2023-10-20
+### New
+- Added getTokenLists and getTokenListTokens to fetch token details
+- Added fetchExchangeRates to fetch exchange rates of tokens
+
 ## [1.3.3] - 2023-10-18
 ### New
 - Added Scroll testnet and Mainnet network support

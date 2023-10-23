@@ -51,3 +51,6 @@ export enum LiFiBridge {
   polygon = 'polygon',
   stargate = 'stargate',
 }
+
+export const TOKEN_LIST_MIN_NAME_LENGTH = 3;
+export const TOKEN_LIST_MAX_NAME_LENGTH = 32;
