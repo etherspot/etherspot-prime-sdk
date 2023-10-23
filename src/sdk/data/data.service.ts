@@ -470,10 +470,11 @@ export class DataService extends Service {
   async getTokenLists(): Promise<TokenList[]> {
     const { apiService } = this.services;
 
-    const { result } = await apiService.query<{
-      result: TokenLists;
-    }>(
-      gql`
+    try {
+      const { result } = await apiService.query<{
+        result: TokenLists;
+      }>(
+        gql`
         query($chainId: Int) {
           result: tokenLists(chainId: $chainId) {
             items {
@@ -486,23 +487,28 @@ export class DataService extends Service {
           }
         }
       `,
-      {
-        models: {
-          result: TokenLists,
+        {
+          models: {
+            result: TokenLists,
+          },
         },
-      },
-    );
+      );
 
-    return result ? result.items : [];
+      return result ? result.items : [];
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   async getTokenListTokens(name: string = null): Promise<TokenListToken[]> {
     const { apiService } = this.services;
 
-    const { result } = await apiService.query<{
-      result: TokenList;
-    }>(
-      gql`
+    try {
+      const { result } = await apiService.query<{
+        result: TokenList;
+      }>(
+        gql`
         query($chainId: Int, $name: String) {
           result: tokenList(chainId: $chainId, name: $name) {
             tokens {
@@ -516,27 +522,31 @@ export class DataService extends Service {
           }
         }
       `,
-      {
-        variables: {
-          name,
+        {
+          variables: {
+            name,
+          },
+          models: {
+            result: TokenList,
+          },
+          fetchPolicy: 'cache-first',
         },
-        models: {
-          result: TokenList,
-        },
-        fetchPolicy: 'cache-first',
-      },
-    );
+      );
 
-    return result ? result.tokens : [];
+      return result ? result.tokens : [];
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   async fetchExchangeRates(tokens: string[], ChainId: number): Promise<RateData> {
     const { apiService } = this.services;
-
-    const { result } = await apiService.query<{
-      result: RateData;
-    }>(
-      gql`
+    try {
+      const { result } = await apiService.query<{
+        result: RateData;
+      }>(
+        gql`
         query($tokens: [String!]!, $ChainId: Int!) {
           result: fetchExchangeRates(tokens: $tokens, chainId: $ChainId) {
             errored
@@ -551,17 +561,21 @@ export class DataService extends Service {
           }
         }
       `,
-      {
-        variables: {
-          tokens,
-          ChainId,
+        {
+          variables: {
+            tokens,
+            ChainId,
+          },
+          models: {
+            result: RateData,
+          },
         },
-        models: {
-          result: RateData,
-        },
-      },
-    );
+      );
 
-    return result ?? null;
+      return result ?? null;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 }
