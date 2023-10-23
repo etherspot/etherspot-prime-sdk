@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core';
 import { HeaderNames, ObjectSubject, Service } from '../common';
 import { Route } from '@lifi/sdk';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, StepTransaction, StepTransactions, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, RateData, StepTransaction, StepTransactions, TokenList, TokenListToken, TokenLists, Transaction } from './classes';
 import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
 
@@ -466,5 +466,116 @@ export class DataService extends Service {
 
     return result ? result : null;
   }
-}
 
+  async getTokenLists(): Promise<TokenList[]> {
+    const { apiService } = this.services;
+
+    try {
+      const { result } = await apiService.query<{
+        result: TokenLists;
+      }>(
+        gql`
+        query($chainId: Int) {
+          result: tokenLists(chainId: $chainId) {
+            items {
+              name
+              endpoint
+              isDefault
+              createdAt
+              updatedAt
+            }
+          }
+        }
+      `,
+        {
+          models: {
+            result: TokenLists,
+          },
+        },
+      );
+
+      return result ? result.items : [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async getTokenListTokens(name: string = null): Promise<TokenListToken[]> {
+    const { apiService } = this.services;
+
+    try {
+      const { result } = await apiService.query<{
+        result: TokenList;
+      }>(
+        gql`
+        query($chainId: Int, $name: String) {
+          result: tokenList(chainId: $chainId, name: $name) {
+            tokens {
+              address
+              name
+              symbol
+              decimals
+              logoURI
+              chainId
+            }
+          }
+        }
+      `,
+        {
+          variables: {
+            name,
+          },
+          models: {
+            result: TokenList,
+          },
+          fetchPolicy: 'cache-first',
+        },
+      );
+
+      return result ? result.tokens : [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  async fetchExchangeRates(tokens: string[], ChainId: number): Promise<RateData> {
+    const { apiService } = this.services;
+    try {
+      const { result } = await apiService.query<{
+        result: RateData;
+      }>(
+        gql`
+        query($tokens: [String!]!, $ChainId: Int!) {
+          result: fetchExchangeRates(tokens: $tokens, chainId: $ChainId) {
+            errored
+            error
+            items {
+              address
+              eth
+              eur
+              gbp
+              usd
+            }
+          }
+        }
+      `,
+        {
+          variables: {
+            tokens,
+            ChainId,
+          },
+          models: {
+            result: RateData,
+          },
+        },
+      );
+
+      return result ?? null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+}

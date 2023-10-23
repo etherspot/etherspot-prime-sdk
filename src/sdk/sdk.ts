@@ -15,8 +15,8 @@ import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/const
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto } from './dto';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session } from './';
+import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto, FetchExchangeRatesDto, GetTokenListDto } from './dto';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session, RateData, TokenListToken, TokenList } from './';
 import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 
@@ -477,5 +477,73 @@ export class PrimeSdk {
       fromAddress,
       showZeroUsd,
     );
+  }
+
+  /**
+ * gets token lists
+ * @return Promise<TokenList[]>
+ */
+  async getTokenLists(): Promise<TokenList[]> {
+    await this.etherspotWallet.require({
+      wallet: false,
+    });
+
+    return this.etherspotWallet.services.dataService.getTokenLists();
+  }
+
+  /**
+ * gets token list tokens
+ * @param dto
+ * @return Promise<TokenListToken[]>
+ */
+  async getTokenListTokens(dto: GetTokenListDto = {}): Promise<TokenListToken[]> {
+    const { name } = await validateDto(dto, GetTokenListDto);
+
+    await this.etherspotWallet.require({
+      wallet: false,
+    });
+
+    return this.etherspotWallet.services.dataService.getTokenListTokens(name);
+  }
+
+  /**
+  * fetch exchange rates of tokens
+  * @param dto
+  * @return Promise<RateData>
+  */
+  async fetchExchangeRates(dto: FetchExchangeRatesDto): Promise<RateData> {
+    const { tokens, chainId } = dto;
+    let data: RateData;
+    const promises = [];
+
+    // Create a batch of 50
+    const batches = [...Array(Math.ceil(tokens.length / 50))].map(() => tokens.splice(0, 50));
+    batches.forEach((batch) => {
+      promises.push(this.etherspotWallet.services.dataService.fetchExchangeRates(batch, chainId));
+    });
+
+    // Fetch succeded results and merge
+    await (Promise as any)
+      .allSettled(promises)
+      .then((response) =>
+        response?.forEach((result) => {
+          if (result?.status === 'fulfilled') {
+            !data
+              ? (data = result.value ? result.value : {})
+              : (data.items = result?.value?.items ? [...data.items, ...result.value.items] : [...data.items]);
+          }
+        }),
+      );
+
+    // Return Unique tokens
+    if (data && data.items && data.items.length) {
+      data.error = ''
+      data.errored = false
+      data.items = [...new Map(data.items.map(item => [item['address'], item])).values()];
+    } else {
+      data.items = [];
+    }
+
+    return data;
   }
 }

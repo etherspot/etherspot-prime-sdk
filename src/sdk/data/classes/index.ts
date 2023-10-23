@@ -16,3 +16,8 @@ export * from './transaction-data';
 export * from './advance-routes-lifi';
 export * from './step-transactions-lifi';
 export * from './exchange-bridging-quote';
+export * from './rate-info';
+export * from './rate-data';
+export * from './token-list-token';
+export * from './token-list';
+export * from './token-lists';
