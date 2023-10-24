@@ -364,7 +364,7 @@ export const Networks: {
   },
   [97]: {
     chainId: 97,
-    bundler: '',
+    bundler: 'https://bsctestnet-bundler.etherspot.io/',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
