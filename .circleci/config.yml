@@ -50,23 +50,27 @@ jobs:
           name: Checkout e2e repo and run tests
           no_output_timeout: 60m
           command: |
-            cd ~
-            git clone https://github.com/etherspot/e2e-sdk-prime.git
-            cd e2e-sdk-prime
-            sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
-            sed -i.bak "s/_project_key_/$PROJECT_KEY/g" .env
-            mv package.json temp.json
-            jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
-            rm temp.json
-            npm i
-            touch ~/logs.txt
-            npm run test-mainnet |& tee ~/logs.txt
-            chmod 755 ~/logs.txt
-            cat ~/logs.txt
-            echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
-            echo $BASH_ENV
-            rm ~/logs.txt
-            source "$BASH_ENV"
+            if [ "$SKIP_E2E_TESTS" = "false" ]; then
+              cd ~
+              git clone https://github.com/etherspot/e2e-sdk-prime.git
+              cd e2e-sdk-prime
+              sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
+              sed -i.bak "s/_project_key_/$PROJECT_KEY/g" .env
+              mv package.json temp.json
+              jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
+              rm temp.json
+              npm i
+              touch ~/logs.txt
+              npm run test-mainnet |& tee ~/logs.txt
+              chmod 755 ~/logs.txt
+              cat ~/logs.txt
+              echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
+              echo $BASH_ENV
+              rm ~/logs.txt
+              source "$BASH_ENV"
+            else
+              echo "E2E Tests skipped..."
+            fi
       - run:
           name: Move test report
           command: |
