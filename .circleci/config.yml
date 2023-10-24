@@ -40,10 +40,11 @@ jobs:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
     steps:
+      - checkout
       - when:
           condition: <<parameters.run_e2e_tests>>
           steps:
-          - checkout
+          
           - restore_cache:
               key: dependency-cache-{{ checksum "package.json" }}
           - run:
