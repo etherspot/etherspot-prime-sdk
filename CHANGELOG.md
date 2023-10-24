@@ -1,4 +1,7 @@
 # Changelog
+## [1.3.4] - 2023-10-24
+### New
+- Added BNB (BSC) Testnet bundler url
 
 ## [1.3.4] - 2023-10-20
 ### New
