@@ -41,7 +41,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - when:
-          condition: <<e2e-tests.parameters.run_e2e_tests>>
+          condition: <<parameters.run_e2e_tests>>
           steps:
             - checkout
             - restore_cache:
