@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - when:
-          condition: <<parameters.run_e2e_tests>>
+          condition: <<pipeline.parameters.run_e2e_tests>>
           steps:
           
           - restore_cache:
