@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.6] - 2023-10-25
+### Bug Fixes
+- Added addUserOp fn to execute single transaction since simpleAccount transfers native tokens only using execute fn and does not support in userOp batching
+
 ## [1.3.4] - 2023-10-24
 ### New
 - Added BNB (BSC) Testnet bundler url
