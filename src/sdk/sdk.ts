@@ -243,7 +243,7 @@ export class PrimeSdk {
     tx: UserOpsRequest,
   ): Promise<BatchUserOpsRequest> {
     if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
-    if (tx.value && this.factoryUsed === Factory.SIMPLE_ACCOUNT && this.userOpsBatch.value.length > 0) throw new Error('SimpleAccount: native transfers cant be part of batch');
+    if (tx.value && this.factoryUsed === Factory.SIMPLE_ACCOUNT && tx.value.toString() !== '0' && this.userOpsBatch.value.length > 0) throw new Error('SimpleAccount: native transfers cant be part of batch');
     this.userOpsBatch.to.push(tx.to);
     this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
     this.userOpsBatch.data.push(tx.data ?? '0x');
