@@ -8,7 +8,7 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { AccountService, AccountTypes, ApiService, CreateSessionDto, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { AccountService, AccountTypes, ApiService, CreateSessionDto, Factory, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
 import { DataService } from '../data';
 import { PaymasterResponse } from './VerifyingPaymasterAPI';
@@ -56,6 +56,7 @@ export abstract class BaseAccountAPI {
   entryPointAddress: string;
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
+  factoryUsed: Factory;
 
   /**
    * base constructor.
@@ -80,6 +81,7 @@ export abstract class BaseAccountAPI {
       bundlerRpcUrl,
       graphqlEndpoint,
       projectKey,
+      factoryWallet,
     } = optionsLike;
 
     // const { networkOptions } = env;
@@ -105,6 +107,8 @@ export abstract class BaseAccountAPI {
     };
 
     this.context = new Context(this.services);
+
+    this.factoryUsed = factoryWallet;
     
     // super();
     this.provider = params.provider;
@@ -387,6 +391,8 @@ export abstract class BaseAccountAPI {
         throw new Error('must have target address if data is single value');
       }
       callData = await this.encodeExecute(target, value, data);
+    } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT && target.length === 1){
+      callData = await this.encodeExecute(target[0], detailsForUserOp.values[0], data[0]);
     } else {
       if (typeof target === 'string') {
         target = Array(data.length).fill(target);
