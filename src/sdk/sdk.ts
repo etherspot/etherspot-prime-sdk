@@ -168,7 +168,7 @@ export class PrimeSdk {
 
     let tx: TransactionDetailsForUserOp = null;
 
-    if (!this.singleUserOp) {
+    if (this.singleUserOp.to === '') {
       tx = {
         target: this.userOpsBatch.to,
         values: this.userOpsBatch.value,
