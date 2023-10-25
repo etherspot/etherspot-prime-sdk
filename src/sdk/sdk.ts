@@ -168,7 +168,7 @@ export class PrimeSdk {
 
     let tx: TransactionDetailsForUserOp = null;
 
-    if (!this.singleUserOp) {
+    if (this.singleUserOp.to === '') {
       tx = {
         target: this.userOpsBatch.to,
         values: this.userOpsBatch.value,
@@ -263,7 +263,7 @@ export class PrimeSdk {
   }
 
   async clearUserOp(): Promise<void> {
-    this.singleUserOp = null;
+    this.singleUserOp = { to: '', data: '', value: ''};
   }
 
   async addUserOpsToBatch(
@@ -281,6 +281,7 @@ export class PrimeSdk {
     this.userOpsBatch.to = [];
     this.userOpsBatch.data = [];
     this.userOpsBatch.value = [];
+    this.singleUserOp = { to: '', data: '', value: ''};
   }
 
   async getAccountContract() {

@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.7] - 2023-10-25
+### Bug Fixes
+- If Condition Typo Fix
+
 ## [1.3.6] - 2023-10-25
 ### Bug Fixes
 - Added addUserOp fn to execute single transaction since simpleAccount transfers native tokens only using execute fn and does not support in userOp batching
