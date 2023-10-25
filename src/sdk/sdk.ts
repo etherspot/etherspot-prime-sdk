@@ -33,6 +33,7 @@ export class PrimeSdk {
   private factoryUsed: Factory;
 
   private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
+  private singleUserOp: UserOpsRequest = { to: '', data: '', value: ''};
 
   constructor(walletProvider: WalletProviderLike, optionsLike: SdkOptions) {
 
@@ -57,7 +58,7 @@ export class PrimeSdk {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
-    const factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
+    this.factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
 
     let provider;
 
@@ -65,23 +66,23 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
-    if (Networks[chainId].contracts.walletFactory[factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
+    if (Networks[chainId].contracts.walletFactory[this.factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
 
-    if (factoryUsed === Factory.ZERO_DEV) {
+    if (this.factoryUsed === Factory.ZERO_DEV) {
       this.etherspotWallet = new ZeroDevWalletAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
-    } else if (factoryUsed === Factory.SIMPLE_ACCOUNT) {
+    } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT) {
       this.etherspotWallet = new SimpleAccountAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
     }
     else {
@@ -90,7 +91,7 @@ export class PrimeSdk {
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
     }
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -155,8 +156,9 @@ export class PrimeSdk {
   }
 
   async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
-    if (this.userOpsBatch.to.length < 1) {
-      throw new Error("cannot sign empty transaction batch");
+    if (this.userOpsBatch.to.length < 1 && !this.singleUserOp) {
+      // console.log(this.userOpsBatch, this.singleUserOp);
+      throw new Error("cannot sign empty transaction");
     }
 
     if (paymasterDetails?.url) {
@@ -164,11 +166,22 @@ export class PrimeSdk {
       this.etherspotWallet.setPaymasterApi(paymasterAPI)
     } else this.etherspotWallet.setPaymasterApi(null);
 
-    const tx: TransactionDetailsForUserOp = {
-      target: this.userOpsBatch.to,
-      values: this.userOpsBatch.value,
-      data: this.userOpsBatch.data,
-      ...gasDetails,
+    let tx: TransactionDetailsForUserOp = null;
+
+    if (!this.singleUserOp) {
+      tx = {
+        target: this.userOpsBatch.to,
+        values: this.userOpsBatch.value,
+        data: this.userOpsBatch.data,
+        ...gasDetails,
+      }
+    } else {
+      tx = {
+        target: this.singleUserOp.to,
+        value: this.singleUserOp.value,
+        data: this.singleUserOp.data,
+        ...gasDetails,
+      }
     }
 
     const partialtx = await this.etherspotWallet.createUnsignedUserOp({
@@ -239,10 +252,25 @@ export class PrimeSdk {
     return this.etherspotWallet.getUserOpHash(userOp);
   }
 
+  async addUserOp(
+    tx: UserOpsRequest
+  ): Promise<void> {
+    if (this.factoryUsed === Factory.ZERO_DEV) throw new Error('Only batching allowed on ZeroDev');
+    if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
+    this.singleUserOp.to = tx.to;
+    this.singleUserOp.data = tx.data ?? "0x";
+    this.singleUserOp.value = tx.value ?? BigNumber.from(0);
+  }
+
+  async clearUserOp(): Promise<void> {
+    this.singleUserOp = null;
+  }
+
   async addUserOpsToBatch(
     tx: UserOpsRequest,
   ): Promise<BatchUserOpsRequest> {
     if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
+    if (tx.value && this.factoryUsed === Factory.SIMPLE_ACCOUNT) throw new Error('SimpleAccount only allows to and data. Please use addUserOp fn');
     this.userOpsBatch.to.push(tx.to);
     this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
     this.userOpsBatch.data.push(tx.data ?? '0x');
