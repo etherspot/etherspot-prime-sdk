@@ -12,3 +12,5 @@ export * from './get-step-transactions-lifi.dto';
 export * from './get-exchange-cross-chain-quote.dto';
 export * from './fetch-exchange-rates.dto';
 export * from './get-token-list.dto';
+export * from './pagination.dto';
+export * from './get-exchange-supported-assets.dto';

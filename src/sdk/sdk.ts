@@ -15,8 +15,8 @@ import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/const
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
-import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto, FetchExchangeRatesDto, GetTokenListDto } from './dto';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session, RateData, TokenListToken, TokenList } from './';
+import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeCrossChainQuoteDto, GetExchangeOffersDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, SignMessageDto, validateDto, FetchExchangeRatesDto, GetTokenListDto, GetExchangeSupportedAssetsDto } from './dto';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session, RateData, TokenListToken, TokenList, PaginatedTokens } from './';
 import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 
@@ -357,6 +357,21 @@ export class PrimeSdk {
       this.etherspotWallet.prepareAccountAddress(account),
       ChainId,
     );
+  }
+
+  /**
+ * gets exchange supported tokens
+ * @param dto
+ * @return Promise<PaginatedTokens>
+ */
+  async getExchangeSupportedAssets(dto: GetExchangeSupportedAssetsDto = {}): Promise<PaginatedTokens> {
+    const { page, limit, chainId } = await validateDto(dto, GetExchangeSupportedAssetsDto);
+
+    const account = await this.getCounterFactualAddress();
+
+    const getChainId = chainId ? chainId : this.etherspotWallet.services.walletService.chainId;
+
+    return this.etherspotWallet.services.dataService.getExchangeSupportedAssets(page, limit, getChainId, account);
   }
 
   /**

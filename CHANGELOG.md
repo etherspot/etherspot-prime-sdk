@@ -1,4 +1,9 @@
 # Changelog
+
+## [1.3.6] - 2023-10-25
+### New
+- Added getExchangeSupportedAssets to gets exchange supported tokens
+
 ## [1.3.4] - 2023-10-24
 ### New
 - Added BNB (BSC) Testnet bundler url

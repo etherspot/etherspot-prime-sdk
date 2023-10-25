@@ -9,6 +9,10 @@ async function main(): Promise<void> {
     chainId: Number(process.env.CHAIN_ID),
     projectKey: '', // project key
   });
+
+  const exchangeSupportedAssets = await primeSdk.getExchangeSupportedAssets({ page: 1, limit: 100 });
+  console.log('\x1b[33m%s\x1b[0m', `Found exchange supported assets:`, exchangeSupportedAssets.items.length);
+
   const fromTokenAddress = '0xe3818504c1b32bf1557b16c238b2e01fd3149c17';
   const toTokenAddress = constants.AddressZero;
   const fromAmount = '1000000000000000000';
