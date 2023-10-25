@@ -263,7 +263,7 @@ export class PrimeSdk {
   }
 
   async clearUserOp(): Promise<void> {
-    this.singleUserOp = null;
+    this.singleUserOp = { to: '', data: '', value: ''};
   }
 
   async addUserOpsToBatch(
@@ -281,6 +281,7 @@ export class PrimeSdk {
     this.userOpsBatch.to = [];
     this.userOpsBatch.data = [];
     this.userOpsBatch.value = [];
+    this.singleUserOp = { to: '', data: '', value: ''};
   }
 
   async getAccountContract() {
