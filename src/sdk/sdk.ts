@@ -156,7 +156,7 @@ export class PrimeSdk {
 
   async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
     if (this.userOpsBatch.to.length < 1) {
-      throw new Error("cannot sign empty transaction");
+      throw new Error("cannot sign empty transaction batch");
     }
 
     if (paymasterDetails?.url) {
