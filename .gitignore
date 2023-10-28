@@ -1,5 +1,6 @@
 # OS
 .DS_Store
+package-lock.json
 
 # IDEs
 /.idea
