@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.9] - 2023-10-28
+### Bug Fixes
+- Upgraded Apollo package dependencies
+
 ## [1.3.8] - 2023-10-25
 ### Bug Fixes
 - Added SimpleAccount execute fn in the batch itself and errored when adding more than one transaction if the first transaction is native transfer
