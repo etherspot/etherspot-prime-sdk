@@ -149,7 +149,7 @@ workflows:
           filters:
             branches:
               only:
-                  - master
+                  - PRO-1861-Error_handling
       - publish-github-release:
           context: general-vars
           requires:
