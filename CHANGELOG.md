@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.10] - 2023-10-31
+### New
+- Added getExchangeSupportedAssets to gets exchange supported tokens
+
 ## [1.3.9] - 2023-10-28
 ### Bug Fixes
 - Upgraded Apollo package dependencies
