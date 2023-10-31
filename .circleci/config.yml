@@ -141,7 +141,7 @@ workflows:
           filters:
             branches:
               only:
-                  - PRO-1861-Error_handling
+                  - master
       - publish-npm-package:
           context: general-vars
           requires:
