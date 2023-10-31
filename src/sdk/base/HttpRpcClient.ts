@@ -5,6 +5,7 @@ import { UserOperationStruct } from '../contracts/account-abstraction/contracts/
 import Debug from 'debug';
 import { deepHexlify } from '../common/ERC4337Utils';
 import { Gas } from '../common';
+import { ErrorHandler } from '../errorHandler/errorHandler.service';
 
 const debug = Debug('aa.rpc');
 
@@ -34,8 +35,16 @@ export class HttpRpcClient {
 
   async getVerificationGasInfo(tx: UserOperationStruct): Promise<any> {
     const hexifiedUserOp = deepHexlify(await resolveProperties(tx));
-    const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [hexifiedUserOp, this.entryPointAddress]);
-    return response;
+    try {
+      const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [hexifiedUserOp, this.entryPointAddress]);
+      return response;
+    } catch (err) {
+      const body = JSON.parse(err.body);
+      if (body?.error?.code) {
+        throw new ErrorHandler(body.error.message, body.error.code)
+      }
+      throw new Error(err.message);
+    }
   }
 
   /**
@@ -44,19 +53,35 @@ export class HttpRpcClient {
    * @return userOpHash the id of this operation, for getUserOperationTransaction
    */
   async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
-    await this.initializing;
-    const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
-    const jsonRequestData: [UserOperationStruct, string] = [hexifiedUserOp, this.entryPointAddress];
-    await this.printUserOperation('eth_sendUserOperation', jsonRequestData);
-    return await this.userOpJsonRpcProvider.send('eth_sendUserOperation', [hexifiedUserOp, this.entryPointAddress]);
+    try {
+      await this.initializing;
+      const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));
+      const jsonRequestData: [UserOperationStruct, string] = [hexifiedUserOp, this.entryPointAddress];
+      await this.printUserOperation('eth_sendUserOperation', jsonRequestData);
+      return await this.userOpJsonRpcProvider.send('eth_sendUserOperation', [hexifiedUserOp, this.entryPointAddress]);
+    } catch (err) {
+      const body = JSON.parse(err.body);
+      if (body?.error?.code) {
+        throw new ErrorHandler(body.error.message, body.error.code)
+      }
+      throw new Error(err);
+    }
   }
 
   async sendAggregatedOpsToBundler(userOps1: UserOperationStruct[]): Promise<string> {
-    const hexifiedUserOps = await Promise.all(userOps1.map(async (userOp1) => await resolveProperties(userOp1)));
-    return await this.userOpJsonRpcProvider.send('eth_sendAggregatedUserOperation', [
-      hexifiedUserOps,
-      this.entryPointAddress,
-    ]);
+    try {
+      const hexifiedUserOps = await Promise.all(userOps1.map(async (userOp1) => await resolveProperties(userOp1)));
+      return await this.userOpJsonRpcProvider.send('eth_sendAggregatedUserOperation', [
+        hexifiedUserOps,
+        this.entryPointAddress,
+      ]);
+    } catch (err) {
+      const body = JSON.parse(err.body);
+      if (body?.error?.code) {
+        throw new ErrorHandler(body.error.message, body.error.code)
+      }
+      throw new Error(err);
+    }
   }
 
   async getSkandhaGasPrice(): Promise<Gas> {
