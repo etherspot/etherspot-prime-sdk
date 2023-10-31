@@ -1,8 +1,20 @@
 # Changelog
+## [1.3.9] - 2023-10-28
+### Bug Fixes
+- Upgraded Apollo package dependencies
+- Updated Error messages with optional possibleSolution parameter for common errors from bundler or Validation Errors on sdk
+
+## [1.3.8] - 2023-10-25
+### Bug Fixes
+- Added SimpleAccount execute fn in the batch itself and errored when adding more than one transaction if the first transaction is native transfer
+
+## [1.3.7] - 2023-10-25
+### Bug Fixes
+- If Condition Typo Fix
 
 ## [1.3.6] - 2023-10-25
-### New
-- Added getExchangeSupportedAssets to gets exchange supported tokens
+### Bug Fixes
+- Added addUserOp fn to execute single transaction since simpleAccount transfers native tokens only using execute fn and does not support in userOp batching
 
 ## [1.3.4] - 2023-10-24
 ### New

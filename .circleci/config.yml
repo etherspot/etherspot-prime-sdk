@@ -1,5 +1,8 @@
 version: 2.1
-
+parameters:
+  run_e2e_tests:
+    type: boolean
+    default: true
 orbs:
   slack: circleci/slack@3.4.2
 
@@ -25,6 +28,9 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+      - run:
+          name: Dry run build
+          command: npm run build
       # - slack/status:
       #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
       #     webhook: "${SLACK_WEBHOOK_URL}"
@@ -38,53 +44,53 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
-      - run:
-          name: Build Etherpot Prime SDK
-          command: npm run build
-      - run:
-          name: Checkout e2e repo and run tests
-          no_output_timeout: 60m
-          command: |
-            if [ "$SKIP_E2E_TESTS" = "false" ]; then
-              cd ~
-              git clone https://github.com/etherspot/e2e-sdk-prime.git
-              cd e2e-sdk-prime
-              sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
-              sed -i.bak "s/_project_key_/$PROJECT_KEY/g" .env
-              mv package.json temp.json
-              jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
-              rm temp.json
-              npm i
-              touch ~/logs.txt
-              npm run test-mainnet |& tee ~/logs.txt
-              chmod 755 ~/logs.txt
-              cat ~/logs.txt
-              echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
-              echo $BASH_ENV
-              rm ~/logs.txt
-              source "$BASH_ENV"
-            else
-              echo "E2E Tests skipped..."
-            fi
-      - run:
-          name: Move test report
-          command: |
-            mv /home/circleci/e2e-sdk-prime/mochawesome-report /tmp/
-            chmod 777 -R /tmp/mochawesome-report
-          when: always    
-      - store_artifacts:
-          path: /tmp/mochawesome-report
-          when: always
-      - slack/status:
-          failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job e2e tests failed! :circleci-fail: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
-          success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job e2e tests completed successfully! :circleci-pass: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
-          # only_for_branches: master
-          webhook: "${SLACK_WEBHOOK_URL}"
+      - when:
+          condition: <<pipeline.parameters.run_e2e_tests>>
+          steps:
+          
+          - restore_cache:
+              key: dependency-cache-{{ checksum "package.json" }}
+          - run:
+              name: Authenticate with registry
+              command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+          - run:
+              name: Build Etherpot Prime SDK
+              command: npm run build
+          - run:
+              name: Checkout e2e repo and run tests
+              no_output_timeout: 60m
+              command: |
+                cd ~
+                git clone https://github.com/etherspot/e2e-sdk-prime.git
+                cd e2e-sdk-prime
+                sed -i.bak "s/_private_key_/$PRIVATE_KEY/g" .env
+                sed -i.bak "s/_project_key_/$PROJECT_KEY/g" .env
+                mv package.json temp.json
+                jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
+                rm temp.json
+                npm i
+                touch ~/logs.txt
+                npm run test-mainnet |& tee ~/logs.txt
+                chmod 755 ~/logs.txt
+                cat ~/logs.txt
+                echo "export LOGS='$(cat ~/logs.txt)'" >> $BASH_ENV
+                echo $BASH_ENV
+                rm ~/logs.txt
+                source "$BASH_ENV"
+          - run:
+              name: Move test report
+              command: |
+                mv /home/circleci/e2e-sdk-prime/mochawesome-report /tmp/
+                chmod 777 -R /tmp/mochawesome-report
+              when: always 
+          - store_artifacts:
+              path: /tmp/mochawesome-report
+              when: always
+          - slack/status:
+              failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job e2e tests failed! :circleci-fail: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
+              success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job e2e tests completed successfully! :circleci-pass: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
+              # only_for_branches: master
+              webhook: "${SLACK_WEBHOOK_URL}"
   publish-npm-package:
     working_directory: ~/etherspot-prime-sdk
     docker:

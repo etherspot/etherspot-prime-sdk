@@ -19,6 +19,7 @@ import { CreateSessionDto, OnRamperDto, GetAccountBalancesDto, GetAdvanceRoutesL
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, NftList, StepTransactions, Transaction, Session, RateData, TokenListToken, TokenList, PaginatedTokens } from './';
 import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
+import { ErrorHandler } from './errorHandler/errorHandler.service';
 
 /**
  * Prime-Sdk
@@ -57,7 +58,7 @@ export class PrimeSdk {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
-    const factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
+    this.factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
 
     let provider;
 
@@ -65,23 +66,23 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
-    if (Networks[chainId].contracts.walletFactory[factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
+    if (Networks[chainId].contracts.walletFactory[this.factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
 
-    if (factoryUsed === Factory.ZERO_DEV) {
+    if (this.factoryUsed === Factory.ZERO_DEV) {
       this.etherspotWallet = new ZeroDevWalletAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
-    } else if (factoryUsed === Factory.SIMPLE_ACCOUNT) {
+    } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT) {
       this.etherspotWallet = new SimpleAccountAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
     }
     else {
@@ -90,7 +91,7 @@ export class PrimeSdk {
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
         entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[factoryUsed],
+        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
       })
     }
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
@@ -156,7 +157,7 @@ export class PrimeSdk {
 
   async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
     if (this.userOpsBatch.to.length < 1) {
-      throw new Error("cannot sign empty transaction batch");
+      throw new ErrorHandler('cannot sign empty transaction batch', 1);
     }
 
     if (paymasterDetails?.url) {
@@ -242,7 +243,8 @@ export class PrimeSdk {
   async addUserOpsToBatch(
     tx: UserOpsRequest,
   ): Promise<BatchUserOpsRequest> {
-    if (!tx.data && !tx.value) throw new Error('Data and Value both cannot be empty');
+    if (!tx.data && !tx.value) throw new ErrorHandler('Data and Value both cannot be empty', 1);
+    if (tx.value && this.factoryUsed === Factory.SIMPLE_ACCOUNT && tx.value.toString() !== '0' && this.userOpsBatch.value.length > 0) throw new ErrorHandler('SimpleAccount: native transfers cant be part of batch', 1);
     this.userOpsBatch.to.push(tx.to);
     this.userOpsBatch.value.push(tx.value ?? BigNumber.from(0));
     this.userOpsBatch.data.push(tx.data ?? '0x');
@@ -271,7 +273,7 @@ export class PrimeSdk {
     else {
       const networks = params.onlyCryptoNetworks.split(',');
       for (const network in networks) {
-        if (!onRamperAllNetworks.includes(network)) throw new Error('Included Networks which are not supported. Please Check');
+        if (!onRamperAllNetworks.includes(network)) throw new ErrorHandler('Included Networks which are not supported. Please Check', 1);
       }
     }
 
