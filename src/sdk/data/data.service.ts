@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core';
 import { HeaderNames, ObjectSubject, Service } from '../common';
 import { Route } from '@lifi/sdk';
-import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, RateData, StepTransaction, StepTransactions, TokenList, TokenListToken, TokenLists, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, PaginatedTokens, RateData, StepTransaction, StepTransactions, TokenList, TokenListToken, TokenLists, Transaction } from './classes';
 import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
 
@@ -152,6 +152,49 @@ export class DataService extends Service {
     );
 
     return result;
+  }
+
+  async getExchangeSupportedAssets(page: number = null, limit: number = null, ChainId: number, account: string): Promise<PaginatedTokens> {
+    const { apiService } = this.services;
+
+    try {
+      const { result } = await apiService.query<{
+        result: PaginatedTokens;
+      }>(
+        gql`
+        query($ChainId: Int, $account: String!, $page: Int, $limit: Int) {
+          result: exchangeSupportedAssets(chainId: $ChainId, account: $account, page: $page, limit: $limit) {
+            items {
+              address
+              name
+              symbol
+              decimals
+              logoURI
+            }
+            currentPage
+            nextPage
+          }
+        }
+      `,
+        {
+          variables: {
+            account,
+            ChainId,
+            page: page || 1,
+            limit: limit || 100,
+          },
+          models: {
+            result: PaginatedTokens,
+          },
+        },
+      );
+
+      return result;
+
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 
   async getExchangeOffers(
