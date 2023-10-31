@@ -2,6 +2,7 @@
 ## [1.3.9] - 2023-10-28
 ### Bug Fixes
 - Upgraded Apollo package dependencies
+- Updated Error messages with optional possibleSolution parameter for common errors from bundler or Validation Errors on sdk
 
 ## [1.3.8] - 2023-10-25
 ### Bug Fixes
