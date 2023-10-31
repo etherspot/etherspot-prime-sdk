@@ -144,9 +144,6 @@ export class ApiService extends Service {
       let result: T;
 
       try {
-        // checks and removes outdated cache entries
-        // this.cache.expire();
-
         const { data } = await call();
         result = mapApiResult(data, models);
       } catch (err) {
