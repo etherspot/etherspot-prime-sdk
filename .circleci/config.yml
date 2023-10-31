@@ -138,10 +138,10 @@ workflows:
           context: general-vars
       - e2e-tests:
           context: general-vars
-          filters:
-            branches:
-              only:
-                  - master
+          # filters:
+          #   branches:
+          #     only:
+          #         - master
       - publish-npm-package:
           context: general-vars
           requires:
