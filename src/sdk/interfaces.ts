@@ -3,7 +3,6 @@ import { SessionStorage } from './session';
 
 export interface PaymasterApi {
   url: string;
-  api_key: string;
   context?: any;
 }
 
@@ -23,4 +22,6 @@ export interface SdkOptions {
   graphqlEndpoint?: string;
   projectKey: string;
   factoryWallet?: Factory;
+  walletFactoryAddress?: string;
+  entryPointAddress?: string;
 }

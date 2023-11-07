@@ -85,8 +85,12 @@ async function main() {
 
     console.log('balances: ', balance);
 
-    // estimate transactions added to the batch and get the fee data for the UserOp
-    const op = await primeSdk.estimate({ url: `${arka_url}?api_key=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { token: "USDC", mode: 'erc20' } });
+    /* estimate transactions added to the batch and get the fee data for the UserOp
+        validUntil and validAfter are optional defaults to 10 mins of expiry from send call and should be passed in terms of milliseconds
+        For example purpose, the valid is fixed as expiring in 100 mins once the paymaster data is generated
+        validUntil and validAfter is relevant only with sponsor transactions and not for token paymasters
+    */
+    const op = await primeSdk.estimate({ url: `${arka_url}?api_key=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor', validAfter: new Date().valueOf(), validUntil: new Date().valueOf() + 6000000 } });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 
     // sign the UserOp and sending to the bundler...

@@ -7,7 +7,7 @@ import { sleep } from '../src/sdk/common';
 dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
-const value = '0.01'; // transfer value
+const value = '0.08'; // transfer value
 
 async function main() {
   // initializating sdk...
