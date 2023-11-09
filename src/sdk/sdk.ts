@@ -53,7 +53,6 @@ export class PrimeSdk {
     const networkConfig = getNetworkConfig(chainId);
 
     if (!optionsLike.bundlerRpcUrl) {
-      console.log(networkConfig);
       if (!networkConfig) throw new Exception('No bundler Rpc provided');
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
     }
