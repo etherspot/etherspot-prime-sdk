@@ -1,4 +1,11 @@
 # Changelog
+## [1.3.11] - 2023-11-08
+### Bug Fixes
+- Updated paymaster url to accept arka api_key and chainId as queryString
+- Added optional parameters such as entryPointAddress and Factory walletAddress for custom chain interaction
+- Bug fixes for handling errors on connecting with custom chain interaction
+
+
 ## [1.3.10] - 2023-10-31
 ### New
 - Added getExchangeSupportedAssets to gets exchange supported tokens

@@ -50,11 +50,14 @@ export class PrimeSdk {
     } = optionsLike;
 
     this.chainId = chainId;
+    const networkConfig = getNetworkConfig(chainId);
 
     if (!optionsLike.bundlerRpcUrl) {
-      const networkConfig = getNetworkConfig(chainId);
+      if (!networkConfig) throw new Exception('No bundler Rpc provided');
       optionsLike.bundlerRpcUrl = networkConfig.bundler;
-      if (optionsLike.bundlerRpcUrl == '') throw new Exception('No bundler Rpc provided');
+    }
+
+    if (networkConfig) {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
@@ -66,23 +69,34 @@ export class PrimeSdk {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
     } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
 
-    if (Networks[chainId].contracts.walletFactory[this.factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
+    let entryPointAddress = '', walletFactoryAddress = '';
+    if (Networks[chainId]) {
+      entryPointAddress = Networks[chainId].contracts.entryPoint;
+      if (Networks[chainId].contracts.walletFactory[this.factoryUsed] == '') throw new Exception('The selected factory is not deployed in the selected chain_id')
+      walletFactoryAddress = Networks[chainId].contracts.walletFactory[this.factoryUsed];
+    }
+
+    if (optionsLike.entryPointAddress) entryPointAddress = optionsLike.entryPointAddress;
+    if (optionsLike.walletFactoryAddress) walletFactoryAddress = optionsLike.walletFactoryAddress;
+
+    if (entryPointAddress == '') throw new Exception('entryPointAddress not set on the given chain_id')
+    if (walletFactoryAddress == '') throw new Exception('walletFactoryAddress not set on the given chain_id')
 
     if (this.factoryUsed === Factory.ZERO_DEV) {
       this.etherspotWallet = new ZeroDevWalletAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
-        entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
+        entryPointAddress,
+        factoryAddress: walletFactoryAddress,
       })
     } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT) {
       this.etherspotWallet = new SimpleAccountAPI({
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
-        entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
+        entryPointAddress,
+        factoryAddress: walletFactoryAddress,
       })
     }
     else {
@@ -90,11 +104,11 @@ export class PrimeSdk {
         provider,
         walletProvider: walletConnectProvider ?? walletProvider,
         optionsLike,
-        entryPointAddress: Networks[chainId].contracts.entryPoint,
-        factoryAddress: Networks[chainId].contracts.walletFactory[this.factoryUsed],
+        entryPointAddress,
+        factoryAddress: walletFactoryAddress,
       })
     }
-    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, Networks[chainId].contracts.entryPoint, Networks[chainId].chainId);
+    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, entryPointAddress, chainId);
 
   }
 
@@ -161,7 +175,7 @@ export class PrimeSdk {
     }
 
     if (paymasterDetails?.url) {
-      const paymasterAPI = new VerifyingPaymasterAPI(paymasterDetails.url, Networks[this.chainId].contracts.entryPoint, paymasterDetails.context ?? {}, paymasterDetails.api_key, this.chainId)
+      const paymasterAPI = new VerifyingPaymasterAPI(paymasterDetails.url, this.etherspotWallet.entryPointAddress, paymasterDetails.context ?? {})
       this.etherspotWallet.setPaymasterApi(paymasterAPI)
     } else this.etherspotWallet.setPaymasterApi(null);
 

@@ -13,4 +13,7 @@ try {
   throw new Error('WebSocket not found. Please install `ws` for node.js');
 }
 
-(global as any).WebSocket = WebSocketConstructor;
+// browsers don't have the `global` and WebSocket is available in window.WebSocket
+if (global) {
+  (global as any).WebSocket = WebSocketConstructor;
+}

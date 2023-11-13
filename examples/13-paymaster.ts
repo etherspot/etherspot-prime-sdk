@@ -8,11 +8,12 @@ dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.01'; // transfer value
+const api_key = '';
 
 async function main() {
   // initializating sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
-    chainId: Number(process.env.CHAIN_ID), projectKey: '',
+    chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key',
   })
 
   console.log('address: ', primeSdk.state.walletAddress)
@@ -34,7 +35,7 @@ async function main() {
   console.log('balances: ', balance);
 
   // estimate transactions added to the batch and get the fee data for the UserOp
-  const op = await primeSdk.estimate({ url: 'https://arka.etherspot.io/', api_key: '', context: { mode: 'sponsor' } });
+  const op = await primeSdk.estimate({ url: `https://arka.etherspot.io?api_key=${api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor' } });
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 
   // sign the UserOp and sending to the bundler...

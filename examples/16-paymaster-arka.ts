@@ -12,11 +12,12 @@ const value = '0.0001'; // transfer value
 
 const arka_api_key = '';
 const arka_url = '';
+const queryString = `?apiKey=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`;
 
 async function main() {
   // initializing sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
-    chainId: Number(process.env.CHAIN_ID), projectKey: '',
+    chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key',
   })
 
   console.log('address: ', primeSdk.state.walletAddress)
@@ -37,13 +38,13 @@ async function main() {
    * The fetching of pimlico erc20 paymaster address is only required for the first time for each specified gas token since we need to approve the tokens to spend
    * from the paymaster address on behalf of you.
    */
-  const returnedValue = await fetch(`${arka_url}/pimlicoAddress`, {
+  const returnedValue = await fetch(`${arka_url}/pimlicoAddress${queryString}`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ "params": [entryPointAddress, { token: "USDC" }, Number(process.env.CHAIN_ID), arka_api_key] })
+    body: JSON.stringify({ "params": [entryPointAddress, { token: "USDC" }] })
   })
     .then((res) => {
       return res.json()
@@ -86,7 +87,7 @@ async function main() {
     console.log('balances: ', balance);
 
     // estimate transactions added to the batch and get the fee data for the UserOp
-    const op = await primeSdk.estimate({ url: arka_url, api_key: arka_api_key, context: { token: "USDC", mode: 'erc20' } });
+    const op = await primeSdk.estimate({ url: `${arka_url}${queryString}`, context: { token: "USDC", mode: 'erc20' } });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 
     // sign the UserOp and sending to the bundler...

@@ -7,7 +7,7 @@ async function main(): Promise<void> {
     // initializating sdk...
     const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
         chainId: Number(process.env.CHAIN_ID),
-        projectKey: '',     // project key
+        projectKey: 'public-prime-testnet-key',     // project key
     });
 
     const ETH_AAVE_ADDR = '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9';
