@@ -7,7 +7,7 @@ dotenv.config();
 async function main(): Promise<void> {
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
     chainId: Number(process.env.CHAIN_ID),
-    projectKey: '', // project key
+    projectKey: 'public-prime-testnet-key', // project key
   });
 
   const exchangeSupportedAssets = await primeSdk.getExchangeSupportedAssets({ page: 1, limit: 100 });

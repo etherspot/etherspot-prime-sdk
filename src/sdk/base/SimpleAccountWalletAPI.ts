@@ -75,7 +75,7 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     } catch (error: any) {
       const addr = error?.errorArgs?.sender;
       if (!addr) throw error;
-      if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id');
+      if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id/walletFactoryAddress');
       this.accountContract = new ethers.Contract(addr, SimpleAccountAbi, this.provider);
       this.accountAddress = addr;
     }

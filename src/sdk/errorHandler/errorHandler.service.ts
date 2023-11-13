@@ -1,4 +1,4 @@
-import { errorMsg } from "./constants";
+import { entryPointErrorMsg, errorMsg } from "./constants";
 
 export class ErrorHandler extends Error {
     public possibleSolution: string = null;
@@ -8,8 +8,11 @@ export class ErrorHandler extends Error {
         this.code = code;
         if (code) {
             this.possibleSolution = errorMsg[code.toString()];
-            if (error.includes('AA33 reverted')) {
-                this.possibleSolution += ' If using a token, make sure that approval transaction is done for the requested operation and have enough tokens to spend for this transaction.'
+            // if (error.includes('AA33 reverted')) {
+            //     this.possibleSolution += ' If using a token, make sure that approval transaction is done for the requested operation and have enough tokens to spend for this transaction.'
+            // }
+            if (entryPointErrorMsg[error]) {
+                this.possibleSolution = entryPointErrorMsg[error];
             }
         }
     }

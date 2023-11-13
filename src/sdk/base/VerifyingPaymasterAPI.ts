@@ -25,13 +25,11 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
   private context: any;
   private api_key: string;
   private chainId: number;
-  constructor(paymasterUrl: string, entryPoint: string, context: any, api_key: string, chainId: number) {
+  constructor(paymasterUrl: string, entryPoint: string, context: any) {
     super();
     this.paymasterUrl = paymasterUrl;
     this.entryPoint = entryPoint;
     this.context = context;
-    this.api_key = api_key;
-    this.chainId = chainId;
   }
 
   async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse> {
@@ -64,7 +62,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ params: [await toJSON(op), this.entryPoint, this.context, this.chainId, this.api_key], jsonrpc: '2', id: 2 }),
+      body: JSON.stringify({ params: [await toJSON(op), this.entryPoint, this.context], jsonrpc: '2', id: 2 }),
     })
       .then(async (res) => {
         const response = await await res.json();
@@ -81,5 +79,5 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
   }
 }
 
-export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string, context: any, api_key: string, chainId: number) =>
-  new VerifyingPaymasterAPI(paymasterUrl, entryPoint, context, api_key, chainId);
+export const getVerifyingPaymaster = (paymasterUrl: string, entryPoint: string, context: any) =>
+  new VerifyingPaymasterAPI(paymasterUrl, entryPoint, context);
