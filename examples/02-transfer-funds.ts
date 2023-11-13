@@ -11,7 +11,7 @@ const value = '0.08'; // transfer value
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: '' })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' })
 
   console.log('address: ', primeSdk.state.walletAddress)
 
