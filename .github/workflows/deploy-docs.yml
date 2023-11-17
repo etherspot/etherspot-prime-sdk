@@ -41,6 +41,9 @@ jobs:
       - name: Build docs
         run: npm run docs:build
 
+      -  name: Install gh-pages cli
+         run: npm install gh-pages -g
+
       - name: Deploy docs
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
