@@ -51,7 +51,7 @@
     "predocs:build": "rimraf ./docs",
     "docs:build": "typedoc ./src",
     "postdocs:build": "cp -r ./.github-pages/files/* ./docs && date > ./docs/.nojekyll",
-    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.dev.git"
+    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.io.git"
   },
   "repository": {
     "type": "git",
