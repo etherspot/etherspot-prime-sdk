@@ -47,7 +47,11 @@
     "compile": "tsc -p ./tsconfig.build.json",
     "compile-watch": "npm run compile -- --watch",
     "init": "ts-node examples/scripts/init.ts",
-    "command": "ts-node examples/scripts/commands/index.ts"
+    "command": "ts-node examples/scripts/commands/index.ts",
+    "predocs:build": "rimraf ./docs",
+    "docs:build": "typedoc ./src",
+    "postdocs:build": "cp -r ./.github-pages/files/* ./docs && date > ./docs/.nojekyll",
+    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.dev.git"
   },
   "repository": {
     "type": "git",
@@ -84,6 +88,7 @@
     "eslint-plugin-import": "2.20.2",
     "npm": "9.6.4",
     "ts-node": "10.9.1",
+    "typedoc": "^0.17.8",
     "typescript": "4.9.5"
   }
 }

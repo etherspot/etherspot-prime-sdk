@@ -1,0 +1,20 @@
+{
+    "inputFiles": [
+      "./src/index.ts"
+    ],
+    "readme": "./README.md",
+    "out": "./docs",
+    "mode": "file",
+    "exclude": [
+      "**/__mocks__/*.*",
+      "**/testing/*.*",
+      "**/*+(index|.spec|.e2e).ts"
+    ],
+    "theme": "./.github-pages/theme",
+    "name": "Etherspot Prime reference docs",
+    "hideGenerator": true,
+    "disableSources": true,
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "stripInternal": true
+  }
