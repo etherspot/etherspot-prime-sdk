@@ -8,7 +8,7 @@ dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.01'; // transfer value
-const api_key = '';
+const api_key = 'arka_public_key'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
 
 async function main() {
   // initializating sdk...
@@ -35,7 +35,7 @@ async function main() {
   console.log('balances: ', balance);
 
   // estimate transactions added to the batch and get the fee data for the UserOp
-  const op = await primeSdk.estimate({ url: `https://arka.etherspot.io?api_key=${api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor' } });
+  const op = await primeSdk.estimate({ url: `https://arka.etherspot.io?apiKey=${api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor' } });
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 
   // sign the UserOp and sending to the bundler...
