@@ -1,0 +1,51 @@
+name: Deploy docs
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.js'
+      - '**.json'
+      - '**.ts'
+      - '**.md'
+      - '**.yml'
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ssh agent
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_MACHINE_KEY_DOCS }}"
+
+      - name: Setup git
+        run: |
+          git config --global user.email "infrastructure@pillarproject.io"
+          git config --global user.name "EtherspotBOT"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build docs
+        run: npm run docs:build
+
+      -  name: Install gh-pages cli
+         run: npm install gh-pages -g
+
+      - name: Deploy docs
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          npm run docs:deploy
