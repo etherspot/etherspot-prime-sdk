@@ -9,8 +9,8 @@ dotenv.config();
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.0001'; // transfer value
 
-const arka_api_key = '';
-const arka_url = '';
+const arka_api_key = 'arka_public_key'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
+const arka_url = 'https://arka.etherspot.io';
 const queryString = `?apiKey=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`;
 
 async function main() {
