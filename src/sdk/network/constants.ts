@@ -31,10 +31,12 @@ export enum NetworkNames {
   Flare = 'flare',
   ScrollSepolia = 'scrollSepolia',
   Scroll = 'scroll',
+  Klaytn = 'klaytn',
+  KlaytnTestnet = 'klaytnTestnet',
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 534351, 534352, 11155111]
+  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 421613, 534351, 534352, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -69,6 +71,8 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Flare]: 14,
   [NetworkNames.ScrollSepolia]: 534351,
   [NetworkNames.Scroll]: 534352,
+  [NetworkNames.Klaytn]: 8217,
+  [NetworkNames.KlaytnTestnet]: 1001,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -89,6 +93,19 @@ export const Networks: {
     },
     graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
+  [1001]: {
+    chainId: 1001,
+    bundler: 'https://klaytntestnet-bundler.etherspot.io',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    },
+    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
+  }, 
   [80001]: {
     chainId: 80001,
     bundler: 'https://mumbai-bundler.etherspot.io',
@@ -163,6 +180,19 @@ export const Networks: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
         zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    },
+    graphqlEndpoint: 'etherspot.pillarproject.io',
+  },
+  [8217]: {
+    chainId: 8217,
+    bundler: 'https://klaytn-bundler.etherspot.io',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
       }
     },
     graphqlEndpoint: 'etherspot.pillarproject.io',

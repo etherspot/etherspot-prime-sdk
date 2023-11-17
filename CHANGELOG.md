@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.12] - 2023-11-17
+### New
+- Added Klaytn mainnet and Testnet (Baobab)
+
 ## [1.3.11] - 2023-11-08
 ### Breaking Changes
 - Removed api_key from estimate function on the sdk and added the same on the queryString, please refer examples/13-paymaster.ts for more info
