@@ -8,6 +8,7 @@ on:
       - '**.json'
       - '**.ts'
       - '**.md'
+      - '**.yml'
 jobs:
   start:
     runs-on: ubuntu-latest
