@@ -10,7 +10,7 @@ async function main() {
   // initializating sdk...
   const primeSdk = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: '' },
+    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' },
   );
 
   console.log('address: ', primeSdk.state.walletAddress);
@@ -19,7 +19,7 @@ async function main() {
   const address: string = await primeSdk.getCounterFactualAddress();
 
   // update the addresses in this array with the guardian addresses you want to set
-  let guardianAddresses: string[] = [
+  const guardianAddresses: string[] = [
     '0xa8430797A27A652C03C46D5939a8e7698491BEd6',
     '0xaf2D76acc5B0e496f924B08491444076219F2f35',
     '0xBF1c0A9F3239f5e7D35cE562Af06c92FB7fdF0DF',

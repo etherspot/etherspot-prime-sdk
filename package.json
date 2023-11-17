@@ -35,8 +35,10 @@
     "13-paymaster": "./node_modules/.bin/ts-node ./examples/13-paymaster",
     "14-zeroDev-address": "./node_modules/.bin/ts-node ./examples/14-zeroDev-address",
     "15-simpleAccount-address": "./node_modules/.bin/ts-node ./examples/15-simpleAccount-address",
+    "16-paymaster-arka": "./node_modules/.bin/ts-node ./examples/16-paymaster-arka",
     "17-token-list": "./node_modules/.bin/ts-node ./examples/17-token-list",
     "18-exchange-rates": "./node_modules/.bin/ts-node ./examples/18-exchange-rates",
+    "19-paymaster-validUntil-validAfter": "./node_modules/.bin/ts-node ./examples/19-paymaster-validUntil-validAfter",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
@@ -45,7 +47,11 @@
     "compile": "tsc -p ./tsconfig.build.json",
     "compile-watch": "npm run compile -- --watch",
     "init": "ts-node examples/scripts/init.ts",
-    "command": "ts-node examples/scripts/commands/index.ts"
+    "command": "ts-node examples/scripts/commands/index.ts",
+    "predocs:build": "rimraf ./docs",
+    "docs:build": "typedoc ./src",
+    "postdocs:build": "cp -r ./.github-pages/files/* ./docs && date > ./docs/.nojekyll",
+    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.io.git"
   },
   "repository": {
     "type": "git",
@@ -67,7 +73,9 @@
     "cross-fetch": "3.1.5",
     "ethers": "5.7.0",
     "graphql-ws": "5.14.2",
-    "prettier": "2.8.8"
+    "prettier": "2.8.8",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "6.6.7"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
@@ -79,9 +87,8 @@
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.20.2",
     "npm": "9.6.4",
-    "reflect-metadata": "0.1.13",
-    "rxjs": "6.6.7",
     "ts-node": "10.9.1",
+    "typedoc": "^0.17.8",
     "typescript": "4.9.5"
   }
 }

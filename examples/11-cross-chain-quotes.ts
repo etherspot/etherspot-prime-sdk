@@ -8,7 +8,7 @@ async function main(): Promise<void> {
   // initializating sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
     chainId: Number(process.env.CHAIN_ID),
-    projectKey: '', // project key
+    projectKey: 'public-prime-testnet-key', // project key
   });
 
   const XdaiUSDC = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83'; // Xdai - USDC

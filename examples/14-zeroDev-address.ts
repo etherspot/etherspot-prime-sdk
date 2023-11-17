@@ -6,7 +6,7 @@ dotenv.config();
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: '', factoryWallet: Factory.ZERO_DEV })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', factoryWallet: Factory.ZERO_DEV })
 
   // get ZeroDev address...
   const address: string = await primeSdk.getCounterFactualAddress();
