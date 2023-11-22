@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.13] - 2023-11-22
+### Bug Fixes
+- Removed UnsupportedChainId error and now can add custom network details
+
 ## [1.3.12] - 2023-11-17
 ### New
 - Added Klaytn mainnet and Testnet (Baobab)
