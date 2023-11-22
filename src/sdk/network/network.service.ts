@@ -34,7 +34,7 @@ export class NetworkService extends Service {
       : this.supportedNetworks[0];
 
     if (!this.defaultNetwork) {
-      throw new Exception('Unsupported network');
+      this.defaultNetwork = this.supportedNetworks.find(({ chainId }) => chainId === 1)
     }
 
     this.chainId$ = this.network$.observeKey('chainId');
@@ -55,10 +55,6 @@ export class NetworkService extends Service {
   switchNetwork(networkName: NetworkNames): void {
     this.network$.next(this.supportedNetworks.find(({ name }) => name === networkName) || null);
   }
-
-  // isNetworkNameSupported(networkName: string): boolean {
-  //   return !!this.supportedNetworks.find(({ name }) => name === networkName);
-  // }
 
   isNetworkSupported(chainId: number): boolean {
     return SupportedNetworks.includes(chainId);
