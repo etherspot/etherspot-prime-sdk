@@ -70,7 +70,7 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "commander": "10.0.1",
-    "cross-fetch": "3.1.5",
+    "cross-fetch": "3.1.8",
     "ethers": "5.7.0",
     "graphql-ws": "5.14.2",
     "prettier": "2.8.8",
