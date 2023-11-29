@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.8.6",
-    "@lifi/sdk": "2.2.3",
+    "@lifi/sdk": "2.5.0",
     "@thehubbleproject/bls": "0.5.1",
     "@walletconnect/universal-provider": "2.10.0",
     "apollo-link-ws": "1.0.20",
