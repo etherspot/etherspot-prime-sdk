@@ -61,7 +61,7 @@
     "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
-    "@apollo/client": "3.8.6",
+    "@apollo/client": "3.8.7",
     "@lifi/sdk": "2.2.3",
     "@thehubbleproject/bls": "0.5.1",
     "@walletconnect/universal-provider": "2.10.0",
