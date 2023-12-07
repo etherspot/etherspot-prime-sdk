@@ -1,23 +1,70 @@
-# Etherspot Prime SDK
-## Account Abstraction (ERC-4337) SDK
-![MIT licensed][license-image]
+<div align="center">
+  <h1 align="center">Etherspot Prime SDK</h1>
+</div>
 
-<a href="https://www.etherspot.io">
-<img src="https://public.etherspot.io/assets/etherspot.png" width="100"/>
-</a>
- 
+<div align="center">
+  <img src="https://public.etherspot.io/assets/etherspot.gif" width="200" height="200">
+  <p>
+    <b>
+      Etherspot Prime is a ERC-4337 compliant Account Abstraction SDK 
+    </b>
+   </p>
+</div>
 
-Etherspot is a blockchain development framework for EVM-compatible chains that creates direct state channel bridges to provide a seamless user experience across chains and wallets.
+--------------
 
-With just one deposit you’re able to onboard your users to the entire multichain world.
+>[!IMPORTANT]
+>This repo/software is under active development.
+>
+>[![npm](https://img.shields.io/npm/v/@etherspot/prime-sdk)](https://www.npmjs.com/package/@etherspot/prime-sdk) 
 
-More information at [etherspot.io](https://www.etherspot.io)
 
-## License
+## 🐞 Etherspot Prime
 
+Etherspot Prime is a fully open source SDK which let's dapp developers easily get building with Account Abstraction.
 
-MIT
+The SDK makes it incredibly easy to get up and running with Account Abstraction. From social logins to transaction batching, using an Etherspot smart wallet can give your dapp a web2 like interface to ensure the user has a seamless experience.
 
-[npm-image]: https://badge.fury.io/js/etherspot.svg
-[npm-url]: https://npmjs.org/package/etherspot
-[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
+## ⚙ Get started
+
+You can either get started by installing the packages yourself here:
+
+```bash
+npm i @etherspot/prime-sdk
+```
+
+Or follow our introductory guide on our docs [here](https://etherspot.fyi/getting-started) which walk you through 
+cloning down an example repo and setting up a dapp in your own environment. 
+
+## 📖 Documentation
+
+- [Quick Start](https://etherspot.fyi/getting-started)
+- [Instantiate the SDK](https://etherspot.fyi/prime-sdk/instantiation)
+- [Running SDK examples](https://etherspot.fyi/examples/intro)
+- [Function List](https://etherspot.fyi/prime-sdk/function)
+- [Batching Transactions](https://etherspot.fyi/prime-sdk/batching-transactions)
+
+## 🔗 Important Links
+
+- [Skandha Bundler](https://etherspot.fyi/skandha/intro)
+- [Arka Paymaster](https://etherspot.fyi/arka/intro)
+- [SDK Reference](https://sdk.etherspot.io/)
+
+## 🏌️‍♂️ Contributions
+
+Please feel free to open issues or PRs to this repo.
+
+## 🔐 Security
+
+To report security issues please follow [guide](./SECURITY.md)
+
+## 💬 Contact
+
+If you have any questions or feedback about Etherspot Prime, please feel free to reach out to us.
+
+- [Follow on Twitter](https://twitter.com/etherspot)
+- [Join our discord](https://discord.etherspot.io/)
+
+## 📄 License
+
+Licensed under the [MIT License](https://github.com/etherspot/etherspot-prime-sdk/blob/master/LICENSE).
