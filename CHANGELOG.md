@@ -1,4 +1,7 @@
 # Changelog
+### New
+- Added ability to override callDataLimit on estimate step by the user
+
 ## [1.3.13] - 2023-11-22
 ### Bug Fixes
 - Removed UnsupportedChainId error and now can add custom network details
