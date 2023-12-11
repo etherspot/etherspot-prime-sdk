@@ -10,7 +10,7 @@ import {
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
-import { BigNumber, ethers, providers } from 'ethers';
+import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
@@ -169,7 +169,7 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
+  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp, callDataLimit?: BigNumberish) {
     if (this.userOpsBatch.to.length < 1) {
       throw new ErrorHandler('cannot sign empty transaction batch', 1);
     }
@@ -191,6 +191,10 @@ export class PrimeSdk {
       maxFeePerGas: 1,
       maxPriorityFeePerGas: 1,
     });
+
+    if (callDataLimit) {
+      partialtx.callGasLimit = BigNumber.from(callDataLimit).toHexString();
+    }
 
     /**
      * Dummy signature used only in the case of zeroDev factory contract
@@ -219,7 +223,8 @@ export class PrimeSdk {
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
-      partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
+      if (!callDataLimit)
+        partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
     }
 
     return partialtx;
