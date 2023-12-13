@@ -9,7 +9,9 @@ export interface Gas {
 export async function getGasFee(provider: ethers.providers.JsonRpcProvider): Promise<Gas> {
   try {
     const [fee, block] = await provider.send('eth_maxPriorityFeePerGas', []);
-    if (BigNumber.from(0).eq(fee)) return { maxFeePerGas: BigNumber.from(1), maxPriorityFeePerGas: BigNumber.from(1) };
+    if (BigNumber.from(0).eq(fee)) {
+      throw new Error('failed to get priorityFeePerGas');
+    }
     const tip = ethers.BigNumber.from(fee);
     const buffer = tip.div(100).mul(bufferPercent);
     const maxPriorityFeePerGas = tip.add(buffer);
