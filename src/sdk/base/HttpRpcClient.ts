@@ -107,8 +107,12 @@ export class HttpRpcClient {
   }
 
   async getUserOpsReceipt(uoHash: string): Promise<any> {
-    const response = await this.userOpJsonRpcProvider.send('eth_getUserOperationReceipt', [uoHash]);
-    return response;
+    try {
+      const response = await this.userOpJsonRpcProvider.send('eth_getUserOperationReceipt', [uoHash]);
+      return response;
+    } catch (err) {
+      return null;
+    }
   }
 
   private async printUserOperation(
