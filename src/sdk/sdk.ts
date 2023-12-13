@@ -223,8 +223,12 @@ export class PrimeSdk {
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
+      const expectedCallGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
+      console.log('values: ', callDataLimit, expectedCallGasLimit.toString(), BigNumber.from(callDataLimit).gt(expectedCallGasLimit))
       if (!callDataLimit)
-        partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
+        partialtx.callGasLimit = expectedCallGasLimit;
+      else if (BigNumber.from(callDataLimit).lt(expectedCallGasLimit))
+        throw new ErrorHandler(`CallGasLimit is too low. Expected atleast ${expectedCallGasLimit.toString()}`);
     }
 
     return partialtx;
