@@ -10,7 +10,7 @@ import {
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
-import { BigNumber, ethers, providers } from 'ethers';
+import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
 import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
@@ -169,7 +169,7 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp) {
+  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp, callDataLimit?: BigNumberish) {
     if (this.userOpsBatch.to.length < 1) {
       throw new ErrorHandler('cannot sign empty transaction batch', 1);
     }
@@ -186,11 +186,19 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
+    const gasInfo = await this.getGasFee()
+
     const partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      maxFeePerGas: 1,
-      maxPriorityFeePerGas: 1,
+      maxFeePerGas: gasInfo.maxFeePerGas,
+      maxPriorityFeePerGas: gasInfo.maxPriorityFeePerGas,
     });
+
+    if (callDataLimit) {
+      partialtx.callGasLimit = BigNumber.from(callDataLimit).toHexString();
+    }
+
+    partialtx.signature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
 
     /**
      * Dummy signature used only in the case of zeroDev factory contract
@@ -219,7 +227,11 @@ export class PrimeSdk {
     if (bundlerGasEstimate.preVerificationGas) {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
-      partialtx.callGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
+      const expectedCallGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
+      if (!callDataLimit)
+        partialtx.callGasLimit = expectedCallGasLimit;
+      else if (BigNumber.from(callDataLimit).lt(expectedCallGasLimit))
+        throw new ErrorHandler(`CallGasLimit is too low. Expected atleast ${expectedCallGasLimit.toString()}`);
     }
 
     return partialtx;
@@ -228,7 +240,7 @@ export class PrimeSdk {
 
   async getGasFee() {
     const version = await this.bundler.getBundlerVersion();
-    if (version.includes('skandha'))
+    if (version && version.includes('skandha'))
       return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
