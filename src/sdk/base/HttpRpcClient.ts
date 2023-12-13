@@ -98,8 +98,12 @@ export class HttpRpcClient {
   }
 
   async getBundlerVersion(): Promise<string> {
-    const version = await this.userOpJsonRpcProvider.send('web3_clientVersion', []);
-    return version;
+    try {
+      const version = await this.userOpJsonRpcProvider.send('web3_clientVersion', []);
+      return version;
+    } catch (err) {
+      return null;
+    }
   }
 
   async getUserOpsReceipt(uoHash: string): Promise<any> {

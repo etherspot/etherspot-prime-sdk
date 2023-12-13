@@ -186,15 +186,19 @@ export class PrimeSdk {
       ...gasDetails,
     }
 
+    const gasInfo = await this.getGasFee()
+
     const partialtx = await this.etherspotWallet.createUnsignedUserOp({
       ...tx,
-      maxFeePerGas: 1,
-      maxPriorityFeePerGas: 1,
+      maxFeePerGas: gasInfo.maxFeePerGas,
+      maxPriorityFeePerGas: gasInfo.maxPriorityFeePerGas,
     });
 
     if (callDataLimit) {
       partialtx.callGasLimit = BigNumber.from(callDataLimit).toHexString();
     }
+
+    partialtx.signature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
 
     /**
      * Dummy signature used only in the case of zeroDev factory contract
@@ -224,7 +228,6 @@ export class PrimeSdk {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       const expectedCallGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
-      console.log('values: ', callDataLimit, expectedCallGasLimit.toString(), BigNumber.from(callDataLimit).gt(expectedCallGasLimit))
       if (!callDataLimit)
         partialtx.callGasLimit = expectedCallGasLimit;
       else if (BigNumber.from(callDataLimit).lt(expectedCallGasLimit))
@@ -237,7 +240,7 @@ export class PrimeSdk {
 
   async getGasFee() {
     const version = await this.bundler.getBundlerVersion();
-    if (version.includes('skandha'))
+    if (version && version.includes('skandha'))
       return this.bundler.getSkandhaGasPrice();
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
