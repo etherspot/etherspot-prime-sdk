@@ -24,16 +24,15 @@ export class GetExchangeCrossChainQuoteDto {
   @IsBigNumberish()
   fromAmount: BigNumber;
 
+  @IsAddress()
+  fromAddress: string;
+
   @IsOptional()
   serviceProvider?: CrossChainServiceProvider;
 
   @IsOptional()
   @IsAddress()
   toAddress?: string;
-
-  @IsOptional()
-  @IsAddress()
-  fromAddress?: string;
 
   @IsOptional()
   lifiBridges?: LiFiBridge[];

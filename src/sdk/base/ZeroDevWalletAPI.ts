@@ -69,7 +69,7 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
         "0xf048AD83CB2dfd6037A43902a2A5Be04e53cd2Eb", // Kernel Implementation Address
         new ethers.utils.Interface(KernelAccountAbi).encodeFunctionData(
           "initialize",
-          ["0xd9AB5096a832b9ce79914329DAEE236f8Eea0390", this.services.walletService.walletAddress], // Kernel Validation Address
+          ["0xd9AB5096a832b9ce79914329DAEE236f8Eea0390", this.services.walletService.EOAAddress], // Kernel Validation Address
         ),
         this.index,
       ],
@@ -92,25 +92,27 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
   }
 
   async getCounterFactualAddress(): Promise<string> {
-    try {
-      const initCode = await this.getAccountInitCode();
-      const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
-      await entryPoint.callStatic.getSenderAddress(initCode);
+    if (!this.accountAddress) {
+      try {
+        const initCode = await this.getAccountInitCode();
+        const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
+        await entryPoint.callStatic.getSenderAddress(initCode);
 
-      throw new Error("getSenderAddress: unexpected result");
-    } catch (error: any) {
-      const addr = error?.errorArgs?.sender;
-      if (!addr) throw error;
-      if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id');
-      const chain = await this.provider.getNetwork().then((n) => n.chainId);
-      const ms = Safe.MultiSend[chain.toString()];
-      if (!ms)
-        throw new Error(
-          `Multisend contract not deployed on network: ${chain.toString()}`
-        );
-      this.multisend = new ethers.Contract(ms, MultiSendAbi, this.provider);
-      this.accountContract = new ethers.Contract(addr, KernelAccountAbi, this.provider);
-      this.accountAddress = addr;
+        throw new Error("getSenderAddress: unexpected result");
+      } catch (error: any) {
+        const addr = error?.errorArgs?.sender;
+        if (!addr) throw error;
+        if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id');
+        const chain = await this.provider.getNetwork().then((n) => n.chainId);
+        const ms = Safe.MultiSend[chain.toString()];
+        if (!ms)
+          throw new Error(
+            `Multisend contract not deployed on network: ${chain.toString()}`
+          );
+        this.multisend = new ethers.Contract(ms, MultiSendAbi, this.provider);
+        this.accountContract = new ethers.Contract(addr, KernelAccountAbi, this.provider);
+        this.accountAddress = addr;
+      }
     }
     return this.accountAddress;
   }

@@ -8,9 +8,8 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { AccountService, AccountTypes, ApiService, CreateSessionDto, Factory, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, Session, SessionService, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { Factory, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
-import { DataService } from '../data';
 import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
 export interface BaseApiParams {
@@ -74,36 +73,20 @@ export abstract class BaseAccountAPI {
 
     const {
       chainId, //
-      omitWalletProviderNetworkCheck,
       stateStorage,
-      sessionStorage,
       rpcProviderUrl,
       bundlerRpcUrl,
-      graphqlEndpoint,
-      projectKey,
       factoryWallet,
     } = optionsLike;
-
-    // const { networkOptions } = env;
 
     this.services = {
       networkService: new NetworkService(chainId),
       walletService: new WalletService(params.walletProvider, {
-        omitProviderNetworkCheck: omitWalletProviderNetworkCheck,
         provider: rpcProviderUrl,
       }, bundlerRpcUrl, chainId),
-      sessionService: new SessionService({
-        storage: sessionStorage,
-      }),
-      accountService: new AccountService(),
       stateService: new StateService({
         storage: stateStorage,
       }),
-      apiService: new ApiService({
-        host: graphqlEndpoint,
-        useSsl: true,
-      }),
-      dataService: new DataService(projectKey),
     };
 
     this.context = new Context(this.services);
@@ -165,21 +148,6 @@ export abstract class BaseAccountAPI {
     return this.services.walletService.signMessage(message);
   }
 
-  // session
-
-  /**
-   * creates session
-   * @param dto
-   * @return Promise<Session>
-   */
-  async createSession(dto: CreateSessionDto = {}): Promise<Session> {
-    const { ttl, fcmToken } = await validateDto(dto, CreateSessionDto);
-
-    await this.require();
-
-    return this.services.sessionService.createSession(ttl, fcmToken);
-  }
-
   async setPaymasterApi(paymaster: PaymasterAPI | null) {
     this.paymasterAPI = paymaster;
   }
@@ -192,8 +160,6 @@ export abstract class BaseAccountAPI {
     options: {
       network?: boolean;
       wallet?: boolean;
-      session?: boolean;
-      contractAccount?: boolean;
     } = {},
   ): Promise<void> {
     options = {
@@ -202,30 +168,16 @@ export abstract class BaseAccountAPI {
       ...options,
     };
 
-    const { accountService, walletService, sessionService } = this.services;
+    const { walletService } = this.services;
 
     if (options.network && !walletService.chainId) {
       throw new Exception('Unknown network');
     }
 
-    if (options.wallet && !walletService.walletAddress) {
+    if (options.wallet && !walletService.EOAAddress) {
       throw new Exception('Require wallet');
     }
 
-    if (options.session) {
-      await sessionService.verifySession();
-    }
-
-    if (options.contractAccount && (!accountService.account || accountService.account.type !== AccountTypes.Contract)) {
-      throw new Exception('Require contract account');
-    }
-  }
-
-  prepareAccountAddress(account: string = null): string {
-    const {
-      accountService: { accountAddress },
-    } = this.services;
-    return account || accountAddress;
   }
 
   getNetworkChainId(networkName: NetworkNames = null): number {
@@ -327,13 +279,11 @@ export abstract class BaseAccountAPI {
    */
   async getCounterFactualAddress(): Promise<string> {
     const initCode = await this.getAccountInitCode();
-    // console.log('initCode: ', initCode)
     // use entryPoint to query account address (factory can provide a helper method to do the same, but
     // this method attempts to be generic
     try {
       await this.entryPointView.callStatic.getSenderAddress(initCode);
     } catch (e: any) {
-      // console.log(e);
       return e.errorArgs.sender;
     }
     throw new Error('must handle revert');

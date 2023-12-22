@@ -13,7 +13,7 @@ async function main() {
     { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' },
   );
 
-  console.log('address: ', primeSdk.state.walletAddress);
+  console.log('address: ', primeSdk.state.EOAAddress);
 
   // get address of EtherspotWallet
   const address: string = await primeSdk.getCounterFactualAddress();

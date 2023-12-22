@@ -2,7 +2,6 @@ import { plainToClass } from 'class-transformer';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { Service } from '../common';
-import { Account } from '../account';
 import { Wallet } from '../wallet';
 import { State } from './classes';
 import { StateOptions, StateStorageState } from './interfaces';
@@ -27,28 +26,12 @@ export class StateService extends Service implements State {
     return this.services.walletService.wallet;
   }
 
-  get walletAddress$(): Observable<string> {
-    return this.services.walletService.walletAddress$;
+  get EOAAddress$(): Observable<string> {
+    return this.services.walletService.EOAAddress$;
   }
 
-  get walletAddress(): string {
-    return this.services.walletService.walletAddress;
-  }
-
-  get account$(): BehaviorSubject<Account> {
-    return this.services.accountService.account$;
-  }
-
-  get account(): Account {
-    return this.services.accountService.account;
-  }
-
-  get accountAddress$(): Observable<string> {
-    return this.services.accountService.accountAddress$;
-  }
-
-  get accountAddress(): string {
-    return this.services.accountService.accountAddress;
+  get EOAAddress(): string {
+    return this.services.walletService.EOAAddress;
   }
 
   get network(): Network {
@@ -60,24 +43,12 @@ export class StateService extends Service implements State {
   }
 
   restore(state: StateStorageState): this {
-    const {
-      accountService: { account$ },
-    } = this.services;
 
     if (state) {
       state = plainToClass(State, state);
-      const { account } = state;
-
-      account$.next(account);
     }
 
     return this;
-  }
-
-  dump(): StateStorageState {
-    return {
-      account: this.account,
-    };
   }
 
   protected onInit() {
@@ -85,7 +56,6 @@ export class StateService extends Service implements State {
 
     const {
       walletService: { wallet$, wallet },
-      accountService: { account$ },
       networkService: { network$, network },
     } = this.services;
 
@@ -93,22 +63,18 @@ export class StateService extends Service implements State {
       this.addSubscriptions(
         combineLatest([
           wallet$, //
-          account$,
           network$,
         ])
           .pipe(
             map(
               ([
                 wallet, //
-                account,
                 network,
               ]: [
                 State['wallet'], //
-                State['account'],
                 State['network'],
               ]) => ({
                 wallet, //
-                account,
                 network,
               }),
             ),
@@ -142,11 +108,11 @@ export class StateService extends Service implements State {
 
     if (storage) {
       this.error$.catch(async () => {
-        const walletAddress = wallet && wallet.address ? wallet.address : null;
+        const EOAAddress = wallet && wallet.address ? wallet.address : null;
         const networkName = network && network.name ? network.name : null;
 
-        if (walletAddress && networkName) {
-          const state = await storage.getState(walletAddress, networkName);
+        if (EOAAddress && networkName) {
+          const state = await storage.getState(EOAAddress, networkName);
 
           this.restore(state);
         }
