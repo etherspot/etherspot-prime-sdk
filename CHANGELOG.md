@@ -1,4 +1,8 @@
 # Changelog
+## [1.4.1] - 2023-12-27
+### Bug Fixes
+- Added an optional parameter called accountAddress in SDKOptions to specify the contract address they wish to connect and added checks to verify that. This one is for users who changed the owner of the contract address 
+
 ### New
 - Added ability to override callDataLimit on estimate step by the user
 
