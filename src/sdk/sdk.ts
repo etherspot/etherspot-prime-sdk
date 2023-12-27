@@ -47,6 +47,7 @@ export class PrimeSdk {
     const {
       chainId, //
       rpcProviderUrl,
+      accountAddress,
     } = optionsLike;
 
     this.chainId = chainId;
@@ -106,6 +107,7 @@ export class PrimeSdk {
         optionsLike,
         entryPointAddress,
         factoryAddress: walletFactoryAddress,
+        predefinedAccountAddress: accountAddress,
       })
     }
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, entryPointAddress, chainId);
