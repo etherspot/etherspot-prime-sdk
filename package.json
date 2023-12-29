@@ -74,7 +74,7 @@
     "ethers": "5.7.0",
     "graphql-ws": "5.14.2",
     "prettier": "2.8.8",
-    "reflect-metadata": "0.1.13",
+    "reflect-metadata": "0.1.14",
     "rxjs": "6.6.7"
   },
   "devDependencies": {
