@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { NetworkConfig } from '.';
 import { ObjectSubject, Service, Exception } from '../common';
-import { NetworkNames, Networks, CHAIN_ID_TO_NETWORK_NAME, SupportedNetworks } from './constants';
+import { Networks, CHAIN_ID_TO_NETWORK_NAME, SupportedNetworks, NetworkNames } from './constants';
 import { Network } from './interfaces';
 
 export class NetworkService extends Service {

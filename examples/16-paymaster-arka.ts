@@ -20,7 +20,7 @@ async function main() {
     chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key',
   })
 
-  console.log('address: ', primeSdk.state.walletAddress)
+  console.log('address: ', primeSdk.state.EOAAddress)
 
   const entryPointAddress = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789';
 

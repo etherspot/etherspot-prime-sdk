@@ -59,25 +59,27 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     return hexConcat([
       this.factoryAddress,
       this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.walletAddress,
+        this.services.walletService.EOAAddress,
         this.index,
       ]),
     ]);
   }
 
   async getCounterFactualAddress(): Promise<string> {
-    try {
-      const initCode = await this.getAccountInitCode();
-      const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
-      await entryPoint.callStatic.getSenderAddress(initCode);
+    if (!this.accountAddress) {
+      try {
+        const initCode = await this.getAccountInitCode();
+        const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
+        await entryPoint.callStatic.getSenderAddress(initCode);
 
-      throw new Error("getSenderAddress: unexpected result");
-    } catch (error: any) {
-      const addr = error?.errorArgs?.sender;
-      if (!addr) throw error;
-      if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id/walletFactoryAddress');
-      this.accountContract = new ethers.Contract(addr, SimpleAccountAbi, this.provider);
-      this.accountAddress = addr;
+        throw new Error("getSenderAddress: unexpected result");
+      } catch (error: any) {
+        const addr = error?.errorArgs?.sender;
+        if (!addr) throw error;
+        if (addr === ethers.constants.AddressZero) throw new Error('Unsupported chain_id/walletFactoryAddress');
+        this.accountContract = new ethers.Contract(addr, SimpleAccountAbi, this.provider);
+        this.accountAddress = addr;
+      }
     }
     return this.accountAddress;
   }

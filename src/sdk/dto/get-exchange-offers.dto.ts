@@ -14,16 +14,14 @@ export class GetExchangeOffersDto {
   })
   fromAmount: BigNumberish;
 
-  @IsOptional()
-  fromChainId?: number;
+  fromChainId: number;
+
+  @IsAddress()
+  fromAddress: string;
 
   @IsOptional()
   @IsAddress()
   toAddress?: string;
-
-  @IsOptional()
-  @IsAddress()
-  fromAddress?: string;
 
   @IsOptional()
   @IsBoolean()

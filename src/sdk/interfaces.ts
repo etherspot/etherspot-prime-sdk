@@ -1,5 +1,4 @@
 import { StateStorage } from './state';
-import { SessionStorage } from './session';
 
 export interface PaymasterApi {
   url: string;
@@ -15,8 +14,6 @@ export enum Factory {
 export interface SdkOptions {
   chainId: number;
   stateStorage?: StateStorage;
-  sessionStorage?: SessionStorage;
-  omitWalletProviderNetworkCheck?: boolean;
   bundlerRpcUrl?: string;
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
@@ -24,4 +21,9 @@ export interface SdkOptions {
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
+}
+
+export enum graphqlEndpoints {
+  QA = 'qa-etherspot.pillarproject.io',
+  PROD = 'etherspot.pillarproject.io'
 }

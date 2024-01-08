@@ -1,9 +1,5 @@
-import { AccountService } from './account';
-import { ApiService } from './api';
 import { ErrorSubject, Service } from './common';
-import { DataService } from './data';
 import { NetworkService } from './network';
-import { SessionService } from './session';
 import { StateService } from './state';
 import { WalletService } from './wallet';
 
@@ -14,13 +10,9 @@ export class Context {
 
   constructor(
     readonly services: {
-      accountService: AccountService;
-      sessionService: SessionService;
       stateService: StateService;
       walletService: WalletService;
       networkService: NetworkService;
-      apiService: ApiService;
-      dataService: DataService,
     },
   ) {
     const items = [...Object.values(services)];

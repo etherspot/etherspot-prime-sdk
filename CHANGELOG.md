@@ -1,4 +1,12 @@
 # Changelog
+## [1.4.0]
+### Breaking Changes
+- Changed the data service to initialise as a seperate entity independent of the primeSdk object
+- Removed unnecessary state variables and changed the walletAddress variable name to EOAAddress for better understanding
+- Optimised the fetching of accountAddress since before it was fetching from on chain for every request to getCounterFactualAddress from the rpc, now it stores the account address locally in the initialised PrimeSDK object
+- Fixed network state variable to output the network which it is connected to
+
+## [1.3.14]
 ### New
 - Added ability to override callDataLimit on estimate step by the user
 
