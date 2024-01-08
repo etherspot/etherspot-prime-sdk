@@ -1,8 +1,11 @@
-import { IsOptional, IsPositive } from 'class-validator';
+import { IsPositive } from 'class-validator';
 import { PaginationDto } from './pagination.dto';
+import { IsAddress } from './validators';
 
 export class GetExchangeSupportedAssetsDto extends PaginationDto {
-  @IsOptional()
   @IsPositive()
-  chainId?: number;
+  chainId: number;
+
+  @IsAddress()
+  account: string;
 }
