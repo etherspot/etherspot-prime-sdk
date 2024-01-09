@@ -31,6 +31,7 @@ export class PrimeSdk {
   private bundler: HttpRpcClient;
   private chainId: number;
   private factoryUsed: Factory;
+  private index: number;
 
   private userOpsBatch: BatchUserOpsRequest = { to: [], data: [], value: [] };
 
@@ -44,12 +45,14 @@ export class PrimeSdk {
     }
 
     const {
-      chainId, //
+      index,
+      chainId,
       rpcProviderUrl,
       accountAddress,
     } = optionsLike;
 
     this.chainId = chainId;
+    this.index = index ?? 0;
     const networkConfig = getNetworkConfig(chainId);
 
     if (!optionsLike.bundlerRpcUrl) {
@@ -89,6 +92,7 @@ export class PrimeSdk {
         optionsLike,
         entryPointAddress,
         factoryAddress: walletFactoryAddress,
+        index: this.index,
       })
     } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT) {
       this.etherspotWallet = new SimpleAccountAPI({
@@ -97,6 +101,7 @@ export class PrimeSdk {
         optionsLike,
         entryPointAddress,
         factoryAddress: walletFactoryAddress,
+        index: this.index,
       })
     }
     else {
@@ -107,6 +112,7 @@ export class PrimeSdk {
         entryPointAddress,
         factoryAddress: walletFactoryAddress,
         predefinedAccountAddress: accountAddress,
+        index: this.index,
       })
     }
     this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, entryPointAddress, chainId);

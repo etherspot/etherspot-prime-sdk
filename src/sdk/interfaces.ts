@@ -22,6 +22,7 @@ export interface SdkOptions {
   walletFactoryAddress?: string;
   entryPointAddress?: string;
   accountAddress?: string;
+  index?: number;
 }
 
 export enum graphqlEndpoints {
