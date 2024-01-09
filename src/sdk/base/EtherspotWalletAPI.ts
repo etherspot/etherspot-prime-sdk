@@ -50,7 +50,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   async checkAccountAddress(address: string): Promise<void> {
     const accountContract = EtherspotWallet__factory.connect(address, this.provider);
-    if (!(await accountContract.isOwner(this.services.walletService.walletAddress))) {
+    if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
       throw new Error('the specified accountAddress does not belong to the given EOA provider')
     }
     else {
