@@ -17,6 +17,7 @@ import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
 export interface EtherspotWalletApiParams extends BaseApiParams {
   factoryAddress?: string;
   index?: number;
+  predefinedAccountAddress?: string;
 }
 
 /**
@@ -30,6 +31,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   factoryAddress?: string;
   index: number;
   accountAddress?: string;
+  predefinedAccountAddress?: string;
 
   /**
    * our account contract.
@@ -43,6 +45,17 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     super(params);
     this.factoryAddress = params.factoryAddress;
     this.index = params.index ?? 0;
+    this.predefinedAccountAddress = params.predefinedAccountAddress ?? null;
+  }
+
+  async checkAccountAddress(address: string): Promise<void> {
+    const accountContract = EtherspotWallet__factory.connect(address, this.provider);
+    if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
+      throw new Error('the specified accountAddress does not belong to the given EOA provider')
+    }
+    else {
+      this.accountAddress = address;
+    }
   }
 
   async _getAccountContract(): Promise<EtherspotWallet | Contract> {
@@ -73,6 +86,9 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async getCounterFactualAddress(): Promise<string> {
+    if (this.predefinedAccountAddress) {
+      await this.checkAccountAddress(this.predefinedAccountAddress);
+    }
     if (!this.accountAddress) {
       this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
       this.accountAddress = await this.factory.getAddress(

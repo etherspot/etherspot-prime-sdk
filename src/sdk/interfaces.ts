@@ -21,6 +21,7 @@ export interface SdkOptions {
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
+  accountAddress?: string;
 }
 
 export enum graphqlEndpoints {
