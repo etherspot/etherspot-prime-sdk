@@ -79,7 +79,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return hexConcat([
       this.factoryAddress,
       this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.walletAddress,
+        this.services.walletService.EOAAddress,
         this.index,
       ]),
     ]);
@@ -92,7 +92,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     if (!this.accountAddress) {
       this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
       this.accountAddress = await this.factory.getAddress(
-        this.services.walletService.walletAddress,
+        this.services.walletService.EOAAddress,
         this.index,
       );
     }

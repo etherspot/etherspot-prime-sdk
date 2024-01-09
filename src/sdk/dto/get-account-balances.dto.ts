@@ -3,20 +3,18 @@ import { IsAddress } from './validators';
 
 export class GetAccountBalancesDto {
   @IsOptional()
-  @IsAddress()
-  account?: string = null;
-
-  @IsOptional()
   @IsAddress({
     each: true,
   })
   tokens?: string[] = [];
 
   @IsOptional()
-  @IsPositive()
-  chainId?: number;
-
-  @IsOptional()
   @IsString()
   provider?: string = null;
+
+  @IsAddress()
+  account: string = null;
+
+  @IsPositive()
+  chainId: number;
 }

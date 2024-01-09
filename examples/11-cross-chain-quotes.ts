@@ -1,15 +1,12 @@
 import { utils } from 'ethers';
-import { PrimeSdk } from '../src';
+import { DataUtils, graphqlEndpoints } from '../src';
 import * as dotenv from 'dotenv';
 import { BridgingQuotes, CrossChainServiceProvider } from '../src/sdk/data';
 dotenv.config();
 
 async function main(): Promise<void> {
-  // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
-    chainId: Number(process.env.CHAIN_ID),
-    projectKey: 'public-prime-testnet-key', // project key
-  });
+  // initializating Data service...
+  const dataService = new DataUtils('public-prime-testnet-key', graphqlEndpoints.QA)
 
   const XdaiUSDC = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83'; // Xdai - USDC
   const MaticUSDC = '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'; // Matic - USDC
@@ -27,12 +24,12 @@ async function main(): Promise<void> {
     toChainId: toChainId,
     fromTokenAddress: fromTokenAddress,
     toTokenAddress: toTokenAddress,
-    fromAddress: '', // account address
+    fromAddress: '', // from address
     fromAmount: fromAmount,
     serviceProvider: CrossChainServiceProvider.LiFi, // Optional parameter
   };
 
-  const quotes: BridgingQuotes = await primeSdk.getCrossChainQuotes(quoteRequestPayload);
+  const quotes: BridgingQuotes = await dataService.getCrossChainQuotes(quoteRequestPayload);
 
   console.log('\x1b[33m%s\x1b[0m', `Quotes:`, quotes);
 }

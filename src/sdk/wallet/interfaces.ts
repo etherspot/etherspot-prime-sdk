@@ -4,6 +4,5 @@ export interface Wallet {
 }
 
 export interface WalletOptions {
-  omitProviderNetworkCheck: boolean;
   provider?: string;
 }

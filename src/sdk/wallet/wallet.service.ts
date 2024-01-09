@@ -7,7 +7,7 @@ import { Wallet, WalletOptions } from './interfaces';
 
 export class WalletService extends Service {
   readonly wallet$ = new ObjectSubject<Wallet>();
-  readonly walletAddress$: Observable<string>;
+  readonly EOAAddress$: Observable<string>;
   readonly rpcBundlerUrl: string;
   readonly chainId: number;
 
@@ -17,7 +17,7 @@ export class WalletService extends Service {
     super();
     this.rpcBundlerUrl = rpcUrl;
     this.chainId = chain;
-    this.walletAddress$ = this.wallet$.observeKey('address');
+    this.EOAAddress$ = this.wallet$.observeKey('address');
   }
 
   get wallet(): Wallet {
@@ -28,7 +28,7 @@ export class WalletService extends Service {
     return this.wallet$.value;
   }
 
-  get walletAddress(): string {
+  get EOAAddress(): string {
     return this.wallet ? this.wallet.address : null;
   }
 
@@ -72,6 +72,7 @@ export class WalletService extends Service {
 
       this.removeSubscriptions();
     } else {
+      const { networkService } = this.services;
       const { type: providerType } = provider;
 
       const subscriptions: Subscription[] = [];
@@ -96,6 +97,8 @@ export class WalletService extends Service {
       } else {
         throw new Error('Invalid wallet address');
       }
+
+      networkService.useDefaultNetwork();
 
       this.replaceSubscriptions(...subscriptions);
     }

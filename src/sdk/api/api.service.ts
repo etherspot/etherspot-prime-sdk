@@ -4,24 +4,24 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import fetch from 'cross-fetch';
 import { BigNumber } from 'ethers';
-import { isBigNumber, Service } from '../common';
-import { HttpException, HttpExceptionCodes } from './exceptions';
+import { isBigNumber } from '../common';
 import { ApiOptions, ApiRequestOptions, ApiRequestQueryOptions } from './interfaces';
 import { buildApiUri, catchApiError, mapApiResult } from './utils';
 
-export class ApiService extends Service {
+export class ApiService {
   private readonly options: ApiOptions;
 
   private apolloClient: ApolloClient<NormalizedCacheObject>;
 
   constructor(options: ApiOptions) {
-    super();
 
     this.options = {
       port: null,
       useSsl: false,
       ...options,
     };
+
+    this.onInit();
   }
 
   async query<T extends {}>(query: DocumentNode, options?: ApiRequestQueryOptions<T>): Promise<T> {
@@ -32,7 +32,6 @@ export class ApiService extends Service {
     };
 
     const {
-      omitChainIdVariable, //
       variables,
       fetchPolicy,
       models,
@@ -43,7 +42,7 @@ export class ApiService extends Service {
         this.apolloClient.query<T>({
           query,
           fetchPolicy,
-          variables: this.prepareApiVariables(variables, omitChainIdVariable),
+          variables: this.prepareApiVariables(variables),
         }),
       models,
     );
@@ -56,7 +55,6 @@ export class ApiService extends Service {
     };
 
     const {
-      omitChainIdVariable, //
       variables,
       models,
     } = options;
@@ -65,7 +63,7 @@ export class ApiService extends Service {
       () =>
         this.apolloClient.mutate<T>({
           mutation,
-          variables: this.prepareApiVariables(variables, omitChainIdVariable),
+          variables: this.prepareApiVariables(variables),
         }),
       models,
     );
@@ -73,7 +71,6 @@ export class ApiService extends Service {
 
   subscribe<T extends {}>(query: DocumentNode, options?: ApiRequestOptions<T>): Observable<T> {
     const {
-      omitChainIdVariable, //
       variables,
       models,
     } = options;
@@ -81,7 +78,7 @@ export class ApiService extends Service {
     return this.apolloClient
       .subscribe<T>({
         query,
-        variables: this.prepareApiVariables(variables, omitChainIdVariable),
+        variables: this.prepareApiVariables(variables),
       })
 
       .map(({ data }) => mapApiResult(data, models));
@@ -103,17 +100,10 @@ export class ApiService extends Service {
     });
 
     const authLink = setContext(async () => {
-      const {
-        accountService, //
-        sessionService,
-        dataService,
-      } = this.services;
 
       return {
         headers: {
-          ...accountService.headers,
-          ...sessionService.headers,
-          ...dataService.headers,
+          ['x-project-key']: this.options.projectKey,
         },
       };
     });
@@ -158,20 +148,7 @@ export class ApiService extends Service {
     try {
       result = await wrapped();
     } catch (err) {
-      if (
-        err instanceof HttpException &&
-        (err.code === HttpExceptionCodes.Forbidden || err.code === HttpExceptionCodes.Unauthorized)
-      ) {
-        // create new session
-        const { sessionService } = this.services;
-        const { sessionTtl } = sessionService;
-        await sessionService.createSession(sessionTtl);
-
-        // re-call
-        result = await wrapped();
-      } else {
-        throw err;
-      }
+      throw err;
     }
 
     return result;
@@ -179,7 +156,6 @@ export class ApiService extends Service {
 
   private prepareApiVariables(
     variables: { [keys: string]: any },
-    omitChainIdVariable: boolean,
   ): { [key: string]: any } {
     const result: { [key: string]: any } = {};
 
@@ -197,12 +173,6 @@ export class ApiService extends Service {
       result[key] = value;
     }
 
-    if (!omitChainIdVariable) {
-      const { chainId } = this.services.walletService;
-      result.chainId = chainId;
-    }
-
     return result;
   }
 }
-

@@ -23,13 +23,12 @@ export class GetAdvanceRoutesLiFiDto {
   @IsBigNumberish()
   fromAmount: BigNumber;
 
-  @IsOptional()
   @IsAddress()
-  toAddress?: string;
+  fromAddress: string;
 
   @IsOptional()
   @IsAddress()
-  fromAddress?: string;
+  toAddress?: string;
 
   @IsOptional()
   @IsBoolean()

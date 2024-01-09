@@ -1,15 +1,21 @@
 import { gql } from '@apollo/client/core';
-import { HeaderNames, ObjectSubject, Service } from '../common';
+import { HeaderNames, ObjectSubject } from '../common';
 import { Route } from '@lifi/sdk';
 import { AccountBalances, AdvanceRoutesLiFi, BridgingQuotes, ExchangeOffer, ExchangeOffers, NftList, PaginatedTokens, RateData, StepTransaction, StepTransactions, TokenList, TokenListToken, TokenLists, Transaction } from './classes';
 import { BigNumber } from 'ethers';
 import { CrossChainServiceProvider, LiFiBridge } from './constants';
+import { ApiService } from '../api';
 
-export class DataService extends Service {
+export class DataModule {
   readonly currentProject$ = new ObjectSubject<string>('');
-
-  constructor(currentProject = '') {
-    super();
+  private apiService: ApiService;
+  constructor(currentProject = '', graphqlEndpoint: string) {
+    // super();
+    this.apiService = new ApiService({
+      host: graphqlEndpoint,
+      useSsl: true,
+      projectKey: currentProject,
+    });
     this.switchCurrentProject(currentProject);
   }
 
@@ -37,9 +43,8 @@ export class DataService extends Service {
   }
 
   async getAccountBalances(account: string, tokens: string[], ChainId: number, provider?: string): Promise<AccountBalances> {
-    const { apiService } = this.services;
 
-    const { result } = await apiService.query<{
+    const { result } = await this.apiService.query<{
       result: AccountBalances;
     }>(
       gql`
@@ -69,15 +74,14 @@ export class DataService extends Service {
     return result;
   }
 
-  async getTransaction(hash: string): Promise<Transaction> {
-    const { apiService } = this.services;
+  async getTransaction(hash: string, ChainId: number): Promise<Transaction> {
 
-    const { result } = await apiService.query<{
+    const { result } = await this.apiService.query<{
       result: Transaction;
     }>(
       gql`
-        query($chainId: Int, $hash: String!) {
-          result: transaction(chainId: $chainId, hash: $hash) {
+        query($ChainId: Int, $hash: String!) {
+          result: transaction(chainId: $ChainId, hash: $hash) {
             blockHash
             blockNumber
             from
@@ -101,6 +105,7 @@ export class DataService extends Service {
       `,
       {
         variables: {
+          ChainId,
           hash,
         },
         models: {
@@ -113,9 +118,8 @@ export class DataService extends Service {
   }
 
   async getNftList(account: string, ChainId: number): Promise<NftList> {
-    const { apiService } = this.services;
-
-    const { result } = await apiService.query<{
+    
+    const { result } = await this.apiService.query<{
       result: NftList;
     }>(
       gql`
@@ -155,10 +159,9 @@ export class DataService extends Service {
   }
 
   async getExchangeSupportedAssets(page: number = null, limit: number = null, ChainId: number, account: string): Promise<PaginatedTokens> {
-    const { apiService } = this.services;
-
+    
     try {
-      const { result } = await apiService.query<{
+      const { result } = await this.apiService.query<{
         result: PaginatedTokens;
       }>(
         gql`
@@ -202,15 +205,14 @@ export class DataService extends Service {
     toTokenAddress: string,
     fromAmount: BigNumber,
     fromChainId: number,
+    fromAddress: string,
     toAddress?: string,
-    fromAddress?: string,
     showZeroUsd?: boolean,
   ): Promise<ExchangeOffer[]> {
-    const { apiService } = this.services;
 
     const account = fromAddress;
 
-    const { result } = await apiService.query<{
+    const { result } = await this.apiService.query<{
       result: ExchangeOffers;
     }>(
       gql`
@@ -278,13 +280,12 @@ export class DataService extends Service {
     fromAddress?: string,
     showZeroUsd?: boolean,
   ): Promise<AdvanceRoutesLiFi> {
-    const { apiService } = this.services;
 
     const account = fromAddress;
 
     let data = null;
 
-    const { result } = await apiService.query<{
+    const { result } = await this.apiService.query<{
       result: string;
     }>(
       gql`
@@ -341,7 +342,6 @@ export class DataService extends Service {
   }
 
   async getStepTransaction(selectedRoute: Route, accountAddress: string): Promise<StepTransactions> {
-    const { apiService } = this.services;
 
     const account = accountAddress;
 
@@ -349,7 +349,7 @@ export class DataService extends Service {
     try {
       const route = JSON.stringify(selectedRoute);
 
-      const { result } = await apiService.query<{
+      const { result } = await this.apiService.query<{
         result: StepTransaction[];
       }>(
         gql`
@@ -398,11 +398,10 @@ export class DataService extends Service {
     fromAddress?: string,
     showZeroUsd?: boolean,
   ): Promise<BridgingQuotes> {
-    const { apiService } = this.services;
 
     const account = fromAddress;
 
-    const { result } = await apiService.query<{
+    const { result } = await this.apiService.query<{
       result: BridgingQuotes;
     }>(
       gql`
@@ -511,10 +510,9 @@ export class DataService extends Service {
   }
 
   async getTokenLists(): Promise<TokenList[]> {
-    const { apiService } = this.services;
 
     try {
-      const { result } = await apiService.query<{
+      const { result } = await this.apiService.query<{
         result: TokenLists;
       }>(
         gql`
@@ -545,10 +543,9 @@ export class DataService extends Service {
   }
 
   async getTokenListTokens(name: string = null): Promise<TokenListToken[]> {
-    const { apiService } = this.services;
 
     try {
-      const { result } = await apiService.query<{
+      const { result } = await this.apiService.query<{
         result: TokenList;
       }>(
         gql`
@@ -584,9 +581,8 @@ export class DataService extends Service {
   }
 
   async fetchExchangeRates(tokens: string[], ChainId: number): Promise<RateData> {
-    const { apiService } = this.services;
     try {
-      const { result } = await apiService.query<{
+      const { result } = await this.apiService.query<{
         result: RateData;
       }>(
         gql`
