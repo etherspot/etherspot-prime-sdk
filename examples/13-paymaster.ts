@@ -35,7 +35,9 @@ async function main() {
   console.log('balances: ', balance);
 
   // estimate transactions added to the batch and get the fee data for the UserOp
-  const op = await primeSdk.estimate({ url: `https://arka.etherspot.io?apiKey=${api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor' } });
+  const op = await primeSdk.estimate({
+    paymasterDetails: { url: `https://arka.etherspot.io?apiKey=${api_key}&chainId=${Number(process.env.CHAIN_ID)}`, context: { mode: 'sponsor' } }
+  });
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 
   // sign the UserOp and sending to the bundler...

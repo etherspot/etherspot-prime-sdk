@@ -99,13 +99,12 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return this.accountAddress;
   }
 
-  async getNonce(): Promise<BigNumber> {
+  async getNonce(key = 0): Promise<BigNumber> {
     console.log('checking nonce...');
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
-    const accountContract = await this._getAccountContract();
-    return accountContract.getNonce();
+    return await this.nonceManager.getNonce(await this.getAccountAddress(), key);
   }
 
   /**

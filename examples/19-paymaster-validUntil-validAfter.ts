@@ -46,7 +46,9 @@ async function main() {
         For example purpose, the valid is fixed as expiring in 100 mins once the paymaster data is generated
         validUntil and validAfter is relevant only with sponsor transactions and not for token paymasters
     */
-    const op = await primeSdk.estimate({ url: `${arka_url}${queryString}`, context: { mode: 'sponsor', validAfter: new Date().valueOf(), validUntil: new Date().valueOf() + 6000000 } });
+    const op = await primeSdk.estimate({
+        paymasterDetails: { url: `${arka_url}${queryString}`, context: { mode: 'sponsor', validAfter: new Date().valueOf(), validUntil: new Date().valueOf() + 6000000 } }
+    });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 
     // sign the UserOp and sending to the bundler...
