@@ -30,6 +30,7 @@ bak
 docs
 demo
 test.js
+yarn.lock
 
 # .env file
 .env
