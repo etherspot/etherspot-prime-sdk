@@ -1,4 +1,9 @@
 # Changelog
+## [1.4.2] - 2024-01-26
+### Breaking changes
+- Refactored `estimate` method
+- Added `key` in `estimate` method to include `key` of semi-abstracted nonce (https://eips.ethereum.org/EIPS/eip-4337#semi-abstracted-nonce-support)
+
 ## [1.4.2] - 2024-01-09
 ### New
 - Integrate index nonce in sdkOptions for enabling the creation of multiple accounts under the same owner.
