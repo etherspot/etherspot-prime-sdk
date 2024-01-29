@@ -161,7 +161,14 @@ export class PrimeSdk {
     return this.etherspotWallet.getCounterFactualAddress();
   }
 
-  async estimate(paymasterDetails?: PaymasterApi, gasDetails?: TransactionGasInfoForUserOp, callDataLimit?: BigNumberish) {
+  async estimate(params: {
+    paymasterDetails?: PaymasterApi,
+    gasDetails?: TransactionGasInfoForUserOp,
+    callGasLimit?: BigNumberish,
+    key?: number
+  } = {}) {
+    const { paymasterDetails, gasDetails, callGasLimit, key } = params;
+
     if (this.userOpsBatch.to.length < 1) {
       throw new ErrorHandler('cannot sign empty transaction batch', 1);
     }
@@ -184,10 +191,10 @@ export class PrimeSdk {
       ...tx,
       maxFeePerGas: gasInfo.maxFeePerGas,
       maxPriorityFeePerGas: gasInfo.maxPriorityFeePerGas,
-    });
+    }, key);
 
-    if (callDataLimit) {
-      partialtx.callGasLimit = BigNumber.from(callDataLimit).toHexString();
+    if (callGasLimit) {
+      partialtx.callGasLimit = BigNumber.from(callGasLimit).toHexString();
     }
 
     partialtx.signature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
@@ -220,9 +227,9 @@ export class PrimeSdk {
       partialtx.preVerificationGas = BigNumber.from(bundlerGasEstimate.preVerificationGas);
       partialtx.verificationGasLimit = BigNumber.from(bundlerGasEstimate.verificationGasLimit ?? bundlerGasEstimate.verificationGas);
       const expectedCallGasLimit = BigNumber.from(bundlerGasEstimate.callGasLimit);
-      if (!callDataLimit)
+      if (!callGasLimit)
         partialtx.callGasLimit = expectedCallGasLimit;
-      else if (BigNumber.from(callDataLimit).lt(expectedCallGasLimit))
+      else if (BigNumber.from(callGasLimit).lt(expectedCallGasLimit))
         throw new ErrorHandler(`CallGasLimit is too low. Expected atleast ${expectedCallGasLimit.toString()}`);
     }
 

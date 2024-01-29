@@ -87,7 +87,9 @@ async function main() {
     console.log('balances: ', balance);
 
     // estimate transactions added to the batch and get the fee data for the UserOp
-    const op = await primeSdk.estimate({ url: `${arka_url}${queryString}`, context: { token: "USDC", mode: 'erc20' } });
+    const op = await primeSdk.estimate({
+      paymasterDetails: { url: `${arka_url}${queryString}`, context: { token: "USDC", mode: 'erc20' } }
+    });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 
     // sign the UserOp and sending to the bundler...
