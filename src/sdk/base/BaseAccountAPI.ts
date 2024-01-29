@@ -1,7 +1,7 @@
 import { ethers, BigNumber, BigNumberish } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
-import { EntryPoint, EntryPoint__factory } from '../contracts';
+import { EntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
@@ -49,6 +49,7 @@ export abstract class BaseAccountAPI {
 
   // entryPoint connected to "zero" address. allowed to make static calls (e.g. to getSenderAddress)
   protected readonly entryPointView: EntryPoint;
+  protected readonly nonceManager: INonceManager;
 
   provider: Provider;
   overheads?: Partial<GasOverheads>;
@@ -103,7 +104,9 @@ export abstract class BaseAccountAPI {
     this.entryPointView = EntryPoint__factory.connect(params.entryPointAddress, params.provider).connect(
       ethers.constants.AddressZero,
     );
-
+    this.nonceManager = INonceManager__factory.connect(params.entryPointAddress, params.provider).connect(
+      ethers.constants.AddressZero
+    );
   }
 
   get state(): StateService {
@@ -238,7 +241,7 @@ export abstract class BaseAccountAPI {
   /**
    * return current account's nonce.
    */
-  protected abstract getNonce(): Promise<BigNumber>;
+  protected abstract getNonce(key?: number): Promise<BigNumber>;
 
   /**
    * encode the call from entryPoint through our account to the target contract.
@@ -400,7 +403,7 @@ export abstract class BaseAccountAPI {
    * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
    * @param info
    */
-  async createUnsignedUserOp(info: TransactionDetailsForUserOp): Promise<UserOperationStruct> {
+  async createUnsignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperationStruct> {
     const { callData, callGasLimit } = await this.encodeUserOpCallDataAndGasLimit(info);
     const initCode = await this.getInitCode();
 
@@ -431,7 +434,7 @@ export abstract class BaseAccountAPI {
 
     const partialUserOp: any = {
       sender: await this.getAccountAddress(),
-      nonce: await this.getNonce(),
+      nonce: await this.getNonce(key),
       initCode,
       callData,
       callGasLimit,
@@ -485,8 +488,8 @@ export abstract class BaseAccountAPI {
    * helper method: create and sign a user operation.
    * @param info transaction details for the userOp
    */
-  async createSignedUserOp(info: TransactionDetailsForUserOp): Promise<UserOperationStruct> {
-    return await this.signUserOp(await this.createUnsignedUserOp(info));
+  async createSignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperationStruct> {
+    return await this.signUserOp(await this.createUnsignedUserOp(info, key));
   }
 
   /**

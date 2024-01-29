@@ -5,7 +5,7 @@ export const errorMsg = {
     '-32502': 'If using skandha bundler or the default one, please report this issue on https://github.com/etherspot/skandha/issues or ticket on https://discord.etherspot.io', //transaction rejected because of opcode validation
     '-32503': 'validUntil and validAfter cannot be past timestamps', // UserOperation out of time-range
     '-32504': 'This paymaster is not whitelisted on current bundler, contact bundler team to whitelist', // transaction rejected because paymaster (or signature aggregator) is throttled/banned
-    '-32505': 'Paymaster not staked or unstake-delay is too low. Try with another paymaster', // transaction rejected because paymaster (or signature aggregator) stake or unstake-delay is too low
+    '-32505': 'Factory or Wallet or Paymaster not staked or unstake-delay is too low. Try with another entity', // transaction rejected because some entity (or signature aggregator) stake or unstake-delay is too low
     '-32506': 'Please create an issue https://github.com/etherspot/etherspot-prime-sdk/issues or ticket on https://discord.etherspot.io', // transaction rejected because wallet specified unsupported signature aggregator
     '-32507': 'Please create an issue https://github.com/etherspot/etherspot-prime-sdk/issues or ticket on https://discord.etherspot.io', // transaction rejected because of wallet signature check failed (or paymaster signature, if the paymaster uses its data as signature)
     '1': 'Make sure the sdk fn called has valid parameters', // sdk Validation errors

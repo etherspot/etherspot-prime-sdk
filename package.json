@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -39,6 +39,9 @@
     "17-token-list": "./node_modules/.bin/ts-node ./examples/17-token-list",
     "18-exchange-rates": "./node_modules/.bin/ts-node ./examples/18-exchange-rates",
     "19-paymaster-validUntil-validAfter": "./node_modules/.bin/ts-node ./examples/19-paymaster-validUntil-validAfter",
+    "20-callGasLimit": "./node_modules/.bin/ts-node ./examples/20-callGasLimit",
+    "21-get-multiple-accounts": "./node_modules/.bin/ts-node ./examples/21-get-multiple-accounts",
+    "22-concurrent-userops": "./node_modules/.bin/ts-node ./examples/22-concurrent-userops",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",

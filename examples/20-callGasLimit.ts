@@ -33,7 +33,7 @@ async function main() {
 
   // estimate transactions added to the batch and get the fee data for the UserOp
   // passing callGasLimit as 40000 to manually set it
-  const op = await primeSdk.estimate(null, null, 40000);
+  const op = await primeSdk.estimate({ callGasLimit: 4000 });
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 
   // sign the UserOp and sending to the bundler...
