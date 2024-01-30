@@ -49,6 +49,7 @@ export class PrimeSdk {
       chainId,
       rpcProviderUrl,
       accountAddress,
+      etherspotBundlerApiKey,
     } = optionsLike;
 
     this.chainId = chainId;
@@ -56,8 +57,8 @@ export class PrimeSdk {
     const networkConfig = getNetworkConfig(chainId);
 
     if (!optionsLike.bundlerRpcUrl) {
-      if (!networkConfig) throw new Exception('No bundler Rpc provided');
-      optionsLike.bundlerRpcUrl = networkConfig.bundler;
+      if (!networkConfig || networkConfig.bundler == '') throw new Exception('No bundler Rpc provided');
+      optionsLike.bundlerRpcUrl = `${networkConfig.bundler.includes("?api-key=") ? networkConfig.bundler + etherspotBundlerApiKey : networkConfig.bundler}`;
     }
 
     if (networkConfig) {

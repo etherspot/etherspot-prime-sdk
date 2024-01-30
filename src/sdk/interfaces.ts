@@ -13,11 +13,12 @@ export enum Factory {
 
 export interface SdkOptions {
   chainId: number;
+  projectKey: string;
   stateStorage?: StateStorage;
   bundlerRpcUrl?: string;
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
-  projectKey: string;
+  etherspotBundlerApiKey?: string;
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
