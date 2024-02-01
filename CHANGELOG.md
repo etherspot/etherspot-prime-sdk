@@ -1,7 +1,7 @@
 # Changelog
 ## [1.4.3] - 2024-01-30
 ### New
-- Added `etherspotBundlerApiKey` optional parameter in SdkOptions for use of predefined mainnet bundlers
+- Added `GenericBundler` and `EtherspotBundler` as bundlerProviders and removed bundlerUrl params from SdkOptions
 
 ## [1.4.2] - 2024-01-26
 ### Breaking changes

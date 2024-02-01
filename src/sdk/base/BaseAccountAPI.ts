@@ -70,21 +70,19 @@ export abstract class BaseAccountAPI {
       throw new Exception('Invalid wallet provider');
     }
 
-    // const env = Env.prepare(optionsLike.env);
-
     const {
       chainId, //
       stateStorage,
       rpcProviderUrl,
-      bundlerRpcUrl,
       factoryWallet,
+      bundlerProvider,
     } = optionsLike;
 
     this.services = {
       networkService: new NetworkService(chainId),
       walletService: new WalletService(params.walletProvider, {
         provider: rpcProviderUrl,
-      }, bundlerRpcUrl, chainId),
+      }, bundlerProvider.url, chainId),
       stateService: new StateService({
         storage: stateStorage,
       }),

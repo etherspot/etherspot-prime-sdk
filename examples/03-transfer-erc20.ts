@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { PrimeSdk } from '../src';
+import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import { ERC20_ABI } from '../src/sdk/helpers/abi/ERC20_ABI';
 import * as dotenv from 'dotenv';
@@ -14,7 +14,7 @@ const tokenAddress = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID)) })
 
   console.log('address: ', primeSdk.state.EOAAddress)
 

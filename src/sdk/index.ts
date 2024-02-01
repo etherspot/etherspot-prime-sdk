@@ -8,6 +8,7 @@ export * from './interfaces';
 export * from './network';
 export * from './state';
 export * from './wallet';
+export * from './bundler';
 
 export { PrimeSdk, DataUtils };
 export default PrimeSdk;

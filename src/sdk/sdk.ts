@@ -49,17 +49,12 @@ export class PrimeSdk {
       chainId,
       rpcProviderUrl,
       accountAddress,
-      etherspotBundlerApiKey,
+      bundlerProvider,
     } = optionsLike;
 
     this.chainId = chainId;
     this.index = index ?? 0;
     const networkConfig = getNetworkConfig(chainId);
-
-    if (!optionsLike.bundlerRpcUrl) {
-      if (!networkConfig || networkConfig.bundler == '') throw new Exception('No bundler Rpc provided');
-      optionsLike.bundlerRpcUrl = `${networkConfig.bundler.includes("?api-key=") ? networkConfig.bundler + etherspotBundlerApiKey : networkConfig.bundler}`;
-    }
 
     if (networkConfig) {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
@@ -71,7 +66,7 @@ export class PrimeSdk {
 
     if (rpcProviderUrl) {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
-    } else provider = new providers.JsonRpcProvider(optionsLike.bundlerRpcUrl);
+    } else provider = new providers.JsonRpcProvider(bundlerProvider.url);
 
     let entryPointAddress = '', walletFactoryAddress = '';
     if (Networks[chainId]) {
@@ -116,7 +111,7 @@ export class PrimeSdk {
         index: this.index,
       })
     }
-    this.bundler = new HttpRpcClient(optionsLike.bundlerRpcUrl, entryPointAddress, chainId);
+    this.bundler = new HttpRpcClient(bundlerProvider.url, entryPointAddress, chainId);
 
   }
 

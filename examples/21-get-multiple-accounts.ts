@@ -1,4 +1,4 @@
-import { PrimeSdk } from '../src';
+import { EtherspotBundler, PrimeSdk } from '../src';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -7,7 +7,7 @@ async function main() {
   // initializating sdk for index 0...
   const primeSdk = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' },
+    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID)) },
   );
 
   // get EtherspotWallet address for index 0...
@@ -17,7 +17,7 @@ async function main() {
   // initializating sdk for index 1...
   const primeSdk1 = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', index: 1 },
+    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', index: 1, bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID)) },
   );
 
   // get EtherspotWallet address for index 1...

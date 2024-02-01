@@ -1,4 +1,4 @@
-import { Factory, PrimeSdk } from '../src';
+import { EtherspotBundler, Factory, PrimeSdk } from '../src';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -6,7 +6,9 @@ dotenv.config();
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', factoryWallet: Factory.ZERO_DEV })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', factoryWallet: Factory.ZERO_DEV, 
+    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID)) 
+  })
 
   // get ZeroDev address...
   const address: string = await primeSdk.getCounterFactualAddress();
