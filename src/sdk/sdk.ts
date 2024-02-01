@@ -19,6 +19,7 @@ import { OnRamperDto, SignMessageDto, validateDto } from './dto';
 import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 import { ErrorHandler } from './errorHandler/errorHandler.service';
+import { EtherspotBundler } from './bundler';
 
 /**
  * Prime-Sdk
@@ -49,12 +50,15 @@ export class PrimeSdk {
       chainId,
       rpcProviderUrl,
       accountAddress,
-      bundlerProvider,
     } = optionsLike;
 
     this.chainId = chainId;
     this.index = index ?? 0;
     const networkConfig = getNetworkConfig(chainId);
+
+    if (!optionsLike.bundlerProvider) {
+      optionsLike.bundlerProvider = new EtherspotBundler(chainId);
+    }
 
     if (networkConfig) {
       optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
@@ -66,7 +70,7 @@ export class PrimeSdk {
 
     if (rpcProviderUrl) {
       provider = new providers.JsonRpcProvider(rpcProviderUrl);
-    } else provider = new providers.JsonRpcProvider(bundlerProvider.url);
+    } else provider = new providers.JsonRpcProvider(optionsLike.bundlerProvider.url);
 
     let entryPointAddress = '', walletFactoryAddress = '';
     if (Networks[chainId]) {
@@ -111,7 +115,7 @@ export class PrimeSdk {
         index: this.index,
       })
     }
-    this.bundler = new HttpRpcClient(bundlerProvider.url, entryPointAddress, chainId);
+    this.bundler = new HttpRpcClient(optionsLike.bundlerProvider.url, entryPointAddress, chainId);
 
   }
 

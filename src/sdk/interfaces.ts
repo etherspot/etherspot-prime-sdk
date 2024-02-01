@@ -15,7 +15,7 @@ export enum Factory {
 export interface SdkOptions {
   chainId: number;
   projectKey: string;
-  bundlerProvider: BundlerProviderLike;
+  bundlerProvider?: BundlerProviderLike;
   stateStorage?: StateStorage;
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
