@@ -1,7 +1,6 @@
 import { BigNumber, BigNumberish, Contract, ethers } from 'ethers';
 import {
   EntryPoint__factory,
-  IEntryPoint__factory,
 } from '../contracts';
 import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
