@@ -117,13 +117,12 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
     return this.accountAddress;
   }
 
-  async getNonce(): Promise<BigNumber> {
+  async getNonce(key = 0): Promise<BigNumber> {
     console.log('checking nonce...');
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
-    const entryPoint = IEntryPoint__factory.connect(this.entryPointAddress, this.provider);
-    return await entryPoint.getNonce(this.accountAddress, 0);
+    return await this.nonceManager.getNonce(await this.getAccountAddress(), key);
   }
 
   async signUserOpHash(userOpHash: string): Promise<string> {
