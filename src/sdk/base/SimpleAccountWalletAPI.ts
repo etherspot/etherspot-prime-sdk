@@ -85,7 +85,6 @@ export class SimpleAccountAPI extends BaseAccountAPI {
   }
 
   async getNonce(key = 0): Promise<BigNumber> {
-    console.log('checking nonce...');
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
