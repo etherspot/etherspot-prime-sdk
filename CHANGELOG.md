@@ -1,5 +1,5 @@
 # Changelog
-## [1.5.1] - 2024-01-26
+## [1.5.1] - 2024-02-08
 ### Bug fixes
 - Added `key` param on SimpleAccount and ZeroDev wallets
 
