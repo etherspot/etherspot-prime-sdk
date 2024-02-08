@@ -1,5 +1,9 @@
 # Changelog
-## [1.4.2] - 2024-01-26
+## [1.5.1] - 2024-02-08
+### Bug fixes
+- Added `key` param on SimpleAccount and ZeroDev wallets
+
+## [1.5.0] - 2024-01-26
 ### Breaking changes
 - Refactored `estimate` method
 - Added `key` in `estimate` method to include `key` of semi-abstracted nonce (https://eips.ethereum.org/EIPS/eip-4337#semi-abstracted-nonce-support)
