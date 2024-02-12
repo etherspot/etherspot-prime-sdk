@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { PrimeSdk } from '../src';
+import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import * as dotenv from 'dotenv';
 import { sleep } from '../src/sdk/common';
@@ -7,10 +7,12 @@ import { sleep } from '../src/sdk/common';
 dotenv.config();
 
 async function main() {
+  const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
+  
   // initializating sdk...
   const primeSdk = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' },
+    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) },
   );
 
   console.log('address: ', primeSdk.state.EOAAddress);

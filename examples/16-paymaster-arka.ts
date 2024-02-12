@@ -1,5 +1,5 @@
 import { ethers, utils } from 'ethers';
-import { PrimeSdk } from '../src';
+import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import * as dotenv from 'dotenv';
 import { sleep } from '../src/sdk/common';
@@ -9,6 +9,7 @@ dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.0001'; // transfer value
+const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
 
 const arka_api_key = 'arka_public_key';
 const arka_url = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
@@ -18,6 +19,7 @@ async function main() {
   // initializing sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
     chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key',
+    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey)
   })
 
   console.log('address: ', primeSdk.state.EOAAddress)

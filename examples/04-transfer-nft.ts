@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { PrimeSdk } from '../src';
+import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import * as dotenv from 'dotenv';
 import { sleep } from '../src/sdk/common';
@@ -10,10 +10,11 @@ dotenv.config();
 const recipient = '0xD129dB5e418e389c3F7D3ae0B8771B3f76799A52'; // recipient wallet address
 const tokenAddress = '0xe55C5793a52AF819fBf3e87a23B36708E6FDd2Cc';
 const tokenId = 4;
+const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
 
 async function main() {
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key' })
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) })
 
   console.log('address: ', primeSdk.state.EOAAddress)
 
