@@ -2277,6 +2277,7 @@ footer .tsd-legend {
 .tsd-panel-group > h1, .tsd-panel-group > h2, .tsd-panel-group > h3 {
   padding-left: 20px;
   padding-right: 20px;
+  color: #fff;
 }
 
 #tsd-search {
