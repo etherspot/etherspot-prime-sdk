@@ -8,11 +8,12 @@ dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.0001'; // transfer value
+const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
 
 async function main() {
   // initializating sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', 
-    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID)) 
+    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) 
   })
 
   console.log('address: ', primeSdk.state.EOAAddress)
