@@ -1,3 +1,4 @@
+import { BundlerProviderLike } from './bundler';
 import { StateStorage } from './state';
 
 export interface PaymasterApi {
@@ -13,11 +14,12 @@ export enum Factory {
 
 export interface SdkOptions {
   chainId: number;
+  projectKey: string;
+  bundlerProvider?: BundlerProviderLike;
   stateStorage?: StateStorage;
-  bundlerRpcUrl?: string;
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
-  projectKey: string;
+  etherspotBundlerApiKey?: string;
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;

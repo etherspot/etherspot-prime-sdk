@@ -1,4 +1,8 @@
 # Changelog
+## [1.5.2] - 2024-02-12
+### New
+- Added `GenericBundler` and `EtherspotBundler` as bundlerProviders and removed bundlerUrl params from SdkOptions
+
 ## [1.5.1] - 2024-02-08
 ### Bug fixes
 - Added `key` param on SimpleAccount and ZeroDev wallets
