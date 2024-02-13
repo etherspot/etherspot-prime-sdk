@@ -68,7 +68,8 @@ jobs:
                 sed -i.bak "s/_project_key_testnet_/$PROJECT_KEY_TESTNET/g" .env
                 sed -i.bak "s/_api_key_/$API_KEY/g" .env
                 sed -i.bak "s/_incorrect_api_key_/$INCORRECT_API_KEY/g" .env
-                sed -i.bak "s/_invalid_api_key_/$INVALID_API_KEY/g" .env                
+                sed -i.bak "s/_invalid_api_key_/$INVALID_API_KEY/g" .env
+                sed -i.bak "s/_portal_api_key_/$PORTAL_API_KEY/g" .env              
                 mv package.json temp.json
                 jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
                 rm temp.json
