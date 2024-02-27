@@ -509,7 +509,7 @@ export class DataModule {
     return result ? result : null;
   }
 
-  async getTokenLists(): Promise<TokenList[]> {
+  async getTokenLists(chainId: number): Promise<TokenList[]> {
 
     try {
       const { result } = await this.apiService.query<{
@@ -529,6 +529,9 @@ export class DataModule {
         }
       `,
         {
+          variables: {
+            chainId,
+          },
           models: {
             result: TokenLists,
           },
@@ -542,7 +545,7 @@ export class DataModule {
     }
   }
 
-  async getTokenListTokens(name: string = null): Promise<TokenListToken[]> {
+  async getTokenListTokens(chainId: number, name: string = null): Promise<TokenListToken[]> {
 
     try {
       const { result } = await this.apiService.query<{
@@ -564,6 +567,7 @@ export class DataModule {
       `,
         {
           variables: {
+            chainId,
             name,
           },
           models: {

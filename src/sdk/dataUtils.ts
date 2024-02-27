@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { AccountBalances, NftList, PaginatedTokens, ExchangeOffer, AdvanceRoutesLiFi, StepTransactions, BridgingQuotes, TokenList, TokenListToken, RateData, Transaction, DataModule } from "./data";
-import { GetAccountBalancesDto, validateDto, GetTransactionDto, GetNftListDto, GetExchangeSupportedAssetsDto, GetExchangeOffersDto, GetAdvanceRoutesLiFiDto, GetStepTransactionsLiFiDto, GetExchangeCrossChainQuoteDto, GetTokenListDto, FetchExchangeRatesDto } from "./dto";
+import { GetAccountBalancesDto, validateDto, GetTransactionDto, GetNftListDto, GetExchangeSupportedAssetsDto, GetExchangeOffersDto, GetAdvanceRoutesLiFiDto, GetStepTransactionsLiFiDto, GetExchangeCrossChainQuoteDto, GetTokenListDto, FetchExchangeRatesDto, GetTokenListsDto } from "./dto";
 import { graphqlEndpoints } from "./interfaces";
 
 export class DataUtils {
@@ -171,11 +171,13 @@ export class DataUtils {
 
   /**
  * gets token lists
+ *  * @param dto
  * @return Promise<TokenList[]>
  */
-  async getTokenLists(): Promise<TokenList[]> {
+  async getTokenLists(dto: GetTokenListsDto): Promise<TokenList[]> {
+    const { chainId } = await validateDto(dto, GetTokenListsDto);
 
-    return this.dataModule.getTokenLists();
+    return this.dataModule.getTokenLists(chainId);
   }
 
   /**
@@ -183,10 +185,10 @@ export class DataUtils {
  * @param dto
  * @return Promise<TokenListToken[]>
  */
-  async getTokenListTokens(dto: GetTokenListDto = {}): Promise<TokenListToken[]> {
-    const { name } = await validateDto(dto, GetTokenListDto);
+  async getTokenListTokens(dto: GetTokenListDto): Promise<TokenListToken[]> {
+    const { chainId, name } = await validateDto(dto, GetTokenListDto);
 
-    return this.dataModule.getTokenListTokens(name);
+    return this.dataModule.getTokenListTokens(chainId, name);
   }
 
   /**

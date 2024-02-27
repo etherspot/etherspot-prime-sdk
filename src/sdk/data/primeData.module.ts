@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, NftList, StepTransactions, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, StepTransactions, TokenList, TokenListToken, Transaction } from './classes';
 import { RestApiService } from '../api';
 import { MethodTypes } from '../api/constants';
 
@@ -130,6 +130,55 @@ export class PrimeDataModule {
             };
         } catch (error) {
             throw new Error(error.message || 'Failed to get step transaction from LIFI');
+        }
+    }
+
+    async getExchangeSupportedAssets(page: number = null, limit: number = null, chainId: number, account: string): Promise<PaginatedTokens> {
+        try {
+            const queryParams = {
+                'api-key': this.currentApi,
+                account,
+                page: page || 1,
+                limit: limit || 100,
+                chainId
+            };
+
+            const assets: PaginatedTokens = await this.apiService.makeRequest('assets/exchangeSupportedAssets', MethodTypes.GET, queryParams);
+
+            return assets;
+        } catch (error) {
+            throw new Error(error.message || 'Failed to get exchange supported assets');
+        }
+    }
+
+    async getTokenLists(chainId: number): Promise<TokenList[]> {
+        try {
+            const queryParams = {
+                'api-key': this.currentApi,
+                chainId,
+            };
+
+            const result = await this.apiService.makeRequest('assets/tokenLists', MethodTypes.GET, queryParams);
+
+            return result ? result.items : [];
+        } catch (error) {
+            throw new Error(error.message || 'Failed to get token lists');
+        }
+    }
+
+    async getTokenListTokens(chainId: number, name: string = null): Promise<TokenListToken[]> {
+        try {
+            const queryParams = {
+                'api-key': this.currentApi,
+                chainId,
+                name,
+            };
+
+            const result = await this.apiService.makeRequest('assets/tokenListTokens', MethodTypes.GET, queryParams);
+
+            return result ? result.tokens : [];
+        } catch (error) {
+            throw new Error(error.message || 'Failed to get token list tokens');
         }
     }
 }

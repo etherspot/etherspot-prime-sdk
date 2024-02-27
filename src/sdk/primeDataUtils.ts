@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, NftList, PrimeDataModule, StepTransactions, Transaction } from "./data";
-import { GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTransactionDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, PrimeDataModule, StepTransactions, TokenList, TokenListToken, Transaction } from "./data";
+import { GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class PrimeDataUtils {
@@ -103,5 +103,40 @@ export class PrimeDataUtils {
         })
 
         return this.primeDataModule.getStepTransaction(route, account);
+    }
+
+    /**
+    * gets exchange supported tokens
+    * @param dto
+    * @return Promise<PaginatedTokens>
+    */
+    async getExchangeSupportedAssets(dto: GetExchangeSupportedAssetsDto): Promise<PaginatedTokens> {
+        const { page, limit, chainId, account } = await validateDto(dto, GetExchangeSupportedAssetsDto, {
+            addressKeys: ['account']
+        });
+
+        return this.primeDataModule.getExchangeSupportedAssets(page, limit, chainId, account);
+    }
+
+    /**
+    * gets token lists
+    * @param dto
+    * @return Promise<TokenList[]>
+    */
+    async getTokenLists(dto: GetTokenListsDto): Promise<TokenList[]> {
+        const { chainId } = await validateDto(dto, GetTokenListsDto);
+
+        return this.primeDataModule.getTokenLists(chainId);
+    }
+
+    /**
+    * gets token list tokens
+    * @param dto
+    * @return Promise<TokenListToken[]>
+    */
+    async getTokenListTokens(dto: GetTokenListDto): Promise<TokenListToken[]> {
+        const { chainId, name } = await validateDto(dto, GetTokenListDto);
+
+        return this.primeDataModule.getTokenListTokens(chainId, name);
     }
 }

@@ -1,7 +1,10 @@
-import { IsString, MinLength, MaxLength, IsOptional } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsOptional, IsPositive } from 'class-validator';
 import { TOKEN_LIST_MAX_NAME_LENGTH, TOKEN_LIST_MIN_NAME_LENGTH } from '../data';
 
 export class GetTokenListDto {
+  @IsPositive()
+  chainId: number;
+
   @IsOptional()
   @IsString()
   @MinLength(TOKEN_LIST_MIN_NAME_LENGTH)
