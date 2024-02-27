@@ -1,5 +1,7 @@
+import { BigNumber } from 'ethers';
+import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, NftList, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, NftList, StepTransactions, Transaction } from './classes';
 import { RestApiService } from '../api';
 import { MethodTypes } from '../api/constants';
 
@@ -70,6 +72,64 @@ export class PrimeDataModule {
             return nfts;
         } catch (error) {
             throw new Error(error.message || 'Failed to get nft list');
+        }
+    }
+
+    async getAdvanceRoutesLiFi(
+        fromTokenAddress: string,
+        toTokenAddress: string,
+        fromChainId: number,
+        toChainId: number,
+        fromAmount: BigNumber,
+        toAddress?: string,
+        allowSwitchChain?: boolean,
+        fromAddress?: string,
+        showZeroUsd?: boolean,
+    ): Promise<AdvanceRoutesLiFi> {
+        const account = fromAddress;
+        let data = null;
+
+        try {
+            const queryParams = {
+                'api-key': this.currentApi,
+                account,
+                fromTokenAddress,
+                toTokenAddress,
+                fromChainId,
+                toChainId,
+                fromAmount: fromAmount.toString(),
+                toAddress,
+                allowSwitchChain,
+                fromAddress,
+                showZeroUsd,
+            };
+
+            const response = await this.apiService.makeRequest('exchange/getAdvanceRoutesLiFi', MethodTypes.GET, queryParams);
+
+            data = JSON.parse(response.data);
+
+            return data;
+        } catch (error) {
+            throw new Error(error.message || 'Failed to advance routes from LiFi');
+        }
+    }
+
+    async getStepTransaction(selectedRoute: Route, account: string): Promise<StepTransactions> {
+        try {
+            const route = JSON.stringify(selectedRoute);
+            const body = {
+                'api-key': this.currentApi,
+                route,
+                account
+            };
+
+            const response = await this.apiService.makeRequest('exchange/getStepTransactions', MethodTypes.POST, {}, body);
+
+            return {
+                items: response.transactions
+            };
+        } catch (error) {
+            throw new Error(error.message || 'Failed to get step transaction from LIFI');
         }
     }
 }

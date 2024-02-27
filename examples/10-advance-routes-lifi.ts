@@ -1,11 +1,11 @@
 import { ethers, utils } from 'ethers';
-import { DataUtils, graphqlEndpoints } from '../src';
+import { PrimeDataUtils } from '../src';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function main(): Promise<void> {
   // initializating Data service...
-  const dataService = new DataUtils('public-prime-testnet-key', graphqlEndpoints.QA)
+  const dataService = new PrimeDataUtils(process.env.DATA_API_KEY);
 
   const fromChainId = 56;
   const toChainId = 137;
