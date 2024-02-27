@@ -4,3 +4,12 @@ export const сacheSettings = {
   },
 };
 
+export const MethodTypes = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE',
+  PATCH: 'PATCH',
+};
+
+export const BACKEND_API_ENDPOINT = 'https://rpc.etherspot.io/data-api';

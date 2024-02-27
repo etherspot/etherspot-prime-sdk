@@ -18,3 +18,6 @@ export interface ApiRequestQueryOptions<T> extends ApiRequestOptions<T> {
   fetchPolicy?: FetchPolicy;
 }
 
+export interface QueryParams {
+  [key: string]: any;
+}
