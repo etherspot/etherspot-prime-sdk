@@ -1,4 +1,8 @@
 # Changelog
+## [1.5.3] - 2024-02-28
+### Bug Fix
+- Added Error Handling on bundler side for possible solutions
+
 ## [1.5.2] - 2024-02-12
 ### New
 - Added `GenericBundler` and `EtherspotBundler` as bundlerProviders and removed bundlerUrl params from SdkOptions
