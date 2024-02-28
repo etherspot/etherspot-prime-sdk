@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, PrimeDataModule, StepTransactions, TokenList, TokenListToken, Transaction } from "./data";
-import { GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, PrimeDataModule, RateData, StepTransactions, TokenList, TokenListToken, Transaction } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class PrimeDataUtils {
@@ -138,5 +138,46 @@ export class PrimeDataUtils {
         const { chainId, name } = await validateDto(dto, GetTokenListDto);
 
         return this.primeDataModule.getTokenListTokens(chainId, name);
+    }
+
+    /**
+    * fetch exchange rates of tokens
+    * @param dto
+    * @return Promise<RateData>
+    */
+    async fetchExchangeRates(dto: FetchExchangeRatesDto): Promise<RateData> {
+        const { tokens, chainId } = dto;
+        let data: RateData;
+        const promises = [];
+
+        // Create a batch of 50
+        const batches = [...Array(Math.ceil(tokens.length / 50))].map(() => tokens.splice(0, 50));
+        batches.forEach((batch) => {
+            promises.push(this.primeDataModule.fetchExchangeRates(batch, chainId));
+        });
+
+        // Fetch succeded results and merge
+        await (Promise as any)
+            .allSettled(promises)
+            .then((response) =>
+                response?.forEach((result) => {
+                    if (result?.status === 'fulfilled') {
+                        !data
+                            ? (data = result.value ? result.value : {})
+                            : (data.items = result?.value?.items ? [...data.items, ...result.value.items] : [...data.items]);
+                    }
+                }),
+            );
+
+        // Return Unique tokens
+        if (data && data.items && data.items.length) {
+            data.error = ''
+            data.errored = false
+            data.items = [...new Map(data.items.map(item => [item['address'], item])).values()];
+        } else {
+            data.items = [];
+        }
+
+        return data;
     }
 }

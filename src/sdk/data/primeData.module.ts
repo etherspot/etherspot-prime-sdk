@@ -1,9 +1,9 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, StepTransactions, TokenList, TokenListToken, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction } from './classes';
 import { RestApiService } from '../api';
-import { MethodTypes } from '../api/constants';
+import { API_ENDPOINTS, MethodTypes } from '../api/constants';
 
 export class PrimeDataModule {
     readonly apiKey$ = new ObjectSubject<string>('');
@@ -34,7 +34,7 @@ export class PrimeDataModule {
                 tokens: tokens.length ? tokens : []
             };
 
-            const balances: AccountBalances = await this.apiService.makeRequest('account/balances', MethodTypes.GET, queryParams);
+            const balances: AccountBalances = await this.apiService.makeRequest(API_ENDPOINTS.GET_ACCOUNT_BALANCES, MethodTypes.GET, queryParams);
 
             return balances;
         } catch (error) {
@@ -50,7 +50,7 @@ export class PrimeDataModule {
                 chainId,
             };
 
-            const response = await this.apiService.makeRequest('transactions/transaction', MethodTypes.GET, queryParams);
+            const response = await this.apiService.makeRequest(API_ENDPOINTS.GET_TRANSACTION, MethodTypes.GET, queryParams);
 
             return response.transaction;
         } catch (error) {
@@ -67,7 +67,7 @@ export class PrimeDataModule {
                 chainId,
             };
 
-            const nfts = await this.apiService.makeRequest('account/nfts', MethodTypes.GET, queryParams);
+            const nfts = await this.apiService.makeRequest(API_ENDPOINTS.GET_ACCOUNT_NFTS, MethodTypes.GET, queryParams);
 
             return nfts;
         } catch (error) {
@@ -104,7 +104,7 @@ export class PrimeDataModule {
                 showZeroUsd,
             };
 
-            const response = await this.apiService.makeRequest('exchange/getAdvanceRoutesLiFi', MethodTypes.GET, queryParams);
+            const response = await this.apiService.makeRequest(API_ENDPOINTS.GET_ADVANCE_ROUTES_LIFI, MethodTypes.GET, queryParams);
 
             data = JSON.parse(response.data);
 
@@ -123,7 +123,7 @@ export class PrimeDataModule {
                 account
             };
 
-            const response = await this.apiService.makeRequest('exchange/getStepTransactions', MethodTypes.POST, {}, body);
+            const response = await this.apiService.makeRequest(API_ENDPOINTS.GET_STEP_TRANSACTIONS, MethodTypes.POST, {}, body);
 
             return {
                 items: response.transactions
@@ -143,7 +143,7 @@ export class PrimeDataModule {
                 chainId
             };
 
-            const assets: PaginatedTokens = await this.apiService.makeRequest('assets/exchangeSupportedAssets', MethodTypes.GET, queryParams);
+            const assets: PaginatedTokens = await this.apiService.makeRequest(API_ENDPOINTS.GET_EXCHANGE_SUPPORTED_ASSETS, MethodTypes.GET, queryParams);
 
             return assets;
         } catch (error) {
@@ -158,7 +158,7 @@ export class PrimeDataModule {
                 chainId,
             };
 
-            const result = await this.apiService.makeRequest('assets/tokenLists', MethodTypes.GET, queryParams);
+            const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_TOKEN_LISTS, MethodTypes.GET, queryParams);
 
             return result ? result.items : [];
         } catch (error) {
@@ -174,11 +174,27 @@ export class PrimeDataModule {
                 name,
             };
 
-            const result = await this.apiService.makeRequest('assets/tokenListTokens', MethodTypes.GET, queryParams);
+            const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_TOKEN_LIST_TOKENS, MethodTypes.GET, queryParams);
 
             return result ? result.tokens : [];
         } catch (error) {
             throw new Error(error.message || 'Failed to get token list tokens');
+        }
+    }
+
+    async fetchExchangeRates(tokens: string[], chainId: number): Promise<RateData> {
+        try {
+            const queryParams = {
+                'api-key': this.currentApi,
+                chainId,
+                tokens,
+            };
+
+            const result = await this.apiService.makeRequest(API_ENDPOINTS.EXCHANGE_RATES, MethodTypes.GET, queryParams);
+
+            return result ? result.exchangeRates : null;
+        } catch (error) {
+            throw new Error(error.message || 'Failed to fetch exchange rates');
         }
     }
 }
