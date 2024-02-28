@@ -15,21 +15,39 @@ export class HttpRpcClient {
   initializing: Promise<void>;
 
   constructor(readonly bundlerUrl: string, readonly entryPointAddress: string, readonly chainId: number) {
-    this.userOpJsonRpcProvider = new ethers.providers.JsonRpcProvider(this.bundlerUrl, {
-      name: 'Connected bundler network',
-      chainId,
-    });
-    this.initializing = this.validateChainId();
+    try {
+      this.userOpJsonRpcProvider = new ethers.providers.JsonRpcProvider({
+        url: this.bundlerUrl
+      }, {
+        name: 'Connected bundler network',
+        chainId,
+      });
+      this.initializing = this.validateChainId();
+    } catch (err) {
+      if (err.message.includes('failed response'))
+        throw new ErrorHandler(err.message, 2);
+      if (err.message.includes('timeout'))
+        throw new ErrorHandler(err.message, 3);
+      throw new Error(err.message);
+    }
   }
 
   async validateChainId(): Promise<void> {
-    // validate chainId is in sync with expected chainid
-    const chain = await this.userOpJsonRpcProvider.send('eth_chainId', []);
-    const bundlerChain = parseInt(chain);
-    if (bundlerChain !== this.chainId) {
-      throw new Error(
-        `bundler ${this.bundlerUrl} is on chainId ${bundlerChain}, but provider is on chainId ${this.chainId}`,
-      );
+    try {
+      // validate chainId is in sync with expected chainid
+      const chain = await this.userOpJsonRpcProvider.send('eth_chainId', []);
+      const bundlerChain = parseInt(chain);
+      if (bundlerChain !== this.chainId) {
+        throw new Error(
+          `bundler ${this.bundlerUrl} is on chainId ${bundlerChain}, but provider is on chainId ${this.chainId}`,
+        );
+      }
+    } catch (err) {
+      if (err.message.includes('failed response'))
+        throw new ErrorHandler(err.message, 400);
+      if (err.message.includes('timeout'))
+        throw new ErrorHandler(err.message, 404);
+      throw new Error(err.message);
     }
   }
 
