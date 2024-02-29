@@ -1,4 +1,10 @@
 # Changelog
+## [1.5.3] - 2024-02-28
+### Bug Fix
+- Added Error Handling on bundler side
+### Breaking Changes
+- Removed `possibleSolution` parameter from error handling and passed that value into `message` itself and added a new parameter called `rawError` to report what the exact error is
+
 ## [1.5.2] - 2024-02-12
 ### New
 - Added `GenericBundler` and `EtherspotBundler` as bundlerProviders and removed bundlerUrl params from SdkOptions
