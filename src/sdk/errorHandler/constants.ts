@@ -1,4 +1,5 @@
 export const errorMsg = {
+    '429': 'Rate limit exceeded for the given bundler api key. Please contact bundler team for increasing bandwidth.', // Rate limit quota execeeded
     '-32521': 'Check for balance in your Smart wallet', // execution reverted
     '-32500': `Please make sure you have enough funds for wallet creation.`, // transaction rejected by entryPoint's simulateValidation, during wallet creation or validation
     '-32501': `Check paymaster data`,  // transaction rejected by paymaster's validatePaymasterUserOp
@@ -8,7 +9,10 @@ export const errorMsg = {
     '-32505': 'Factory or Wallet or Paymaster not staked or unstake-delay is too low. Try with another entity', // transaction rejected because some entity (or signature aggregator) stake or unstake-delay is too low
     '-32506': 'Please create an issue https://github.com/etherspot/etherspot-prime-sdk/issues or ticket on https://discord.etherspot.io', // transaction rejected because wallet specified unsupported signature aggregator
     '-32507': 'Please create an issue https://github.com/etherspot/etherspot-prime-sdk/issues or ticket on https://discord.etherspot.io', // transaction rejected because of wallet signature check failed (or paymaster signature, if the paymaster uses its data as signature)
-    '1': 'Make sure the sdk fn called has valid parameters', // sdk Validation errors
+    '1': 'Make sure the sdk fn called has valid parameters', // sdk Validation errors,
+    '400': 'Either the bundler url is unreachable or the api key rate limit has reached. Please contact support for more info', // Bundler using ethers package returning SERVER_ERROR
+    '404': 'The request sent has reached timeout. Check your internet access or the bundler url if using etherspot bundler, the rate limit might be reached Please contact support for more info', // ethers package 
+    '-429': 'Rate limit exceeded for the given bundler api key. Please contact bundler team for increasing bandwidth.', // Rate limit quota execeeded
 }
 
 export const entryPointErrorMsg = {

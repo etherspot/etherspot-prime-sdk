@@ -1,10 +1,16 @@
 # Changelog
-## [1.5.3] - 2024-02-28
+## [1.5.4] - 2024-02-28
 ### New
 - `PrimeDataUtils` has been added as a separate module, independent of the primeSdk, responsible for fetching data from REST APIs
 - Added these endpoints into PrimeDataUtils: `getAccountBalances`, `getTransaction`, `getNftList`, `getAdvanceRoutesLiFi`, `getStepTransaction`, `getTokenLists`, `getTokenListTokens` and `fetchExchangeRates`
 ### Breaking changes
 - Added new parameter named `chainId` in `getTokenLists` and `getTokenListTokens` endpoints
+
+## [1.5.3] - 2024-02-28
+### Bug Fix
+- Added Error Handling on bundler side
+### Breaking Changes
+- Removed `possibleSolution` parameter from error handling and passed that value into `message` itself and added a new parameter called `rawError` to report what the exact error is
 
 ## [1.5.2] - 2024-02-12
 ### New
