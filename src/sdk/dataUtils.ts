@@ -5,8 +5,9 @@ import { BigNumber } from "ethers";
 
 export class DataUtils {
   private dataModule: DataModule;
-  constructor(apiKey: string) {
-    this.dataModule = new DataModule(apiKey)
+  private readonly defaultDataAPiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjI4ZWJiMGQ5YTMxYjQ3MmY4NmU4MWY2YTVhYzBhMzE1IiwiaCI6Im11cm11cjEyOCJ9';
+  constructor(apiKey?: string) {
+    this.dataModule = new DataModule(apiKey || this.defaultDataAPiKey);
   }
 
   /**
