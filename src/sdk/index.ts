@@ -1,6 +1,5 @@
 import { DataUtils } from './dataUtils';
 import { PrimeSdk } from './sdk';
-import { PrimeDataUtils } from './primeDataUtils';
 
 export * from './api';
 export * from './dto';
@@ -10,5 +9,5 @@ export * from './state';
 export * from './wallet';
 export * from './bundler';
 
-export { PrimeSdk, DataUtils, PrimeDataUtils };
+export { PrimeSdk, DataUtils };
 export default PrimeSdk;

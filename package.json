@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -30,7 +30,6 @@
     "08-nft-list": "./node_modules/.bin/ts-node ./examples/08-nft-list",
     "09-exchange": "./node_modules/.bin/ts-node ./examples/09-exchange",
     "10-advance-routes-lifi": "./node_modules/.bin/ts-node ./examples/10-advance-routes-lifi",
-    "11-cross-chain-quotes": "./node_modules/.bin/ts-node ./examples/11-cross-chain-quotes",
     "12-add-guardians": "./node_modules/.bin/ts-node ./examples/12-add-guardians",
     "13-paymaster": "./node_modules/.bin/ts-node ./examples/13-paymaster",
     "14-zeroDev-address": "./node_modules/.bin/ts-node ./examples/14-zeroDev-address",

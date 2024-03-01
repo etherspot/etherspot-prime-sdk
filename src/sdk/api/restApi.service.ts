@@ -26,7 +26,7 @@ export class RestApiService {
                     throw new Error('Invalid API Key');
                 }
 
-                throw new Error(data.message || 'Request failed');
+                throw new Error(data.message || data.error || 'Request failed');
             }
 
             return data;

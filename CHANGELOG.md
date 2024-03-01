@@ -1,8 +1,8 @@
 # Changelog
-## [1.5.4] - 2024-02-28
+## [1.5.4] - 2024-03-01
 ### New
-- `PrimeDataUtils` has been added as a separate module, independent of the primeSdk, responsible for fetching data from REST APIs
-- Added these endpoints into PrimeDataUtils: `getAccountBalances`, `getTransaction`, `getNftList`, `getAdvanceRoutesLiFi`, `getStepTransaction`, `getTokenLists`, `getTokenListTokens` and `fetchExchangeRates`
+- The `DataUtils` module has been updated to fetch data from REST APIs provided by the new backend
+- Added these endpoints into DataUtils: `getAccountBalances`, `getTransaction`, `getNftList`, `getAdvanceRoutesLiFi`, `getStepTransaction`, `getTokenLists`, `getTokenListTokens` and `fetchExchangeRates`
 ### Breaking changes
 - Added new parameter named `chainId` in `getTokenLists` and `getTokenListTokens` endpoints
 

@@ -1,11 +1,13 @@
-import { PrimeDataUtils, RateData } from '../src';
+import { RateData } from '../src/sdk/data';
+import { DataUtils } from '../src';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
+const dataApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjI4ZWJiMGQ5YTMxYjQ3MmY4NmU4MWY2YTVhYzBhMzE1IiwiaCI6Im11cm11cjEyOCJ9';
 
 async function main(): Promise<void> {
   // initializating Data service...
-  const dataService = new PrimeDataUtils(process.env.DATA_API_KEY);
+  const dataService = new DataUtils(dataApiKey);
 
   const ETH_AAVE_ADDR = '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9';
   const ETH_MATIC_ADDR = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0';
