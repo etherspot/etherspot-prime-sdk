@@ -1,20 +1,20 @@
+import "reflect-metadata";
+import { AccountBalances, AdvanceRoutesLiFi, DataModule, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
-import { AccountBalances, NftList, PaginatedTokens, ExchangeOffer, AdvanceRoutesLiFi, StepTransactions, BridgingQuotes, TokenList, TokenListToken, RateData, Transaction, DataModule } from "./data";
-import { GetAccountBalancesDto, validateDto, GetTransactionDto, GetNftListDto, GetExchangeSupportedAssetsDto, GetExchangeOffersDto, GetAdvanceRoutesLiFiDto, GetStepTransactionsLiFiDto, GetExchangeCrossChainQuoteDto, GetTokenListDto, FetchExchangeRatesDto } from "./dto";
-import { graphqlEndpoints } from "./interfaces";
 
 export class DataUtils {
-    private dataModule: DataModule;
-    constructor(projectKey: string, endpoint: graphqlEndpoints) {
+  private dataModule: DataModule;
+  private readonly defaultDataAPiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjI4ZWJiMGQ5YTMxYjQ3MmY4NmU4MWY2YTVhYzBhMzE1IiwiaCI6Im11cm11cjEyOCJ9';
+  constructor(apiKey?: string) {
+    this.dataModule = new DataModule(apiKey || this.defaultDataAPiKey);
+  }
 
-      this.dataModule = new DataModule(projectKey, endpoint)
-    }
-
-    /**
- * gets account balances
- * @param dto
- * @return Promise<AccountBalances>
- */
+  /**
+  * gets account balances
+  * @param dto
+  * @return Promise<AccountBalances>
+  */
   async getAccountBalances(dto: GetAccountBalancesDto): Promise<AccountBalances> {
     const { account, tokens, chainId, provider } = await validateDto(dto, GetAccountBalancesDto, {
       addressKeys: ['account', 'tokens'],
@@ -29,10 +29,10 @@ export class DataUtils {
   }
 
   /**
- * gets transaction
- * @param dto
- * @return Promise<Transaction>
- */
+  * gets transaction
+  * @param dto
+  * @return Promise<Transaction>
+  */
   async getTransaction(dto: GetTransactionDto): Promise<Transaction> {
     const { hash, chainId } = await validateDto(dto, GetTransactionDto);
 
@@ -56,43 +56,10 @@ export class DataUtils {
   }
 
   /**
- * gets exchange supported tokens
- * @param dto
- * @return Promise<PaginatedTokens>
- */
-  async getExchangeSupportedAssets(dto: GetExchangeSupportedAssetsDto): Promise<PaginatedTokens> {
-    const { page, limit, chainId, account } = await validateDto(dto, GetExchangeSupportedAssetsDto, {
-      addressKeys: ['account']
-    });
-
-    return this.dataModule.getExchangeSupportedAssets(page, limit, chainId, account);
-  }
-
-  /**
- * gets exchange offers
- * @param dto
- * @return Promise<ExchangeOffer[]>
- */
-  async getExchangeOffers(dto: GetExchangeOffersDto): Promise<ExchangeOffer[]> {
-    const { fromTokenAddress, toTokenAddress, fromAmount, fromChainId, showZeroUsd, fromAddress } = await validateDto(dto, GetExchangeOffersDto, {
-      addressKeys: ['fromTokenAddress', 'toTokenAddress', 'fromAddress'],
-    });
-
-    let { toAddress } = dto;
-
-    if (!toAddress) toAddress = fromAddress;
-
-    return this.dataModule.getExchangeOffers(
-      fromTokenAddress,
-      toTokenAddress,
-      BigNumber.from(fromAmount),
-      fromChainId,
-      fromAddress,
-      toAddress,
-      showZeroUsd,
-    );
-  }
-
+  * gets advance routes from LIFI
+  * @param dto
+  * @return Promise<AdvanceRoutesLiFi>
+  */
   async getAdvanceRoutesLiFi(dto: GetAdvanceRoutesLiFiDto): Promise<AdvanceRoutesLiFi> {
     const {
       fromChainId,
@@ -126,6 +93,11 @@ export class DataUtils {
     return data;
   }
 
+  /**
+  * gets step transactions from LIFI
+  * @param dto
+  * @return Promise<StepTransactions>
+  */
   async getStepTransaction(dto: GetStepTransactionsLiFiDto): Promise<StepTransactions> {
     const { route, account } = await validateDto(dto, GetStepTransactionsLiFiDto, {
       addressKeys: ['account']
@@ -135,58 +107,38 @@ export class DataUtils {
   }
 
   /**
- * gets multi chain quotes
- * @param dto
- * @return Promise<MutliChainQuotes>
- */
-  async getCrossChainQuotes(dto: GetExchangeCrossChainQuoteDto): Promise<BridgingQuotes> {
-    const {
-      fromChainId,
-      toChainId,
-      fromTokenAddress,
-      toTokenAddress,
-      fromAmount,
-      serviceProvider,
-      lifiBridges,
-      toAddress,
-      showZeroUsd,
-      fromAddress,
-    } = await validateDto(dto, GetExchangeCrossChainQuoteDto, {
-      addressKeys: ['fromTokenAddress', 'toTokenAddress', 'fromAddress'],
+  * gets exchange supported tokens
+  * @param dto
+  * @return Promise<PaginatedTokens>
+  */
+  async getExchangeSupportedAssets(dto: GetExchangeSupportedAssetsDto): Promise<PaginatedTokens> {
+    const { page, limit, chainId, account } = await validateDto(dto, GetExchangeSupportedAssetsDto, {
+      addressKeys: ['account']
     });
 
-    return this.dataModule.getCrossChainQuotes(
-      fromTokenAddress,
-      toTokenAddress,
-      fromChainId,
-      toChainId,
-      BigNumber.from(fromAmount),
-      serviceProvider,
-      lifiBridges,
-      toAddress,
-      fromAddress,
-      showZeroUsd,
-    );
+    return this.dataModule.getExchangeSupportedAssets(page, limit, chainId, account);
   }
 
   /**
- * gets token lists
- * @return Promise<TokenList[]>
- */
-  async getTokenLists(): Promise<TokenList[]> {
+  * gets token lists
+  * @param dto
+  * @return Promise<TokenList[]>
+  */
+  async getTokenLists(dto: GetTokenListsDto): Promise<TokenList[]> {
+    const { chainId } = await validateDto(dto, GetTokenListsDto);
 
-    return this.dataModule.getTokenLists();
+    return this.dataModule.getTokenLists(chainId);
   }
 
   /**
- * gets token list tokens
- * @param dto
- * @return Promise<TokenListToken[]>
- */
-  async getTokenListTokens(dto: GetTokenListDto = {}): Promise<TokenListToken[]> {
-    const { name } = await validateDto(dto, GetTokenListDto);
+  * gets token list tokens
+  * @param dto
+  * @return Promise<TokenListToken[]>
+  */
+  async getTokenListTokens(dto: GetTokenListDto): Promise<TokenListToken[]> {
+    const { chainId, name } = await validateDto(dto, GetTokenListDto);
 
-    return this.dataModule.getTokenListTokens(name);
+    return this.dataModule.getTokenListTokens(chainId, name);
   }
 
   /**

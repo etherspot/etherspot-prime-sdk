@@ -12,3 +12,4 @@ export * from './fetch-exchange-rates.dto';
 export * from './get-token-list.dto';
 export * from './pagination.dto';
 export * from './get-exchange-supported-assets.dto';
+export * from './get-token-lists.dto';
