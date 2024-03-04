@@ -1,4 +1,5 @@
 /* eslint-disable no-var */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const platformCommands = {
     darwin: 'open',
     win32: 'explorer.exe',

@@ -1,4 +1,12 @@
 # Changelog
+## [1.5.4] - 2024-03-01
+### New
+- The `DataUtils` module has been updated to fetch data from REST APIs provided by the new backend
+- Added these endpoints into DataUtils: `getAccountBalances`, `getTransaction`, `getNftList`, `getAdvanceRoutesLiFi`, `getStepTransaction`, `getTokenLists`, `getTokenListTokens` and `fetchExchangeRates`
+### Breaking changes
+- Updated the `DataUtils` module to include a data API key parameter instead of project key and GraphQL endpoint parameters (If the data API key is not provided, it will automatically use the default API key, which has a strict rate limit)
+- Added new parameter named `chainId` in `getTokenLists` and `getTokenListTokens` endpoints
+
 ## [1.5.3] - 2024-02-28
 ### Bug Fix
 - Added Error Handling on bundler side

@@ -1,11 +1,12 @@
-import { DataUtils, RateData, graphqlEndpoints } from '../src';
+import { RateData } from '../src/sdk/data';
+import { DataUtils } from '../src';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 async function main(): Promise<void> {
   // initializating Data service...
-  const dataService = new DataUtils('public-prime-testnet-key', graphqlEndpoints.QA)
+  const dataService = new DataUtils();
 
   const ETH_AAVE_ADDR = '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9';
   const ETH_MATIC_ADDR = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0';
