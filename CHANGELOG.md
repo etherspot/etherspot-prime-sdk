@@ -1,4 +1,8 @@
 # Changelog
+## [1.6.0] - 2024-03-08
+### Bug Fixes
+- Passed the dummy signature based on the type of smart wallet account to the paymaster
+
 ## [1.5.4] - 2024-03-01
 ### New
 - The `DataUtils` module has been updated to fetch data from REST APIs provided by the new backend
