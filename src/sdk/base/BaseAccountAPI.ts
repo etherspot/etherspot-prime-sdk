@@ -458,7 +458,7 @@ export abstract class BaseAccountAPI {
     return {
       ...partialUserOp,
       preVerificationGas: this.getPreVerificationGas(partialUserOp),
-      signature: '0x',
+      signature: info.dummySignature ?? '0x',
     };
   }
 

@@ -23,8 +23,6 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
   private paymasterUrl: string;
   private entryPoint: string;
   private context: any;
-  private api_key: string;
-  private chainId: number;
   constructor(paymasterUrl: string, entryPoint: string, context: any) {
     super();
     this.paymasterUrl = paymasterUrl;
@@ -50,7 +48,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
       maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
       // A dummy value here is required in order to calculate a correct preVerificationGas value.
       paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
-      signature: ethers.utils.hexlify(Buffer.alloc(SIG_SIZE, 1)),
+      signature: userOp.signature ?? '0x',
     };
     const op = await ethers.utils.resolveProperties(pmOp);
     op.preVerificationGas = calcPreVerificationGas(op);

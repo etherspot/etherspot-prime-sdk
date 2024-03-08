@@ -168,6 +168,14 @@ export class PrimeSdk {
     key?: number
   } = {}) {
     const { paymasterDetails, gasDetails, callGasLimit, key } = params;
+    let dummySignature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+
+    /**
+     * Dummy signature used only in the case of zeroDev factory contract
+     */
+    if (this.factoryUsed === Factory.ZERO_DEV) {
+      dummySignature = "0x00000000870fe151d548a1c527c3804866fab30abf28ed17b79d5fc5149f19ca0819fefc3c57f3da4fdf9b10fab3f2f3dca536467ae44943b9dbb8433efe7760ddd72aaa1c"
+    }
 
     if (this.userOpsBatch.to.length < 1) {
       throw new ErrorHandler('cannot sign empty transaction batch', 1);
@@ -182,6 +190,7 @@ export class PrimeSdk {
       target: this.userOpsBatch.to,
       values: this.userOpsBatch.value,
       data: this.userOpsBatch.data,
+      dummySignature: dummySignature,
       ...gasDetails,
     }
 
@@ -195,15 +204,6 @@ export class PrimeSdk {
 
     if (callGasLimit) {
       partialtx.callGasLimit = BigNumber.from(callGasLimit).toHexString();
-    }
-
-    partialtx.signature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
-
-    /**
-     * Dummy signature used only in the case of zeroDev factory contract
-     */
-    if (this.factoryUsed === Factory.ZERO_DEV) {
-      partialtx.signature = "0x00000000870fe151d548a1c527c3804866fab30abf28ed17b79d5fc5149f19ca0819fefc3c57f3da4fdf9b10fab3f2f3dca536467ae44943b9dbb8433efe7760ddd72aaa1c"
     }
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);

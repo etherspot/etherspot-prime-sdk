@@ -13,6 +13,7 @@ export interface TransactionDetailsForUserOp {
   gasLimit?: BigNumberish;
   maxFeePerGas?: BigNumberish;
   maxPriorityFeePerGas?: BigNumberish;
+  dummySignature?: string;
 }
 
 export interface TransactionGasInfoForUserOp {
