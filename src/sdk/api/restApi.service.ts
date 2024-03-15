@@ -1,11 +1,11 @@
 import fetch from 'cross-fetch';
-import qs from 'querystring';
+import qs from 'qs';
 import { QueryParams } from './interfaces';
 import { BACKEND_API_ENDPOINT } from './constants';
 
 export class RestApiService {
     async makeRequest(endpoint: string, method = 'GET', queryParams = {}, body = null) {
-        const queryString = qs.stringify(this.buildQueryParams(queryParams));
+        const queryString = qs.stringify(this.buildQueryParams(queryParams), { indices: false });
         const url = new URL(`${BACKEND_API_ENDPOINT}/${endpoint}?${queryString}`);
 
         const requestOptions = {
