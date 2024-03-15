@@ -1,4 +1,8 @@
 # Changelog
+## [1.6.1] - 2024-03-14
+### New
+- Added Base Sepolia Network
+
 ## [1.6.0] - 2024-03-08
 ### Bug Fixes
 - Passed the dummy signature based on the type of smart wallet account to the paymaster
