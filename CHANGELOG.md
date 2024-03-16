@@ -1,4 +1,8 @@
 # Changelog
+## [1.6.2] - 2024-03-15
+### Bug Fixes
+- Fixed browser-side querystring issue
+
 ## [1.6.1] - 2024-03-14
 ### New
 - Added Base Sepolia Network

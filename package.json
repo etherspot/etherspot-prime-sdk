@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -76,12 +76,14 @@
     "ethers": "5.7.2",
     "graphql-ws": "5.14.2",
     "prettier": "2.8.8",
+    "qs": "6.12.0",
     "reflect-metadata": "0.1.14",
     "rxjs": "6.6.7"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
     "@types/prettier": "2.7.3",
+    "@types/qs": "6.9.12",
     "@typescript-eslint/eslint-plugin": "5.45.0",
     "@typescript-eslint/parser": "5.45.0",
     "dotenv": "16.0.3",
