@@ -1,4 +1,10 @@
 # Changelog
+## [1.6.3] - 2024-03-18
+### New
+- Added `getTransactions` endpoint into DataUtils
+### Breaking changes
+- The parameters named `projectKey` and `graphqlEndpoint` have been removed in the PrimeSdk module
+
 ## [1.6.2] - 2024-03-15
 ### Bug Fixes
 - Fixed browser-side querystring issue

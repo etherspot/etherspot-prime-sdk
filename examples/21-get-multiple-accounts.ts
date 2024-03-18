@@ -9,7 +9,7 @@ async function main() {
   // initializating sdk for index 0...
   const primeSdk = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) },
+    { chainId: Number(process.env.CHAIN_ID), bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) },
   );
 
   // get EtherspotWallet address for index 0...
@@ -19,7 +19,7 @@ async function main() {
   // initializating sdk for index 1...
   const primeSdk1 = new PrimeSdk(
     { privateKey: process.env.WALLET_PRIVATE_KEY },
-    { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', index: 1, bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) },
+    { chainId: Number(process.env.CHAIN_ID), index: 1, bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) },
   );
 
   // get EtherspotWallet address for index 1...

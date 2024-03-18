@@ -93,7 +93,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [1001]: {
     chainId: 1001,
@@ -106,7 +105,6 @@ export const Networks: {
         simpleAccount: '',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   }, 
   [80001]: {
     chainId: 80001,
@@ -119,7 +117,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [84531]: {
     chainId: 84531,
@@ -132,7 +129,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [84532]: {
     chainId: 84532,
@@ -145,7 +141,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [11155111]: {
     chainId: 11155111,
@@ -158,7 +153,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [10]: {
     chainId: 10,
@@ -171,7 +165,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [137]: {
     chainId: 137,
@@ -184,7 +177,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [42161]: {
     chainId: 42161,
@@ -197,7 +189,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [8217]: {
     chainId: 8217,
@@ -210,7 +201,6 @@ export const Networks: {
         simpleAccount: '',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [1]: {
     chainId: 1,
@@ -223,7 +213,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [421613]: {
     chainId: 421613,
@@ -236,7 +225,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [10200]: {
     chainId: 10200,
@@ -249,7 +237,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [122]: {
     chainId: 122,
@@ -262,7 +249,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [123]: {
     chainId: 123,
@@ -275,7 +261,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [100]: {
     chainId: 100,
@@ -288,7 +273,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io',
   },
   [2357]: {
     chainId: 2357,
@@ -301,7 +285,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [420]: {
     chainId: 420,
@@ -314,7 +297,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io',
   },
   [31]: {
     chainId: 31,
@@ -327,7 +309,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [20197]: {
     chainId: 20197,
@@ -340,7 +321,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [5000]: {
     chainId: 5000,
@@ -353,7 +333,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [5001]: {
     chainId: 5001,
@@ -366,7 +345,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: '',
   },
   [43114]: {
     chainId: 43114,
@@ -379,7 +357,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io'
   },
   [8453]: {
     chainId: 8453,
@@ -392,7 +369,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
   [56]: {
     chainId: 56,
@@ -405,7 +381,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'etherspot.pillarproject.io'
   },
   [97]: {
     chainId: 97,
@@ -418,7 +393,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
   },
   [43113]: {
     chainId: 43113,
@@ -431,7 +405,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: 'qa-etherspot.pillarproject.io'
   },
   [59144]: {
     chainId: 59144,
@@ -444,7 +417,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
   [59140]: {
     chainId: 59140,
@@ -457,7 +429,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
   [114]: {
     chainId: 114,
@@ -470,7 +441,6 @@ export const Networks: {
         simpleAccount: '',
       }
     },
-    graphqlEndpoint: ''
   },
   [14]: {
     chainId: 14,
@@ -483,7 +453,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
   [534351]: {
     chainId: 534351,
@@ -496,7 +465,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
   [534352]: {
     chainId: 534352,
@@ -509,7 +477,6 @@ export const Networks: {
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
-    graphqlEndpoint: ''
   },
 };
 

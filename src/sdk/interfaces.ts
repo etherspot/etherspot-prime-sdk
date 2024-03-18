@@ -14,20 +14,13 @@ export enum Factory {
 
 export interface SdkOptions {
   chainId: number;
-  projectKey: string;
   bundlerProvider?: BundlerProviderLike;
   stateStorage?: StateStorage;
   rpcProviderUrl?: string;
-  graphqlEndpoint?: string;
   etherspotBundlerApiKey?: string;
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
   accountAddress?: string;
   index?: number;
-}
-
-export enum graphqlEndpoints {
-  QA = 'qa-etherspot.pillarproject.io',
-  PROD = 'etherspot.pillarproject.io'
 }

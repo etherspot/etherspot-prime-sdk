@@ -1,12 +1,10 @@
 import { ethers } from 'ethers';
 import fetch from 'cross-fetch';
-import { Buffer } from 'buffer';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { toJSON } from '../common/OperationUtils';
 
-const SIG_SIZE = 65;
 const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
 

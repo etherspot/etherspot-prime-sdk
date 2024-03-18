@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
 import { RestApiService } from '../api';
 import { API_ENDPOINTS, MethodTypes } from '../api/constants';
 
@@ -55,7 +55,24 @@ export class DataModule {
       return response.transaction;
     } catch (error) {
       throw new Error(error.message || 'Failed to get transaction');
+    }
+  }
 
+  async getTransactions(account: string, chainId: number, page?: number, limit?: number): Promise<Transactions> {
+    try {
+      const queryParams = {
+        'api-key': this.currentApi,
+        account,
+        chainId,
+        page,
+        limit,
+      };
+
+      const response = await this.apiService.makeRequest(API_ENDPOINTS.GET_TRANSACTIONS, MethodTypes.GET, queryParams);
+
+      return response;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get transactions');
     }
   }
 

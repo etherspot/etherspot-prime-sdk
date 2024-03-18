@@ -18,7 +18,7 @@ const queryString = `?apiKey=${arka_api_key}&chainId=${Number(process.env.CHAIN_
 async function main() {
   // initializing sdk...
   const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
-    chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key',
+    chainId: Number(process.env.CHAIN_ID),
     bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey)
   })
 

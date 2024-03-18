@@ -13,8 +13,9 @@ const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxM
 async function main() {
   const provider = new providers.JsonRpcProvider(process.env.RPC_PROVIDER_URL);
   // initializating sdk...
-  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, { chainId: Number(process.env.CHAIN_ID), projectKey: 'public-prime-testnet-key', 
-    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey) 
+  const primeSdk = new PrimeSdk({ privateKey: process.env.WALLET_PRIVATE_KEY }, {
+    chainId: Number(process.env.CHAIN_ID),
+    bundlerProvider: new EtherspotBundler(Number(process.env.CHAIN_ID), bundlerApiKey)
   })
 
   console.log('address: ', primeSdk.state.EOAAddress)
