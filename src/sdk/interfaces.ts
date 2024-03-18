@@ -19,7 +19,6 @@ export interface SdkOptions {
   stateStorage?: StateStorage;
   rpcProviderUrl?: string;
   graphqlEndpoint?: string;
-  etherspotBundlerApiKey?: string;
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
