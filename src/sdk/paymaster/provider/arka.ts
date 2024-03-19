@@ -15,9 +15,12 @@ export class ArkaPaymaster implements PaymasterProvider {
     this.chainId = chainId;
   }
 
+  /* This method is to get the paymaster address for the given token symbol if available
+  * @param tokenSym, the token symbol used as string ex: "USDC"
+  */
   async getTokenPaymasterAddress(tokenSym: string) {
     let response = null;
-    const entryPointAddress = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789';
+    const entryPointAddressV06 = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789';
     const context = { token: tokenSym }
     try {
       response = await fetch(`${this.url}/pimlicoAddress${this.queryParams}`, {
@@ -26,7 +29,7 @@ export class ArkaPaymaster implements PaymasterProvider {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ params: [entryPointAddress, context] }),
+        body: JSON.stringify({ params: [entryPointAddressV06, context] }),
       })
         .then(async (res) => {
           const responseJson = await res.json();
@@ -45,6 +48,9 @@ export class ArkaPaymaster implements PaymasterProvider {
     return response;
   }
 
+  /* This method is to whitelist the addresses given
+  * @param addresses, the array of addresses that needs to be whitelisted
+  */
   async addWhitelist(addresses: string[]) {
     let response = null;
     if (addresses.length > 10) throw new Error(ErrorMessage.MAX_ADDRESSES);
@@ -76,6 +82,9 @@ export class ArkaPaymaster implements PaymasterProvider {
     return response;
   }
 
+  /* This method is to remove whitelisted addresses given
+  * @param addresses, the array of addresses that needs to be removed from whitelist
+  */
   async removeWhitelist(addresses: string[]) {
     let response = null;
     if (addresses.length > 10) throw new Error(ErrorMessage.MAX_ADDRESSES);
@@ -107,6 +116,9 @@ export class ArkaPaymaster implements PaymasterProvider {
     return response;
   }
 
+  /* This method is to check a given address is whitelisted or not
+  * @param address, address that needs to be checked if its whitelisted or not
+  */
   async checkWhitelist(address: string) {
     let response = null;
     if (!ethers.utils.isAddress(address)) throw new Error(ErrorMessage.INVALID_ADDRESS)
@@ -136,6 +148,9 @@ export class ArkaPaymaster implements PaymasterProvider {
     return response;
   }
 
+  /* This method is to deposit the amount for the paymaster to the entryPoint contract
+  * @param amountInEth, amount that needs to be deposited in ETH terms 
+  */
   async deposit(amountInEth: number) {
     let response = null;
     try {
@@ -164,6 +179,7 @@ export class ArkaPaymaster implements PaymasterProvider {
     return response;
   }
 
+  // This method is to get the details of the paymaster associated to your apiKey
   async metadata() {
     let response = null;
     try {
