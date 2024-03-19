@@ -26,6 +26,8 @@ class UserOpsTransaction {
   nonce: number;
   initCode?: string;
   callData?: string;
+  accountGasLimits?: string;
+  gasFees?: string;
   callGasLimit: BigNumber;
   verificationGasLimit: BigNumber;
   preVerificationGas: BigNumber;

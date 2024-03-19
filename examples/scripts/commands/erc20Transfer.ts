@@ -12,7 +12,6 @@ export default async function main(
   amt: string,
 ) {
   const primeSdk = new PrimeSdk({ privateKey: config.signingKey }, { chainId: config.chainId, rpcProviderUrl: config.rpcProviderUrl })
-  const address = await primeSdk.getCounterFactualAddress();
 
   const provider = new ethers.providers.JsonRpcProvider(config.rpcProviderUrl);
   const token = ethers.utils.getAddress(tkn);

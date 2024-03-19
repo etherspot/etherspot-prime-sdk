@@ -14,7 +14,7 @@ export const BACKEND_API_ENDPOINT = 'https://rpc.etherspot.io/data-api';
 export const API_ENDPOINTS = {
   GET_ACCOUNT_BALANCES: 'account/balances',
   GET_ACCOUNT_NFTS: 'account/nfts',
-  GET_TRANSACTION: 'transactions/transaction',
+  GET_TRANSACTION: 'transactions/transactionByHash',
   GET_TRANSACTIONS: 'transactions',
   GET_ADVANCE_ROUTES_LIFI: 'exchange/getAdvanceRoutesLiFi',
   GET_STEP_TRANSACTIONS: 'exchange/getStepTransactions',
