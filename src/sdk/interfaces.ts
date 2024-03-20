@@ -17,7 +17,6 @@ export interface SdkOptions {
   bundlerProvider?: BundlerProviderLike;
   stateStorage?: StateStorage;
   rpcProviderUrl?: string;
-  etherspotBundlerApiKey?: string;
   factoryWallet?: Factory;
   walletFactoryAddress?: string;
   entryPointAddress?: string;
