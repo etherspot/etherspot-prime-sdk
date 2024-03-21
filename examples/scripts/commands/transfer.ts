@@ -8,7 +8,6 @@ import { sleep } from "../../../src/sdk/common";
 
 export default async function main(t: string, amt: string) {
   const primeSdk = new PrimeSdk({ privateKey: config.signingKey }, { chainId: config.chainId, rpcProviderUrl: config.rpcProviderUrl })
-  const address = await primeSdk.getCounterFactualAddress();
 
   const target = ethers.utils.getAddress(t);
   const value = ethers.utils.parseEther(amt);

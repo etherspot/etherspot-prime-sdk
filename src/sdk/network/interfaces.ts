@@ -16,5 +16,4 @@ export interface NetworkConfig {
       simpleAccount: string;
     };
   };
-  graphqlEndpoint?: string;
 };

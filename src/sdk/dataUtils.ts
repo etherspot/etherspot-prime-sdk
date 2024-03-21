@@ -1,13 +1,13 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, DataModule, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction } from "./data";
-import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, DataModule, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class DataUtils {
   private dataModule: DataModule;
-  private readonly defaultDataAPiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjI4ZWJiMGQ5YTMxYjQ3MmY4NmU4MWY2YTVhYzBhMzE1IiwiaCI6Im11cm11cjEyOCJ9';
+  private readonly defaultDataApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjI4ZWJiMGQ5YTMxYjQ3MmY4NmU4MWY2YTVhYzBhMzE1IiwiaCI6Im11cm11cjEyOCJ9';
   constructor(apiKey?: string) {
-    this.dataModule = new DataModule(apiKey || this.defaultDataAPiKey);
+    this.dataModule = new DataModule(apiKey || this.defaultDataApiKey);
   }
 
   /**
@@ -37,6 +37,24 @@ export class DataUtils {
     const { hash, chainId } = await validateDto(dto, GetTransactionDto);
 
     return this.dataModule.getTransaction(hash, chainId);
+  }
+
+  /**
+  * gets transactions
+  * @param dto
+  * @return Promise<Transactions>
+  */
+  async getTransactions(dto: GetTransactionsDto): Promise<Transactions> {
+    const { account, chainId, page, limit } = await validateDto(dto, GetTransactionsDto, {
+      addressKeys: ['account'],
+    });
+
+    return this.dataModule.getTransactions(
+      account,
+      chainId,
+      page,
+      limit,
+    );
   }
 
   /**

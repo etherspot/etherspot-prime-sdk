@@ -102,9 +102,7 @@ export class ApiService {
     const authLink = setContext(async () => {
 
       return {
-        headers: {
-          ['x-project-key']: this.options.projectKey,
-        },
+        headers: {},
       };
     });
 

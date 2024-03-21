@@ -2,7 +2,6 @@ import { FetchPolicy } from '@apollo/client/core';
 
 export interface ApiOptions {
   host: string;
-  projectKey: string;
   port?: number;
   useSsl?: boolean;
 }

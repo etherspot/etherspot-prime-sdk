@@ -11,7 +11,7 @@ import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
 import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
-import { getNetworkConfig, Networks, onRamperAllNetworks } from './network/constants';
+import { Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
@@ -54,14 +54,9 @@ export class PrimeSdk {
 
     this.chainId = chainId;
     this.index = index ?? 0;
-    const networkConfig = getNetworkConfig(chainId);
 
     if (!optionsLike.bundlerProvider) {
       optionsLike.bundlerProvider = new EtherspotBundler(chainId);
-    }
-
-    if (networkConfig) {
-      optionsLike.graphqlEndpoint = networkConfig.graphqlEndpoint;
     }
 
     this.factoryUsed = optionsLike.factoryWallet ?? Factory.ETHERSPOT;
