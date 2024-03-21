@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -27,6 +27,7 @@
     "03-transfer-erc20": "./node_modules/.bin/ts-node ./examples/03-transfer-erc20",
     "05-get-account-balances": "./node_modules/.bin/ts-node ./examples/05-get-account-balances",
     "06-transaction": "./node_modules/.bin/ts-node ./examples/06-transaction",
+    "07-transactions": "./node_modules/.bin/ts-node ./examples/07-transactions",
     "08-nft-list": "./node_modules/.bin/ts-node ./examples/08-nft-list",
     "09-exchange": "./node_modules/.bin/ts-node ./examples/09-exchange",
     "10-advance-routes-lifi": "./node_modules/.bin/ts-node ./examples/10-advance-routes-lifi",
@@ -42,7 +43,7 @@
     "21-get-multiple-accounts": "./node_modules/.bin/ts-node ./examples/21-get-multiple-accounts",
     "22-concurrent-userops": "./node_modules/.bin/ts-node ./examples/22-concurrent-userops",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
-    "lint": "eslint \"{src,test}/**/*.ts\"",
+    "lint": "eslint \"{src,test,examples}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "prebuild": "rimraf ./dist",
     "build": "npm run compile",

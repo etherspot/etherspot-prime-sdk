@@ -23,3 +23,4 @@ export * from './token-list';
 export * from './token-lists';
 export * from './token-list-token';
 export * from './paginated-tokens';
+export * from './transactions';
