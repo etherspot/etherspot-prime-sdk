@@ -1,4 +1,9 @@
 # Changelog
+
+## [1.6.5] - 2024-04-01
+### New
+- Added `getExchangeOffers` endpoint into DataUtils
+
 ## [1.6.4] - 2024-03-20
 ### New
 - Added `getTransactions` endpoint into DataUtils
