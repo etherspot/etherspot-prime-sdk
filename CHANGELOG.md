@@ -1,8 +1,10 @@
 # Changelog
 
-## [1.6.5] - 2024-04-01
+## [1.7.0] - 2024-04-01
 ### New
 - Added `getExchangeOffers` endpoint into DataUtils
+### Breaking changes
+- The type name `UserOpsTransaction` has been changed to `UserOpTransaction`
 
 ## [1.6.4] - 2024-03-20
 ### New
