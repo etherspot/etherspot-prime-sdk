@@ -1,4 +1,8 @@
 # Changelog
+## [1.6.5] - 2024-04-03
+### New
+- Added Rootstock testnet and mainnet network support
+
 ## [1.6.4] - 2024-03-20
 ### New
 - Added `getTransactions` endpoint into DataUtils

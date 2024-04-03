@@ -17,7 +17,8 @@ export enum NetworkNames {
   KromaTestnet = 'kromaTestnet',
   Mainnet = 'mainnet',
   OptimismGoerli = 'optimismGoerli',
-  RSKTestnet = 'RSKTestnet',
+  Rootstock = 'rootstock',
+  RootstockTestnet = 'rootstockTestnet',
   VerseTestnet = 'verseTestnet',
   Mantle = 'Mantle',
   MantleTestnet = 'MantleTestnet',
@@ -37,7 +38,7 @@ export enum NetworkNames {
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 14, 31, 56, 97, 100, 114, 122, 123, 137, 420, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 84532, 421613, 534351, 534352, 11155111]
+  [1, 5, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 420, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 84532, 421613, 534351, 534352, 11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -58,7 +59,8 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.KromaTestnet]: 2357,
   [NetworkNames.Mainnet]: 1,
   [NetworkNames.OptimismGoerli]: 420,
-  [NetworkNames.RSKTestnet]: 31,
+  [NetworkNames.Rootstock]: 30,
+  [NetworkNames.RootstockTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
   [NetworkNames.Mantle]: 5000,
   [NetworkNames.MantleTestnet]: 5001,
@@ -298,11 +300,23 @@ export const Networks: {
       }
     },
   },
-  [31]: {
-    chainId: 31,
-    bundler: '',
+  [30]: {
+    chainId: 30,
+    bundler: 'https://rpc.etherspot.io/rootstock',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    },
+  },
+  [31]: {
+    chainId: 31,
+    bundler: 'https://rootstocktestnet-bundler.etherspot.io/',
+    contracts: {
+      entryPoint: '0x48e60BBb664aEfAc9f14aDB42e5FB5b4a119EB66',
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
         zeroDev: '',

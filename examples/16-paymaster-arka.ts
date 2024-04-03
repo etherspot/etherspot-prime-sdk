@@ -11,9 +11,9 @@ const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wal
 const value = '0.0001'; // transfer value
 const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
 
-const arka_api_key = 'arka_public_key';
-const arka_url = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
-const queryString = `?apiKey=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`;
+const arkaApiKey = 'arka_public_key';
+const arkaUrl = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
+const queryString = `?apiKey=${arkaApiKey}&chainId=${Number(process.env.CHAIN_ID)}`;
 
 async function main() {
   // initializing sdk...
@@ -40,7 +40,7 @@ async function main() {
    * The fetching of pimlico erc20 paymaster address is only required for the first time for each specified gas token since we need to approve the tokens to spend
    * from the paymaster address on behalf of you.
    */
-  const returnedValue = await fetch(`${arka_url}/pimlicoAddress${queryString}`, {
+  const returnedValue = await fetch(`${arkaUrl}/pimlicoAddress${queryString}`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -90,7 +90,7 @@ async function main() {
 
     // estimate transactions added to the batch and get the fee data for the UserOp
     const op = await primeSdk.estimate({
-      paymasterDetails: { url: `${arka_url}${queryString}`, context: { token: "USDC", mode: 'erc20' } }
+      paymasterDetails: { url: `${arkaUrl}${queryString}`, context: { token: "USDC", mode: 'erc20' } }
     });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 

@@ -10,9 +10,9 @@ const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wal
 const value = '0.0001'; // transfer value
 const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
 
-const arka_api_key = 'arka_public_key'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
-const arka_url = 'https://arka.etherspot.io';
-const queryString = `?apiKey=${arka_api_key}&chainId=${Number(process.env.CHAIN_ID)}`;
+const arkaApiKey = 'arka_public_key'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
+const arkaUrl = 'https://arka.etherspot.io';
+const queryString = `?apiKey=${arkaApiKey}&chainId=${Number(process.env.CHAIN_ID)}`;
 
 async function main() {
     // initializing sdk...
@@ -48,7 +48,7 @@ async function main() {
         validUntil and validAfter is relevant only with sponsor transactions and not for token paymasters
     */
     const op = await primeSdk.estimate({
-        paymasterDetails: { url: `${arka_url}${queryString}`, context: { mode: 'sponsor', validAfter: new Date().valueOf(), validUntil: new Date().valueOf() + 6000000 } }
+        paymasterDetails: { url: `${arkaUrl}${queryString}`, context: { mode: 'sponsor', validAfter: new Date().valueOf(), validUntil: new Date().valueOf() + 6000000 } }
     });
     console.log(`Estimate UserOp: ${await printOp(op)}`);
 
