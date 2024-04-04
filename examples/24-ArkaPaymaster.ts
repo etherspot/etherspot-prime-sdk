@@ -4,11 +4,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function main() {
-  const arka_api_key = 'arka_public_key';
-  const arka_url = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
+  const arkaApiKey = 'arka_public_key';
+  const arkaUrl = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
 
   // initializating sdk...
-  const arkaPaymaster = new ArkaPaymaster(Number(process.env.CHAIN_ID), arka_api_key, arka_url);
+  const arkaPaymaster = new ArkaPaymaster(Number(process.env.CHAIN_ID), arkaApiKey, arkaUrl);
 
   console.log(await arkaPaymaster.metadata());
   console.log(await arkaPaymaster.getTokenPaymasterAddress("eUSDC"))
