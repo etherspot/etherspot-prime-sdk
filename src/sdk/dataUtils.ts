@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, DataModule, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
-import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class DataUtils {
@@ -135,6 +135,31 @@ export class DataUtils {
     });
 
     return this.dataModule.getExchangeSupportedAssets(page, limit, chainId, account);
+  }
+
+  /**
+  * gets exchange offers
+  * @param dto
+  * @return Promise<ExchangeOffer[]>
+  */
+  async getExchangeOffers(dto: GetExchangeOffersDto): Promise<ExchangeOffer[]> {
+    const { fromTokenAddress, toTokenAddress, fromAmount, fromChainId, showZeroUsd, fromAddress } = await validateDto(dto, GetExchangeOffersDto, {
+      addressKeys: ['fromTokenAddress', 'toTokenAddress', 'fromAddress'],
+    });
+
+    let { toAddress } = dto;
+
+    if (!toAddress) toAddress = fromAddress;
+
+    return this.dataModule.getExchangeOffers(
+      fromTokenAddress,
+      toTokenAddress,
+      BigNumber.from(fromAmount),
+      fromChainId,
+      fromAddress,
+      toAddress,
+      showZeroUsd,
+    );
   }
 
   /**

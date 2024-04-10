@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
 import { RestApiService } from '../api';
 import { API_ENDPOINTS, MethodTypes } from '../api/constants';
 
@@ -168,6 +168,38 @@ export class DataModule {
       return assets;
     } catch (error) {
       throw new Error(error.message || 'Failed to get exchange supported assets');
+    }
+  }
+
+  async getExchangeOffers(
+    fromTokenAddress: string,
+    toTokenAddress: string,
+    fromAmount: BigNumber,
+    fromChainId: number,
+    fromAddress: string,
+    toAddress?: string,
+    showZeroUsd?: boolean
+  ): Promise<ExchangeOffer[]> {
+    const account = fromAddress;
+
+    try {
+      const queryParams = {
+        'api-key': this.currentApi,
+        account,
+        fromTokenAddress,
+        toTokenAddress,
+        fromAmount: fromAmount.toString(),
+        chainId: fromChainId,
+        fromAddress,
+        toAddress,
+        showZeroUsd,
+      };
+
+      const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_EXCHANGE_OFFERS, MethodTypes.GET, queryParams);
+
+      return result ? result.items : null;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get exchange offers');
     }
   }
 

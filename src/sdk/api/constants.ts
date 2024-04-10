@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   GET_TRANSACTIONS: 'transactions',
   GET_ADVANCE_ROUTES_LIFI: 'exchange/getAdvanceRoutesLiFi',
   GET_STEP_TRANSACTIONS: 'exchange/getStepTransactions',
+  GET_EXCHANGE_OFFERS: 'exchange/offers',
   GET_EXCHANGE_SUPPORTED_ASSETS: 'assets/exchangeSupportedAssets',
   GET_TOKEN_LISTS: 'assets/tokenLists',
   GET_TOKEN_LIST_TOKENS: 'assets/tokenListTokens',
