@@ -14,3 +14,6 @@ export * from './pagination.dto';
 export * from './get-exchange-supported-assets.dto';
 export * from './get-token-lists.dto';
 export * from './get-transactions.dto';
+export * from './get-connext-supported-assets.dto';
+export * from './get-connext-quotes.dto';
+export * from './get-connext-transaction-status.dto';

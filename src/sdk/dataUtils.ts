@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
-import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, ConnextToken, ConnextTransaction, ConnextTransactionStatus, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetConnextSupportedAssetsDto, GetConnextTransactionStatusDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, getConnextQuotesDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class DataUtils {
@@ -223,5 +223,56 @@ export class DataUtils {
     }
 
     return data;
+  }
+
+  /**
+  * gets connext supported tokens
+  * @param dto
+  * @return Promise<ConnextToken[]>
+  */
+  async getConnextSupportedAssets(dto: GetConnextSupportedAssetsDto): Promise<ConnextToken[]> {
+    const { chainId } = await validateDto(dto, GetConnextSupportedAssetsDto);
+
+    return this.dataModule.getConnextSupportedAssets(chainId);
+  }
+
+  /**
+  * gets quote transactions from connext
+  * @param dto
+  * @return Promise<ConnextTransaction[]>
+  */
+  async getConnextQuotes(dto: getConnextQuotesDto): Promise<ConnextTransaction[]> {
+    const {
+      fromAddress,
+      toAddress,
+      fromChainId,
+      toChainId,
+      fromToken,
+      fromAmount,
+      slippage
+    } = await validateDto(dto, getConnextQuotesDto, {
+      addressKeys: ['fromAddress', 'toAddress', 'fromToken'],
+    });
+
+    return this.dataModule.getConnextQuotes(
+      fromAddress,
+      toAddress,
+      fromChainId,
+      toChainId,
+      fromToken,
+      BigNumber.from(fromAmount),
+      slippage
+    );
+  }
+
+  /**
+  * gets connext transaction status
+  * @param dto
+  * @return Promise<ConnextTransactionStatus>
+  */
+  async getConnextTransactionStatus(dto: GetConnextTransactionStatusDto): Promise<ConnextTransactionStatus> {
+    const { fromChainId, toChainId, transactionHash } = await validateDto(dto, GetConnextTransactionStatusDto);
+
+    return this.dataModule.getConnextTransactionStatus(fromChainId, toChainId, transactionHash);
   }
 }

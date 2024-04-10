@@ -1,4 +1,9 @@
 # Changelog
+## [1.7.1] - 2024-04-10
+### New
+- Added `getConnextSupportedAssets` to get supported tokens of connext
+- Added `getConnextQuotes` to get transaction quotes from connext
+- Added `getConnextTransactionStatus` to get the transaction status of connext
 
 ## [1.7.0] - 2024-04-10
 ### New

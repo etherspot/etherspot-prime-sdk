@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, ConnextToken, ConnextTransaction, ConnextTransactionStatus, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
 import { RestApiService } from '../api';
 import { API_ENDPOINTS, MethodTypes } from '../api/constants';
 
@@ -247,6 +247,67 @@ export class DataModule {
       return result ? result.exchangeRates : null;
     } catch (error) {
       throw new Error(error.message || 'Failed to fetch exchange rates');
+    }
+  }
+
+  async getConnextSupportedAssets(chainId?: number): Promise<ConnextToken[]> {
+    try {
+      const queryParams = {
+        'api-key': this.currentApi,
+        chainId,
+      };
+
+      const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_CONNEXT_SUPPORTED_ASSETS, MethodTypes.GET, queryParams);
+
+      return result ? result.tokens : [];
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get connext supported assets');
+    }
+  }
+
+  async getConnextQuotes(
+    fromAddress: string,
+    toAddress: string,
+    fromChainId: number,
+    toChainId: number,
+    fromToken: string,
+    fromAmount: BigNumber,
+    slippage: number
+  ): Promise<ConnextTransaction[]> {
+    try {
+      const queryParams = {
+        'api-key': this.currentApi,
+        fromAddress,
+        toAddress,
+        fromChainId,
+        toChainId,
+        fromToken,
+        fromAmount: fromAmount.toString(),
+        slippage
+      };
+
+      const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_CONNEXT_QUOTE_TRANSACTIONS, MethodTypes.GET, queryParams);
+
+      return result ? result.transactions : [];
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get connext quotes transactions');
+    }
+  }
+
+  async getConnextTransactionStatus(fromChainId: number, toChainId: number, transactionHash: string): Promise<ConnextTransactionStatus> {
+    try {
+      const queryParams = {
+        'api-key': this.currentApi,
+        fromChainId,
+        toChainId,
+        transactionHash,
+      };
+
+      const result = await this.apiService.makeRequest(API_ENDPOINTS.GET_CONNEXT_TRANSACTION_STATUS, MethodTypes.GET, queryParams);
+
+      return result ? result : null;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to get connext transaction status');
     }
   }
 }
