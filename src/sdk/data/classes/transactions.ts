@@ -2,14 +2,14 @@ import { BigNumber } from 'ethers';
 import { TransactionStatuses } from '../constants';
 
 export class Transactions {
-  transactions: UserOpsTransaction[];
+  transactions: UserOpTransaction[];
   pageInfo?: {
     currentPage: number;
     limit: number;
   };
 }
 
-class UserOpsTransaction {
+export class UserOpTransaction {
   chainId: number;
   sender: string;
   target?: string | null;
@@ -41,7 +41,7 @@ class UserOpsTransaction {
   nftTransfers?: NFTTransfersEntity[];
 }
 
-class Erc20TransfersEntity {
+export class Erc20TransfersEntity {
   from: string;
   to: string;
   value: number;
@@ -50,7 +50,7 @@ class Erc20TransfersEntity {
   decimal: number;
 }
 
-class NativeTransfersEntity {
+export class NativeTransfersEntity {
   from: string;
   to: string;
   value: string;
@@ -60,7 +60,7 @@ class NativeTransfersEntity {
   data: string;
 }
 
-class NFTTransfersEntity {
+export class NFTTransfersEntity {
   from: string;
   to: string;
   value: number;
