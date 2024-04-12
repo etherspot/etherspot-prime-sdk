@@ -1,9 +1,10 @@
 # Changelog
 ## [1.7.1] - 2024-04-10
 ### New
-- Added `getConnextSupportedAssets` to get supported tokens of connext
-- Added `getConnextQuotes` to get transaction quotes from connext
-- Added `getConnextTransactionStatus` to get the transaction status of connext
+- Added `getSupportedAssets` to get supported tokens
+- Added `getQuotes` to get transaction quotes
+- Added `getTransactionStatus` to get the transaction status
+- The default provider is `Connext`
 
 ## [1.7.0] - 2024-04-10
 ### New
