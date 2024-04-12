@@ -1,4 +1,4 @@
-export class ConnextToken {
+export class Token {
     symbol: string;
     address: string;
     decimals: number;

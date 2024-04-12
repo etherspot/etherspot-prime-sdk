@@ -38,6 +38,10 @@ export enum CrossChainServiceProvider {
   Etherspot = 'Connext',
 }
 
+export enum QuotesProvider {
+  Connext = 'Connext',
+}
+
 export enum LiFiBridge {
   across = 'across',
   arbitrum = 'arbitrum',

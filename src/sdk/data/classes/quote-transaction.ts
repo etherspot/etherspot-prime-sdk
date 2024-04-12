@@ -1,6 +1,6 @@
 import { BigNumberish, BytesLike } from "ethers";
 
-export class ConnextTransaction {
+export class QuoteTransaction {
     to?: string;
     data?: BytesLike;
     value?: BigNumberish;
