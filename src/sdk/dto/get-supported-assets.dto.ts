@@ -1,5 +1,5 @@
 import { IsInt, IsOptional, IsPositive } from 'class-validator';
-import { QuotesProvider } from '../data';
+import { BridgingProvider } from '../data';
 
 export class GetSupportedAssetsDto {
   @IsOptional()
@@ -8,5 +8,5 @@ export class GetSupportedAssetsDto {
   chainId?: number = null;
 
   @IsOptional()
-  provider?: QuotesProvider;
+  provider?: BridgingProvider;
 }

@@ -1,7 +1,7 @@
 import { BigNumberish } from 'ethers';
 import { IsAddress, IsBigNumberish } from './validators';
 import { IsOptional } from 'class-validator';
-import { QuotesProvider } from '../data';
+import { BridgingProvider } from '../data';
 
 export class GetQuotesDto {
   @IsAddress()
@@ -25,5 +25,5 @@ export class GetQuotesDto {
   slippage: number;
 
   @IsOptional()
-  provider?: QuotesProvider;
+  provider?: BridgingProvider;
 }

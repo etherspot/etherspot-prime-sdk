@@ -1,6 +1,6 @@
 import { IsInt, IsOptional, IsPositive } from 'class-validator';
 import { IsHex32 } from './validators';
-import { QuotesProvider } from '../data';
+import { BridgingProvider } from '../data';
 
 export class GetTransactionStatusDto {
   @IsPositive()
@@ -15,5 +15,5 @@ export class GetTransactionStatusDto {
   transactionHash: string;
 
   @IsOptional()
-  provider?: QuotesProvider;
+  provider?: BridgingProvider;
 }

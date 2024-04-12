@@ -38,7 +38,7 @@ export enum CrossChainServiceProvider {
   Etherspot = 'Connext',
 }
 
-export enum QuotesProvider {
+export enum BridgingProvider {
   Connext = 'Connext',
 }
 

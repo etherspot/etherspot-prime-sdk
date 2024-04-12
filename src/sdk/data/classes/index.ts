@@ -25,5 +25,5 @@ export * from './token-list-token';
 export * from './paginated-tokens';
 export * from './transactions';
 export * from './token';
-export * from './quote-transaction';
+export * from './quote';
 export * from './transaction-status';

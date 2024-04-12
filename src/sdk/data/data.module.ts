@@ -1,10 +1,10 @@
 import { BigNumber } from 'ethers';
 import { Route } from '@lifi/sdk';
 import { ObjectSubject } from '../common';
-import { AccountBalances, AdvanceRoutesLiFi, Token, QuoteTransaction, TransactionStatus, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
+import { AccountBalances, AdvanceRoutesLiFi, Token, Quote, TransactionStatus, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from './classes';
 import { RestApiService } from '../api';
 import { API_ENDPOINTS, MethodTypes } from '../api/constants';
-import { QuotesProvider } from './constants';
+import { BridgingProvider } from './constants';
 
 export class DataModule {
   readonly apiKey$ = new ObjectSubject<string>('');
@@ -251,7 +251,7 @@ export class DataModule {
     }
   }
 
-  async getSupportedAssets(chainId?: number, provider?: QuotesProvider): Promise<Token[]> {
+  async getSupportedAssets(chainId?: number, provider?: BridgingProvider): Promise<Token[]> {
     try {
       const queryParams = {
         'api-key': this.currentApi,
@@ -260,7 +260,7 @@ export class DataModule {
       let apiUrl: string;
 
       switch (provider) {
-        case QuotesProvider.Connext:
+        case BridgingProvider.Connext:
           apiUrl = API_ENDPOINTS.GET_CONNEXT_SUPPORTED_ASSETS;
           break;
         default:
@@ -284,8 +284,8 @@ export class DataModule {
     fromToken: string,
     fromAmount: BigNumber,
     slippage: number,
-    provider?: QuotesProvider
-  ): Promise<QuoteTransaction[]> {
+    provider?: BridgingProvider
+  ): Promise<Quote[]> {
     try {
       const queryParams = {
         'api-key': this.currentApi,
@@ -300,7 +300,7 @@ export class DataModule {
       let apiUrl: string;
 
       switch (provider) {
-        case QuotesProvider.Connext:
+        case BridgingProvider.Connext:
           apiUrl = API_ENDPOINTS.GET_CONNEXT_QUOTE_TRANSACTIONS;
           break;
         default:
@@ -308,7 +308,7 @@ export class DataModule {
           break;
       }
 
-      const result: { transactions: QuoteTransaction[] } = await this.apiService.makeRequest(apiUrl, MethodTypes.GET, queryParams);
+      const result: { transactions: Quote[] } = await this.apiService.makeRequest(apiUrl, MethodTypes.GET, queryParams);
 
       return result ? result.transactions : [];
     } catch (error) {
@@ -316,7 +316,7 @@ export class DataModule {
     }
   }
 
-  async getTransactionStatus(fromChainId: number, toChainId: number, transactionHash: string, provider?: QuotesProvider): Promise<TransactionStatus> {
+  async getTransactionStatus(fromChainId: number, toChainId: number, transactionHash: string, provider?: BridgingProvider): Promise<TransactionStatus> {
     try {
       const queryParams = {
         'api-key': this.currentApi,
@@ -327,7 +327,7 @@ export class DataModule {
       let apiUrl: string;
 
       switch (provider) {
-        case QuotesProvider.Connext:
+        case BridgingProvider.Connext:
           apiUrl = API_ENDPOINTS.GET_CONNEXT_TRANSACTION_STATUS;
           break;
         default:

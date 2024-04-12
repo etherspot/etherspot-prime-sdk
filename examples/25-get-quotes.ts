@@ -1,7 +1,7 @@
 import { utils } from 'ethers';
 import { DataUtils } from '../src';
 import * as dotenv from 'dotenv';
-import { QuotesProvider } from '../src/sdk/data';
+import { BridgingProvider } from '../src/sdk/data';
 
 dotenv.config();
 const dataApiKey = '';
@@ -16,7 +16,7 @@ async function main(): Promise<void> {
 
     const supportedAssets = await dataService.getSupportedAssets({
         chainId: 1,
-        provider: QuotesProvider.Connext,
+        provider: BridgingProvider.Connext,
     });
     console.log('\x1b[33m%s\x1b[0m', `Connext supported assets per chain:`, supportedAssets.length);
 
@@ -28,7 +28,7 @@ async function main(): Promise<void> {
         fromToken: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         fromAmount: utils.parseUnits('1', 18),
         slippage: 0.1,
-        provider: QuotesProvider.Connext,
+        provider: BridgingProvider.Connext,
     });
     console.log('\x1b[33m%s\x1b[0m', `Connext quote transactions:`, quotes);
 
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
         fromChainId: 100,
         toChainId: 56,
         transactionHash: '0xfc46adedf462d3fd6cdbe0214ed11c06cba20c385b9875aa4d51c60afbd9725d',
-        provider: QuotesProvider.Connext,
+        provider: BridgingProvider.Connext,
     });
     console.log('\x1b[33m%s\x1b[0m', `Connext transaction status:`, transactionStatus);
 }

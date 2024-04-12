@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, Token, QuoteTransaction, TransactionStatus, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
+import { AccountBalances, AdvanceRoutesLiFi, Token, Quote, TransactionStatus, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
 import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetSupportedAssetsDto, GetTransactionStatusDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, GetQuotesDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
@@ -239,9 +239,9 @@ export class DataUtils {
   /**
   * gets quote transactions
   * @param dto
-  * @return Promise<QuoteTransaction[]>
+  * @return Promise<Quote[]>
   */
-  async getQuotes(dto: GetQuotesDto): Promise<QuoteTransaction[]> {
+  async getQuotes(dto: GetQuotesDto): Promise<Quote[]> {
     const {
       fromAddress,
       toAddress,
