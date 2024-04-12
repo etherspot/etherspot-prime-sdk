@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { AccountBalances, AdvanceRoutesLiFi, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
-import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, validateDto } from "./dto";
+import { AccountBalances, AdvanceRoutesLiFi, Token, Quote, TransactionStatus, DataModule, ExchangeOffer, NftList, PaginatedTokens, RateData, StepTransactions, TokenList, TokenListToken, Transaction, Transactions } from "./data";
+import { FetchExchangeRatesDto, GetAccountBalancesDto, GetAdvanceRoutesLiFiDto, GetSupportedAssetsDto, GetTransactionStatusDto, GetExchangeOffersDto, GetExchangeSupportedAssetsDto, GetNftListDto, GetStepTransactionsLiFiDto, GetTokenListDto, GetTokenListsDto, GetTransactionDto, GetTransactionsDto, GetQuotesDto, validateDto } from "./dto";
 import { BigNumber } from "ethers";
 
 export class DataUtils {
@@ -223,5 +223,58 @@ export class DataUtils {
     }
 
     return data;
+  }
+
+  /**
+  * gets supported tokens
+  * @param dto
+  * @return Promise<Token[]>
+  */
+  async getSupportedAssets(dto: GetSupportedAssetsDto): Promise<Token[]> {
+    const { chainId, provider } = await validateDto(dto, GetSupportedAssetsDto);
+
+    return this.dataModule.getSupportedAssets(chainId, provider);
+  }
+
+  /**
+  * gets quote transactions
+  * @param dto
+  * @return Promise<Quote[]>
+  */
+  async getQuotes(dto: GetQuotesDto): Promise<Quote[]> {
+    const {
+      fromAddress,
+      toAddress,
+      fromChainId,
+      toChainId,
+      fromToken,
+      fromAmount,
+      slippage,
+      provider
+    } = await validateDto(dto, GetQuotesDto, {
+      addressKeys: ['fromAddress', 'toAddress', 'fromToken'],
+    });
+
+    return this.dataModule.getQuotes(
+      fromAddress,
+      toAddress,
+      fromChainId,
+      toChainId,
+      fromToken,
+      BigNumber.from(fromAmount),
+      slippage,
+      provider
+    );
+  }
+
+  /**
+  * gets transaction status
+  * @param dto
+  * @return Promise<TransactionStatus>
+  */
+  async getTransactionStatus(dto: GetTransactionStatusDto): Promise<TransactionStatus> {
+    const { fromChainId, toChainId, transactionHash, provider } = await validateDto(dto, GetTransactionStatusDto);
+
+    return this.dataModule.getTransactionStatus(fromChainId, toChainId, transactionHash, provider);
   }
 }

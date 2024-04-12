@@ -1,4 +1,10 @@
 # Changelog
+## [1.7.1] - 2024-04-12
+### New
+- Added `getSupportedAssets` to get supported tokens
+- Added `getQuotes` to get transaction quotes
+- Added `getTransactionStatus` to get the transaction status
+- The default provider is `Connext`
 
 ## [1.7.0] - 2024-04-10
 ### New
