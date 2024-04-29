@@ -1,27 +1,24 @@
 import { NetworkConfig } from ".";
 
 export enum NetworkNames {
-  Goerli = 'goerli',
-  Mumbai = 'mumbai',
-  BaseGoerli = 'baseGoerli',
   BaseSepolia = 'baseSepolia',
   Sepolia = 'sepolia',
   Optimism = 'optimism',
   Polygon = 'polygon',
   Arbitrum = 'arbitrum',
-  ArbitrumGoerli = 'arbitrumGoerli',
+  ArbitrumSepolia = 'arbitrumSepolia',
   Chiado = 'chiado',
   Fuse = 'fuse',
   FuseSparknet = 'fuseSparknet',
   Gnosis = 'gnosis',
   KromaTestnet = 'kromaTestnet',
   Mainnet = 'mainnet',
-  OptimismGoerli = 'optimismGoerli',
+  OptimismSepolia = 'optimismSepolia',
   Rootstock = 'rootstock',
   RootstockTestnet = 'rootstockTestnet',
   VerseTestnet = 'verseTestnet',
   Mantle = 'Mantle',
-  MantleTestnet = 'MantleTestnet',
+  MantleSepolia = 'MantleSepolia',
   Avalanche = 'avalanche',
   Base = 'base',
   Bsc = 'bsc',
@@ -33,37 +30,36 @@ export enum NetworkNames {
   Flare = 'flare',
   ScrollSepolia = 'scrollSepolia',
   Scroll = 'scroll',
-  Klaytn = 'klaytn',
-  KlaytnTestnet = 'klaytnTestnet',
+  Ancient8Testnet = 'ancient8Testnet',
+  Ancient8 = 'ancient8',
+  Amoy = 'amoy',
+
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 420, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 84532, 421613, 534351, 534352, 11155111]
+  [1, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 2357, 5000, 5003, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80002, 84532, 421614, 534351, 534352, 11155111, 11155420, 28122024, 888888888]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
 } = {
-  [NetworkNames.Goerli]: 5,
-  [NetworkNames.Mumbai]: 80001,
-  [NetworkNames.BaseGoerli]: 84531,
   [NetworkNames.BaseSepolia]: 84532,
   [NetworkNames.Sepolia]: 11155111,
   [NetworkNames.Optimism]: 10,
   [NetworkNames.Polygon]: 137,
   [NetworkNames.Arbitrum]: 42161,
-  [NetworkNames.ArbitrumGoerli]: 421613,
+  [NetworkNames.ArbitrumSepolia]: 421614,
   [NetworkNames.Chiado]: 10200,
   [NetworkNames.Fuse]: 122,
   [NetworkNames.FuseSparknet]: 123,
   [NetworkNames.Gnosis]: 100,
   [NetworkNames.KromaTestnet]: 2357,
   [NetworkNames.Mainnet]: 1,
-  [NetworkNames.OptimismGoerli]: 420,
+  [NetworkNames.OptimismSepolia]: 11155420,
   [NetworkNames.Rootstock]: 30,
   [NetworkNames.RootstockTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
   [NetworkNames.Mantle]: 5000,
-  [NetworkNames.MantleTestnet]: 5001,
+  [NetworkNames.MantleSepolia]: 5003,
   [NetworkNames.Avalanche]: 43114,
   [NetworkNames.Base]: 8453,
   [NetworkNames.Bsc]: 56,
@@ -75,8 +71,9 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Flare]: 14,
   [NetworkNames.ScrollSepolia]: 534351,
   [NetworkNames.Scroll]: 534352,
-  [NetworkNames.Klaytn]: 8217,
-  [NetworkNames.KlaytnTestnet]: 1001,
+  [NetworkNames.Ancient8Testnet]: 28122024,
+  [NetworkNames.Ancient8]: 888888888,
+  [NetworkNames.Amoy]: 80002,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -84,57 +81,9 @@ export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', '
 export const Networks: {
   [key: string]: NetworkConfig
 } = {
-  [5]: {
-    chainId: 5,
-    bundler: 'https://goerli-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [1001]: {
-    chainId: 1001,
-    bundler: 'https://klaytntestnet-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '',
-        simpleAccount: '',
-      }
-    },
-  }, 
-  [80001]: {
-    chainId: 80001,
-    bundler: 'https://mumbai-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [84531]: {
-    chainId: 84531,
-    bundler: 'https://basegoerli-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
   [84532]: {
     chainId: 84532,
-    bundler: 'https://basesepolia-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/84532',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -146,7 +95,7 @@ export const Networks: {
   },
   [11155111]: {
     chainId: 11155111,
-    bundler: 'https://sepolia-bundler.etherspot.io',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/11155111',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -192,33 +141,9 @@ export const Networks: {
       }
     },
   },
-  [8217]: {
-    chainId: 8217,
-    bundler: 'https://klaytn-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '',
-        simpleAccount: '',
-      }
-    },
-  },
   [1]: {
     chainId: 1,
     bundler: 'https://rpc.etherspot.io/ethereum',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [421613]: {
-    chainId: 421613,
-    bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -254,7 +179,7 @@ export const Networks: {
   },
   [123]: {
     chainId: 123,
-    bundler: 'https://fusetestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/123',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -288,18 +213,6 @@ export const Networks: {
       }
     },
   },
-  [420]: {
-    chainId: 420,
-    bundler: 'https://optimismgoerli-bundler.etherspot.io/',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
   [30]: {
     chainId: 30,
     bundler: 'https://rpc.etherspot.io/rootstock',
@@ -314,7 +227,7 @@ export const Networks: {
   },
   [31]: {
     chainId: 31,
-    bundler: 'https://rootstocktestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/31',
     contracts: {
       entryPoint: '0x48e60BBb664aEfAc9f14aDB42e5FB5b4a119EB66',
       walletFactory: {
@@ -348,9 +261,9 @@ export const Networks: {
       }
     },
   },
-  [5001]: {
-    chainId: 5001,
-    bundler: 'https://mantletestnet-bundler.etherspot.io/',
+  [5003]: {
+    chainId: 5003,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/5003',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -398,7 +311,7 @@ export const Networks: {
   },
   [97]: {
     chainId: 97,
-    bundler: 'https://bnbtestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/97',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -446,7 +359,7 @@ export const Networks: {
   },
   [114]: {
     chainId: 114,
-    bundler: 'https://flaretestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/114',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -470,7 +383,7 @@ export const Networks: {
   },
   [534351]: {
     chainId: 534351,
-    bundler: 'https://scrollsepolia-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/534351',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -492,6 +405,54 @@ export const Networks: {
       }
     },
   },
+  [11155420]: {
+    chainId: 11155420,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/11155420',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
+      }
+    }
+  },
+  [28122024]: {
+    chainId: 28122024,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/28122024',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    },
+  },
+  [888888888]: {
+    chainId: 888888888,
+    bundler: 'https://rpc.etherspot.io/ancient8',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    }
+  },
+  [80002]: {
+    chainId: 80002,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/80002',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    }
+  }
 };
 
 interface ISafeConstant {
@@ -610,7 +571,6 @@ export const Safe: ISafeConstant = {
     "4918": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "4919": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "5000": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
-    "5001": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "5003": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "5700": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "6102": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
@@ -660,7 +620,7 @@ export const Safe: ISafeConstant = {
     "71401": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "71402": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "73799": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
-    "80001": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
+    "80002": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "80085": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "81457": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "84531": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
