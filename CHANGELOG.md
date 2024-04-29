@@ -1,7 +1,7 @@
 # Changelog
 ## [1.8.0] - 2024-04-29
 ### Breaking changes
-- Removed Goerli, Op Goerli, Arb Goerli and Added OP Sepolia, Arb Sepolia and Ancient8 mainnet and testnet as networks supported
+- Removed Goerli, Op Goerli, Arb Goerli, Mumbai, Klaytn since its deprecated and Added OP Sepolia, Arb Sepolia and Ancient8 mainnet and testnet as networks supported
 
 ## [1.7.1] - 2024-04-12
 ### New

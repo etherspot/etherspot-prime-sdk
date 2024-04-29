@@ -1,9 +1,6 @@
 import { NetworkConfig } from ".";
 
 export enum NetworkNames {
-  Goerli = 'goerli',
-  Mumbai = 'mumbai',
-  BaseGoerli = 'baseGoerli',
   BaseSepolia = 'baseSepolia',
   Sepolia = 'sepolia',
   Optimism = 'optimism',
@@ -33,22 +30,17 @@ export enum NetworkNames {
   Flare = 'flare',
   ScrollSepolia = 'scrollSepolia',
   Scroll = 'scroll',
-  Klaytn = 'klaytn',
-  KlaytnTestnet = 'klaytnTestnet',
   Ancient8Testnet = 'ancient8Testnet',
   Ancient8 = 'ancient8',
 
 }
 
 export const SupportedNetworks =
-  [1, 5, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 84532, 421614, 534351, 534352, 11155111, 11155420, 28122024, 888888888]
+  [1, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 84532, 421614, 534351, 534352, 11155111, 11155420, 28122024, 888888888]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
 } = {
-  [NetworkNames.Goerli]: 5,
-  [NetworkNames.Mumbai]: 80001,
-  [NetworkNames.BaseGoerli]: 84531,
   [NetworkNames.BaseSepolia]: 84532,
   [NetworkNames.Sepolia]: 11155111,
   [NetworkNames.Optimism]: 10,
@@ -78,8 +70,6 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Flare]: 14,
   [NetworkNames.ScrollSepolia]: 534351,
   [NetworkNames.Scroll]: 534352,
-  [NetworkNames.Klaytn]: 8217,
-  [NetworkNames.KlaytnTestnet]: 1001,
   [NetworkNames.Ancient8Testnet]: 28122024,
   [NetworkNames.Ancient8]: 888888888,
 };
@@ -89,54 +79,6 @@ export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', '
 export const Networks: {
   [key: string]: NetworkConfig
 } = {
-  [5]: {
-    chainId: 5,
-    bundler: 'https://goerli-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [1001]: {
-    chainId: 1001,
-    bundler: 'https://klaytntestnet-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '',
-        simpleAccount: '',
-      }
-    },
-  }, 
-  [80001]: {
-    chainId: 80001,
-    bundler: 'https://mumbai-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [84531]: {
-    chainId: 84531,
-    bundler: 'https://basegoerli-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
   [84532]: {
     chainId: 84532,
     bundler: 'https://basesepolia-bundler.etherspot.io/',
@@ -194,18 +136,6 @@ export const Networks: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
         zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [8217]: {
-    chainId: 8217,
-    bundler: 'https://klaytn-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '',
-        simpleAccount: '',
       }
     },
   },
@@ -289,18 +219,6 @@ export const Networks: {
       walletFactory: {
         etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
         zeroDev: '',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
-  [420]: {
-    chainId: 420,
-    bundler: 'https://optimismgoerli-bundler.etherspot.io/',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
         simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
       }
     },
