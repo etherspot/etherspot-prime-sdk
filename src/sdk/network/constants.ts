@@ -18,7 +18,7 @@ export enum NetworkNames {
   RootstockTestnet = 'rootstockTestnet',
   VerseTestnet = 'verseTestnet',
   Mantle = 'Mantle',
-  MantleTestnet = 'MantleTestnet',
+  MantleSepolia = 'MantleSepolia',
   Avalanche = 'avalanche',
   Base = 'base',
   Bsc = 'bsc',
@@ -32,11 +32,12 @@ export enum NetworkNames {
   Scroll = 'scroll',
   Ancient8Testnet = 'ancient8Testnet',
   Ancient8 = 'ancient8',
+  Amoy = 'amoy',
 
 }
 
 export const SupportedNetworks =
-  [1, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 2357, 5000, 5001, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 84532, 421614, 534351, 534352, 11155111, 11155420, 28122024, 888888888]
+  [1, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 2357, 5000, 5003, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80002, 84532, 421614, 534351, 534352, 11155111, 11155420, 28122024, 888888888]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
@@ -58,7 +59,7 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.RootstockTestnet]: 31,
   [NetworkNames.VerseTestnet]: 20197,
   [NetworkNames.Mantle]: 5000,
-  [NetworkNames.MantleTestnet]: 5001,
+  [NetworkNames.MantleSepolia]: 5003,
   [NetworkNames.Avalanche]: 43114,
   [NetworkNames.Base]: 8453,
   [NetworkNames.Bsc]: 56,
@@ -72,6 +73,7 @@ export const NETWORK_NAME_TO_CHAIN_ID: {
   [NetworkNames.Scroll]: 534352,
   [NetworkNames.Ancient8Testnet]: 28122024,
   [NetworkNames.Ancient8]: 888888888,
+  [NetworkNames.Amoy]: 80002,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -81,7 +83,7 @@ export const Networks: {
 } = {
   [84532]: {
     chainId: 84532,
-    bundler: 'https://basesepolia-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/84532',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -93,7 +95,7 @@ export const Networks: {
   },
   [11155111]: {
     chainId: 11155111,
-    bundler: 'https://sepolia-bundler.etherspot.io',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/11155111',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -151,18 +153,6 @@ export const Networks: {
       }
     },
   },
-  [421613]: {
-    chainId: 421613,
-    bundler: 'https://arbitrumgoerli-bundler.etherspot.io',
-    contracts: {
-      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
-      walletFactory: {
-        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
-        zeroDev: '0x5de4839a76cf55d0c90e2061ef4386d962E15ae3',
-        simpleAccount: '0x9406Cc6185a346906296840746125a0E44976454',
-      }
-    },
-  },
   [10200]: {
     chainId: 10200,
     bundler: '',
@@ -189,7 +179,7 @@ export const Networks: {
   },
   [123]: {
     chainId: 123,
-    bundler: 'https://fusetestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/123',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -237,7 +227,7 @@ export const Networks: {
   },
   [31]: {
     chainId: 31,
-    bundler: 'https://rootstocktestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/31',
     contracts: {
       entryPoint: '0x48e60BBb664aEfAc9f14aDB42e5FB5b4a119EB66',
       walletFactory: {
@@ -271,9 +261,9 @@ export const Networks: {
       }
     },
   },
-  [5001]: {
-    chainId: 5001,
-    bundler: 'https://mantletestnet-bundler.etherspot.io/',
+  [5003]: {
+    chainId: 5003,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/5003',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -321,7 +311,7 @@ export const Networks: {
   },
   [97]: {
     chainId: 97,
-    bundler: 'https://bnbtestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/97',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -369,7 +359,7 @@ export const Networks: {
   },
   [114]: {
     chainId: 114,
-    bundler: 'https://flaretestnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/114',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -393,7 +383,7 @@ export const Networks: {
   },
   [534351]: {
     chainId: 534351,
-    bundler: 'https://scrollsepolia-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/534351',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -417,7 +407,7 @@ export const Networks: {
   },
   [11155420]: {
     chainId: 11155420,
-    bundler: 'https://optimismsepolia-bundler.etherspot.io',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/11155420',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -429,7 +419,7 @@ export const Networks: {
   },
   [28122024]: {
     chainId: 28122024,
-    bundler: 'https://ancient8testnet-bundler.etherspot.io/',
+    bundler: 'https://testnet-rpc.etherspot.io/v1/28122024',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -442,6 +432,18 @@ export const Networks: {
   [888888888]: {
     chainId: 888888888,
     bundler: 'https://rpc.etherspot.io/ancient8',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    }
+  },
+  [80002]: {
+    chainId: 80002,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/80002',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -569,7 +571,6 @@ export const Safe: ISafeConstant = {
     "4918": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "4919": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "5000": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
-    "5001": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "5003": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "5700": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "6102": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
@@ -619,7 +620,7 @@ export const Safe: ISafeConstant = {
     "71401": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "71402": "0x998739BFdAAdde7C933B942a68053933098f9EDa",
     "73799": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
-    "80001": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
+    "80002": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "80085": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "81457": "0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761",
     "84531": "0x998739BFdAAdde7C933B942a68053933098f9EDa",

@@ -1,7 +1,9 @@
 # Changelog
 ## [1.8.0] - 2024-04-29
 ### Breaking changes
-- Removed Goerli, Op Goerli, Arb Goerli, Mumbai, Klaytn since its deprecated and Added OP Sepolia, Arb Sepolia and Ancient8 mainnet and testnet as networks supported
+- Removed (deprecated) networks Goerli, Op Goerli, Arb Goerli, Mumbai, Klaytn and Mantle Testnet (Goerli)
+- Added OP Sepolia, Arb Sepolia, Mantle Sepolia, Polygon Amoy testnet,  Ancient8 mainnet, Ancient8 testnet supported networks
+- Changed testnet bundler rpc urls to the new format
 
 ## [1.7.1] - 2024-04-12
 ### New
