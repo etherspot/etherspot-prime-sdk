@@ -1,12 +1,16 @@
-import { BigNumber, BigNumberish, Contract } from 'ethers';
+import { BigNumber, BigNumberish, Contract, ethers } from 'ethers';
 import {
   EtherspotWallet,
   EtherspotWallet__factory,
   EtherspotWalletFactory,
   EtherspotWalletFactory__factory,
 } from '../contracts';
-import { arrayify, hexConcat } from 'ethers/lib/utils';
+import { arrayify, defaultAbiCoder, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
+import { EtherspotWallet7579Factory__factory, EtherspotWallet7579__factory } from '../contracts/factories/src/ERC7579/wallet';
+import { EtherspotWallet7579, EtherspotWallet7579Factory } from '../contracts/src/ERC7579/wallet';
+import { IModule } from '../contracts/erc7579-ref-impl/src/interfaces/IModule.sol';
+import { BOOTSTRAP_ABI, BootstrapConfig, _makeBootstrapConfig, makeBootstrapConfig } from './Bootstrap';
 
 /**
  * constructor params, added no top of base params:
@@ -37,9 +41,9 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    * our account contract.
    * should support the "execFromEntryPoint" and "nonce" methods
    */
-  accountContract?: EtherspotWallet;
+  accountContract?: EtherspotWallet7579;
 
-  factory?: EtherspotWalletFactory;
+  factory?: EtherspotWallet7579Factory;
 
   constructor(params: EtherspotWalletApiParams) {
     super(params);
@@ -49,7 +53,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async checkAccountAddress(address: string): Promise<void> {
-    const accountContract = EtherspotWallet__factory.connect(address, this.provider);
+    const accountContract = EtherspotWallet7579__factory.connect(address, this.provider);
     if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
       throw new Error('the specified accountAddress does not belong to the given EOA provider')
     }
@@ -58,9 +62,9 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     }
   }
 
-  async _getAccountContract(): Promise<EtherspotWallet | Contract> {
+  async _getAccountContract(): Promise<EtherspotWallet7579 | Contract> {
     if (this.accountContract == null) {
-      this.accountContract = EtherspotWallet__factory.connect(await this.getAccountAddress(), this.provider);
+      this.accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
     }
     return this.accountContract;
   }
@@ -71,16 +75,34 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    */
   async getAccountInitCode(): Promise<string> {
     if (this.factoryAddress != null && this.factoryAddress !== '') {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
+      this.factory = EtherspotWallet7579Factory__factory.connect(this.factoryAddress, this.provider);
     } else {
       throw new Error('no factory to get initCode');
     }
 
+    const iface = new ethers.utils.Interface(BOOTSTRAP_ABI);
+    const validators: BootstrapConfig[] = makeBootstrapConfig('0x1e714c551fe6234b6ee406899ec3be9234ad2124', '0x');
+    const executors: BootstrapConfig[] = makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+    const hook: BootstrapConfig = _makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+    const fallbacks: BootstrapConfig[] = makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+
+    const initMSAData = iface.encodeFunctionData(
+      "initMSA",
+      [validators, executors, hook, fallbacks]
+    );
+
+    const initCode = ethers.utils.defaultAbiCoder.encode(
+      ["address", "address", "bytes"],
+      [this.services.walletService.EOAAddress, '0x4f695ad7694863c8280FCEBf2Cb220E361ce4eA0', initMSAData]
+    );
+    const encodedValue = ethers.utils.solidityKeccak256(['string'], [this.index.toString()]);
+    const hexlifyValue = ethers.utils.hexlify(encodedValue);
+    const salt = ethers.utils.arrayify(hexlifyValue)
     return hexConcat([
       this.factoryAddress,
       this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.EOAAddress,
-        this.index,
+        salt,
+        initCode,
       ]),
     ]);
   }
@@ -89,11 +111,31 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     if (this.predefinedAccountAddress) {
       await this.checkAccountAddress(this.predefinedAccountAddress);
     }
+
+    const encodedValue = ethers.utils.solidityKeccak256(['string'], [this.index.toString()]);
+    const hexlifyValue = ethers.utils.hexlify(encodedValue);
+    const salt = ethers.utils.arrayify(hexlifyValue);
+    const iface = new ethers.utils.Interface(BOOTSTRAP_ABI);
+    const validators: BootstrapConfig[] = makeBootstrapConfig('0x1e714c551fe6234b6ee406899ec3be9234ad2124', '0x');
+    const executors: BootstrapConfig[] = makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+    const hook: BootstrapConfig = _makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+    const fallbacks: BootstrapConfig[] = makeBootstrapConfig('0x0000000000000000000000000000000000000000', '0x');
+
+    const initMSAData = iface.encodeFunctionData(
+      "initMSA",
+      [validators, executors, hook, fallbacks]
+    );
+
+    const initCode = ethers.utils.defaultAbiCoder.encode(
+      ["address", "address", "bytes"],
+      [this.services.walletService.EOAAddress, '0x4f695ad7694863c8280FCEBf2Cb220E361ce4eA0', initMSAData]
+    );
+
     if (!this.accountAddress) {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
+      this.factory = EtherspotWallet7579Factory__factory.connect(this.factoryAddress, this.provider);
       this.accountAddress = await this.factory.getAddress(
-        this.services.walletService.EOAAddress,
-        this.index,
+        salt,
+        initCode,
       );
     }
     return this.accountAddress;
@@ -128,6 +170,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   async encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string> {
     const accountContract = await this._getAccountContract();
-    return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, datas]);
+    return accountContract.interface.encodeFunctionData('execute', [targets[0], values[0], datas[0]]);
+    // return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, datas]);
   }
 }

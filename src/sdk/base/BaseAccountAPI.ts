@@ -1,12 +1,12 @@
 import { ethers, BigNumber, BigNumberish } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
-import { EntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
+import { IEntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
 import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
-import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
+import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp, UserOperation } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
 import { Factory, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
@@ -48,7 +48,7 @@ export abstract class BaseAccountAPI {
   context: Context;
 
   // entryPoint connected to "zero" address. allowed to make static calls (e.g. to getSenderAddress)
-  protected readonly entryPointView: EntryPoint;
+  protected readonly entryPointView: IEntryPoint;
   protected readonly nonceManager: INonceManager;
 
   provider: Provider;
@@ -365,7 +365,7 @@ export abstract class BaseAccountAPI {
    * This value matches entryPoint.getUserOpHash (calculated off-chain, to avoid a view call)
    * @param userOp userOperation, (signature field ignored)
    */
-  async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
+  async getUserOpHash(userOp: UserOperation): Promise<string> {
     const op = await resolveProperties(userOp);
     const provider = this.services.walletService.getWalletProvider();
     const chainId = await provider.getNetwork().then((net) => net.chainId);
@@ -401,11 +401,11 @@ export abstract class BaseAccountAPI {
    * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
    * @param info
    */
-  async createUnsignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperationStruct> {
+  async createUnsignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<any> {
     const { callData, callGasLimit } = await this.encodeUserOpCallDataAndGasLimit(info);
-    const initCode = await this.getInitCode();
+    const factoryData = await this.getInitCode();
 
-    const initGas = await this.estimateCreationGas(initCode);
+    const initGas = await this.estimateCreationGas(factoryData);
     const verificationGasLimit = BigNumber.from(await this.getVerificationGasLimit()).add(initGas);
 
     let { maxFeePerGas, maxPriorityFeePerGas } = info;
@@ -433,7 +433,7 @@ export abstract class BaseAccountAPI {
     const partialUserOp: any = {
       sender: await this.getAccountAddress(),
       nonce: await this.getNonce(key),
-      initCode,
+      factoryData : '0x' + factoryData.substring(42),
       callData,
       callGasLimit,
       verificationGasLimit,
@@ -466,7 +466,7 @@ export abstract class BaseAccountAPI {
    * Sign the filled userOp.
    * @param userOp the UserOperation to sign (with signature field ignored)
    */
-  async signUserOp(userOp: UserOperationStruct): Promise<UserOperationStruct> {
+  async signUserOp(userOp: any): Promise<any> {
     if (this.paymasterAPI != null) {
       const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
       userOp.paymasterAndData = paymasterAndData.result.paymasterAndData;
@@ -486,7 +486,7 @@ export abstract class BaseAccountAPI {
    * helper method: create and sign a user operation.
    * @param info transaction details for the userOp
    */
-  async createSignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperationStruct> {
+  async createSignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperation> {
     return await this.signUserOp(await this.createUnsignedUserOp(info, key));
   }
 

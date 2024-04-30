@@ -8,6 +8,7 @@ import { ClientConfig } from './ClientConfig';
 import { HttpRpcClient } from './HttpRpcClient';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { BaseAccountAPI } from './BaseAccountAPI';
+import { UserOperation } from '../common';
 
 export class ERC4337EthersSigner extends Signer {
   // TODO: we have 'erc4337provider', remove shared dependencies or avoid two-way reference
@@ -99,7 +100,7 @@ export class ERC4337EthersSigner extends Signer {
     throw new Error('not implemented');
   }
 
-  async signUserOperation(userOperation: UserOperationStruct): Promise<string> {
+  async signUserOperation(userOperation: UserOperation): Promise<string> {
     const message = await this.smartAccountAPI.getUserOpHash(userOperation);
     return await this.originalSigner.signMessage(message);
   }

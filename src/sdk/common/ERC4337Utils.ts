@@ -1,21 +1,39 @@
-import { defaultAbiCoder, hexConcat, hexlify, keccak256 } from 'ethers/lib/utils';
+import { BytesLike, defaultAbiCoder, hexConcat, hexZeroPad, hexlify, keccak256 } from 'ethers/lib/utils';
 import { EntryPoint__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
-import { ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { Buffer } from 'buffer';
 
 const entryPointAbi: any = EntryPoint__factory.abi;
 
 // UserOperation is the first parameter of validateUseOp
-const validateUserOpMethod = 'simulateValidation';
-const UserOpType = entryPointAbi.find((entry) => entry.name === validateUserOpMethod)?.inputs[0];
-if (UserOpType == null) {
-  throw new Error(
-    `unable to find method ${validateUserOpMethod} in EP ${entryPointAbi
-      .filter((x) => x.type === 'function')
-      .map((x) => x.name)
-      .join(',')}`,
-  );
+// const validateUserOpMethod = 'simulateValidation';
+// const UserOpType = entryPointAbi.find((entry) => entry.name === validateUserOpMethod)?.inputs[0];
+// if (UserOpType == null) {
+//   throw new Error(
+//     `unable to find method ${validateUserOpMethod} in EP ${entryPointAbi
+//       .filter((x) => x.type === 'function')
+//       .map((x) => x.name)
+//       .join(',')}`,
+//   );
+// }
+
+export interface UserOperation {
+  sender: string
+  nonce: BigNumberish
+  factory?: string
+  factoryData?: BytesLike
+  callData: BytesLike
+  callGasLimit: BigNumberish
+  verificationGasLimit: BigNumberish
+  preVerificationGas: BigNumberish
+  maxFeePerGas: BigNumberish
+  maxPriorityFeePerGas: BigNumberish
+  paymaster?: string
+  paymasterVerificationGasLimit?: BigNumberish
+  paymasterPostOpGasLimit?: BigNumberish
+  paymasterData?: BytesLike
+  signature: BytesLike
 }
 
 export const AddressZero = ethers.constants.AddressZero;
@@ -42,24 +60,63 @@ export type NotPromise<T> = {
  * @param forSignature "true" if the hash is needed to calculate the getUserOpHash()
  *  "false" to pack entire UserOp, for calculating the calldata cost of putting it on-chain.
  */
-export function packUserOp (op: NotPromise<UserOperationStruct>, forSignature = true): string {
+export function packUserOp(op1: UserOperation | NotPromise<UserOperationStruct>, forSignature = true): string {
+  let op: NotPromise<UserOperationStruct>;
+  if ('callGasLimit' in op1) {
+    op = packUserOpData(op1)
+  } else {
+    op = op1
+  }
+
   if (forSignature) {
     return defaultAbiCoder.encode(
-      ['address', 'uint256', 'bytes32', 'bytes32',
-        'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
-        'bytes32'],
+      ['address', 'uint256', 'bytes32', 'bytes32', 'bytes32', 'uint256', 'bytes32', 'bytes32'],
       [op.sender, op.nonce, keccak256(op.initCode), keccak256(op.callData),
-        op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
-        keccak256(op.paymasterAndData)])
+      op.accountGasLimits, op.preVerificationGas, op.gasFees,
+      keccak256(op.paymasterAndData)])
   } else {
     // for the purpose of calculating gas cost encode also signature (and no keccak of bytes)
     return defaultAbiCoder.encode(
-      ['address', 'uint256', 'bytes', 'bytes',
-        'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
-        'bytes', 'bytes'],
+      ['address', 'uint256', 'bytes', 'bytes', 'bytes32', 'uint256', 'bytes32', 'bytes', 'bytes'],
       [op.sender, op.nonce, op.initCode, op.callData,
-        op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
-        op.paymasterAndData, op.signature])
+      op.accountGasLimits, op.preVerificationGas, op.gasFees,
+      op.paymasterAndData, op.signature])
+  }
+}
+
+export function packUint(high128: BigNumberish, low128: BigNumberish): string {
+  return hexZeroPad(BigNumber.from(high128).shl(128).add(low128).toHexString(), 32)
+}
+
+export function packPaymasterData(paymaster: string, paymasterVerificationGasLimit: BigNumberish, postOpGasLimit: BigNumberish, paymasterData?: BytesLike): BytesLike {
+  return ethers.utils.hexConcat([
+    paymaster,
+    packUint(paymasterVerificationGasLimit, postOpGasLimit),
+    paymasterData ?? '0x'
+  ])
+}
+
+export function packUserOpData(op: any): NotPromise<UserOperationStruct> {
+  let paymasterAndData: BytesLike
+  if (op.paymaster == null) {
+    paymasterAndData = '0x'
+  } else {
+    if (op.paymasterVerificationGasLimit == null || op.paymasterPostOpGasLimit == null) {
+      throw new Error('paymaster with no gas limits')
+    }
+    paymasterAndData = packPaymasterData(op.paymaster, op.paymasterVerificationGasLimit, op.paymasterPostOpGasLimit, op.paymasterData)
+  }
+
+  return {
+    sender: op.sender,
+    nonce: BigNumber.from(op.nonce).toHexString(),
+    initCode: op.factory == null ? '0x' : hexConcat([op.factory, op.factoryData ?? '']),
+    callData: op.callData,
+    accountGasLimits: packUint(op.verificationGasLimit, op.callGasLimit),
+    preVerificationGas: BigNumber.from(op.preVerificationGas).toHexString(),
+    gasFees: packUint(op.maxPriorityFeePerGas, op.maxFeePerGas),
+    paymasterAndData,
+    signature: op.signature
   }
 }
 
@@ -72,7 +129,7 @@ export function packUserOp (op: NotPromise<UserOperationStruct>, forSignature = 
  * @param entryPoint
  * @param chainId
  */
-export function getUserOpHash(op: NotPromise<UserOperationStruct>, entryPoint: string, chainId: number): string {
+export function getUserOpHash(op: UserOperation, entryPoint: string, chainId: number): string {
   const userOpHash = keccak256(packUserOp(op, true));
   const enc = defaultAbiCoder.encode(['bytes32', 'address', 'uint256'], [userOpHash, entryPoint, chainId]);
   return keccak256(enc);
