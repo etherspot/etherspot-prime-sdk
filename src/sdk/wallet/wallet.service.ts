@@ -1,6 +1,6 @@
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BytesLike, ethers, providers, Wallet as EtherWallet } from 'ethers';
+import { BytesLike, ethers, providers, Wallet as EtherWallet, TypedDataField } from 'ethers';
 import { Service, ObjectSubject } from '../common';
 import { WalletProvider, WalletProviderLike, KeyWalletProvider, WalletLike } from './providers';
 import { Wallet, WalletOptions } from './interfaces';
@@ -43,6 +43,10 @@ export class WalletService extends Service {
 
   async signMessage(message: BytesLike): Promise<string> {
     return this.provider ? this.provider.signMessage(message) : null;
+  }
+
+  async signTypedData(types: TypedDataField[], message: any, accountAddress: string): Promise<string> {
+    return this.provider ? this.provider.signTypedData(types, message, accountAddress) : null;
   }
 
   protected switchWalletProvider(providerLike: WalletProviderLike): void {
