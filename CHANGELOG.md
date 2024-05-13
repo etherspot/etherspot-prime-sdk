@@ -1,4 +1,8 @@
 # Changelog
+## [1.8.1] - 2024-05-14
+### New
+- Added signTypedData method to all providers supported
+
 ## [1.8.0] - 2024-04-29
 ### Breaking changes
 - Removed (deprecated) networks Goerli, Op Goerli, Arb Goerli, Mumbai, Klaytn and Mantle Testnet (Goerli)
