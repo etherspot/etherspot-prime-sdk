@@ -2,13 +2,11 @@ import { BaseProvider, TransactionReceipt, TransactionResponse } from '@etherspr
 import { BigNumber, Signer } from 'ethers';
 import { Network } from '@ethersproject/networks';
 import { hexValue, resolveProperties } from 'ethers/lib/utils';
-
 import { ClientConfig } from './ClientConfig';
 import { ERC4337EthersSigner } from './ERC4337EthersSigner';
 import { UserOperationEventListener } from './UserOperationEventListener';
 import { HttpRpcClient } from './HttpRpcClient';
 import type { IEntryPoint } from '../contracts';
-import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { UserOperation, getUserOpHash } from '../common';
 import { BaseAccountAPI } from './BaseAccountAPI';
 

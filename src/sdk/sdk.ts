@@ -10,9 +10,8 @@ import {
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOperation, UserOpsRequest } from "./common";
-import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
+import { BigNumber, BigNumberish, Contract, ethers, providers } from 'ethers';
 import { Networks, onRamperAllNetworks } from './network/constants';
-import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { OnRamperDto, SignMessageDto, validateDto } from './dto';
@@ -20,6 +19,7 @@ import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 import { ErrorHandler } from './errorHandler/errorHandler.service';
 import { EtherspotBundler } from './bundler';
+import { ModularEtherspotWallet } from './contracts/src/ERC7579/wallet';
 
 /**
  * Prime-Sdk
@@ -160,7 +160,7 @@ export class PrimeSdk {
     paymasterDetails?: PaymasterApi,
     gasDetails?: TransactionGasInfoForUserOp,
     callGasLimit?: BigNumberish,
-    key?: number
+    key?: BigNumber
   } = {}) {
     const { paymasterDetails, gasDetails, callGasLimit, key } = params;
     let dummySignature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
@@ -200,7 +200,10 @@ export class PrimeSdk {
     if (callGasLimit) {
       partialtx.callGasLimit = BigNumber.from(callGasLimit).toHexString();
     }
-    partialtx.factory = this.etherspotWallet.factoryAddress;
+
+    if (await this.etherspotWallet.checkAccountPhantom()) {
+      partialtx.factory = this.etherspotWallet.factoryAddress;
+    }
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
 
@@ -278,7 +281,7 @@ export class PrimeSdk {
     this.userOpsBatch.value = [];
   }
 
-  async getAccountContract() {
+  async getAccountContract(): Promise<ModularEtherspotWallet | Contract> {
     return this.etherspotWallet._getAccountContract();
   }
 

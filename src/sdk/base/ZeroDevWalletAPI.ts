@@ -116,7 +116,7 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
     return this.accountAddress;
   }
 
-  async getNonce(key = 0): Promise<BigNumber> {
+  async getNonce(key = BigNumber.from(0)): Promise<BigNumber> {
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }

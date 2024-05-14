@@ -1,82 +1,15 @@
 import { NetworkConfig } from ".";
 
 export enum NetworkNames {
-  Goerli = 'goerli',
-  Mumbai = 'mumbai',
-  BaseGoerli = 'baseGoerli',
-  BaseSepolia = 'baseSepolia',
   Sepolia = 'sepolia',
-  Optimism = 'optimism',
-  Polygon = 'polygon',
-  Arbitrum = 'arbitrum',
-  ArbitrumGoerli = 'arbitrumGoerli',
-  Chiado = 'chiado',
-  Fuse = 'fuse',
-  FuseSparknet = 'fuseSparknet',
-  Gnosis = 'gnosis',
-  KromaTestnet = 'kromaTestnet',
-  Mainnet = 'mainnet',
-  OptimismGoerli = 'optimismGoerli',
-  Rootstock = 'rootstock',
-  RootstockTestnet = 'rootstockTestnet',
-  VerseTestnet = 'verseTestnet',
-  Mantle = 'Mantle',
-  MantleTestnet = 'MantleTestnet',
-  Avalanche = 'avalanche',
-  Base = 'base',
-  Bsc = 'bsc',
-  BscTestnet = 'bscTestnet',
-  Fuji = 'fuji',
-  Linea = 'linea',
-  LineaTestnet = 'lineaTestnet',
-  FlareTestnet = 'flareTestnet',
-  Flare = 'flare',
-  ScrollSepolia = 'scrollSepolia',
-  Scroll = 'scroll',
-  Klaytn = 'klaytn',
-  KlaytnTestnet = 'klaytnTestnet',
 }
 
-export const SupportedNetworks =
-  [1, 5, 10, 14, 30, 31, 56, 97, 100, 114, 122, 123, 137, 420, 1001, 2357, 5000, 5001, 8217, 8453, 10200, 20197, 42161, 43113, 43114, 59140, 59144, 80001, 84531, 84532, 421613, 534351, 534352, 11155111]
+export const SupportedNetworks = [11155111]
 
 export const NETWORK_NAME_TO_CHAIN_ID: {
   [key: string]: number;
 } = {
-  [NetworkNames.Goerli]: 5,
-  [NetworkNames.Mumbai]: 80001,
-  [NetworkNames.BaseGoerli]: 84531,
-  [NetworkNames.BaseSepolia]: 84532,
   [NetworkNames.Sepolia]: 11155111,
-  [NetworkNames.Optimism]: 10,
-  [NetworkNames.Polygon]: 137,
-  [NetworkNames.Arbitrum]: 42161,
-  [NetworkNames.ArbitrumGoerli]: 421613,
-  [NetworkNames.Chiado]: 10200,
-  [NetworkNames.Fuse]: 122,
-  [NetworkNames.FuseSparknet]: 123,
-  [NetworkNames.Gnosis]: 100,
-  [NetworkNames.KromaTestnet]: 2357,
-  [NetworkNames.Mainnet]: 1,
-  [NetworkNames.OptimismGoerli]: 420,
-  [NetworkNames.Rootstock]: 30,
-  [NetworkNames.RootstockTestnet]: 31,
-  [NetworkNames.VerseTestnet]: 20197,
-  [NetworkNames.Mantle]: 5000,
-  [NetworkNames.MantleTestnet]: 5001,
-  [NetworkNames.Avalanche]: 43114,
-  [NetworkNames.Base]: 8453,
-  [NetworkNames.Bsc]: 56,
-  [NetworkNames.BscTestnet]: 97,
-  [NetworkNames.Fuji]: 43113,
-  [NetworkNames.Linea]: 59144,
-  [NetworkNames.LineaTestnet]: 59140,
-  [NetworkNames.FlareTestnet]: 114,
-  [NetworkNames.Flare]: 14,
-  [NetworkNames.ScrollSepolia]: 534351,
-  [NetworkNames.Scroll]: 534352,
-  [NetworkNames.Klaytn]: 8217,
-  [NetworkNames.KlaytnTestnet]: 1001,
 };
 
 export const onRamperAllNetworks = ['OPTIMISM', 'POLYGON', 'ARBITRUM', 'FUSE', 'GNOSIS', 'ETHEREUM']
@@ -93,7 +26,9 @@ export const Networks: {
         etherspot: '0x77E4288A4b15893F520F15C262a07dF9866904e4',
         zeroDev: '',
         simpleAccount: '',
-      }
+      },
+      bootstrap: '0x4f695ad7694863c8280FCEBf2Cb220E361ce4eA0',
+      multipleOwnerECDSAValidator: '0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124',
     },
   }
 };

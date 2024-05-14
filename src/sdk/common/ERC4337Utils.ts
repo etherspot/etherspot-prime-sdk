@@ -1,22 +1,7 @@
 import { BytesLike, defaultAbiCoder, hexConcat, hexZeroPad, hexlify, keccak256 } from 'ethers/lib/utils';
-import { EntryPoint__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { Buffer } from 'buffer';
-
-const entryPointAbi: any = EntryPoint__factory.abi;
-
-// UserOperation is the first parameter of validateUseOp
-// const validateUserOpMethod = 'simulateValidation';
-// const UserOpType = entryPointAbi.find((entry) => entry.name === validateUserOpMethod)?.inputs[0];
-// if (UserOpType == null) {
-//   throw new Error(
-//     `unable to find method ${validateUserOpMethod} in EP ${entryPointAbi
-//       .filter((x) => x.type === 'function')
-//       .map((x) => x.name)
-//       .join(',')}`,
-//   );
-// }
 
 export interface UserOperation {
   sender: string

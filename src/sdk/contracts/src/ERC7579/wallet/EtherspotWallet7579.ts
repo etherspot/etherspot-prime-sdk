@@ -28,153 +28,129 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export declare namespace IExecution {
-  export type ExecutionStruct = {
-    target: PromiseOrValue<string>;
-    value: PromiseOrValue<BigNumberish>;
-    callData: PromiseOrValue<BytesLike>;
+export type PackedUserOperationStruct = {
+  sender: PromiseOrValue<string>;
+  nonce: PromiseOrValue<BigNumberish>;
+  initCode: PromiseOrValue<BytesLike>;
+  callData: PromiseOrValue<BytesLike>;
+  accountGasLimits: PromiseOrValue<BytesLike>;
+  preVerificationGas: PromiseOrValue<BigNumberish>;
+  gasFees: PromiseOrValue<BytesLike>;
+  paymasterAndData: PromiseOrValue<BytesLike>;
+  signature: PromiseOrValue<BytesLike>;
+};
+
+export type PackedUserOperationStructOutput = [
+  string,
+  BigNumber,
+  string,
+  string,
+  string,
+  BigNumber,
+  string,
+  string,
+  string
+] & {
+  sender: string;
+  nonce: BigNumber;
+  initCode: string;
+  callData: string;
+  accountGasLimits: string;
+  preVerificationGas: BigNumber;
+  gasFees: string;
+  paymasterAndData: string;
+  signature: string;
+};
+
+export declare namespace ModuleManager {
+  export type FallbackHandlerStruct = {
+    handler: PromiseOrValue<string>;
+    calltype: PromiseOrValue<BytesLike>;
+    allowedCallers: PromiseOrValue<string>[];
   };
 
-  export type ExecutionStructOutput = [string, BigNumber, string] & {
-    target: string;
-    value: BigNumber;
-    callData: string;
-  };
-}
-
-export declare namespace IERC4337 {
-  export type UserOperationStruct = {
-    sender: PromiseOrValue<string>;
-    nonce: PromiseOrValue<BigNumberish>;
-    initCode: PromiseOrValue<BytesLike>;
-    callData: PromiseOrValue<BytesLike>;
-    callGasLimit: PromiseOrValue<BigNumberish>;
-    verificationGasLimit: PromiseOrValue<BigNumberish>;
-    preVerificationGas: PromiseOrValue<BigNumberish>;
-    maxFeePerGas: PromiseOrValue<BigNumberish>;
-    maxPriorityFeePerGas: PromiseOrValue<BigNumberish>;
-    paymasterAndData: PromiseOrValue<BytesLike>;
-    signature: PromiseOrValue<BytesLike>;
-  };
-
-  export type UserOperationStructOutput = [
-    string,
-    BigNumber,
-    string,
-    string,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    BigNumber,
-    string,
-    string
-  ] & {
-    sender: string;
-    nonce: BigNumber;
-    initCode: string;
-    callData: string;
-    callGasLimit: BigNumber;
-    verificationGasLimit: BigNumber;
-    preVerificationGas: BigNumber;
-    maxFeePerGas: BigNumber;
-    maxPriorityFeePerGas: BigNumber;
-    paymasterAndData: string;
-    signature: string;
+  export type FallbackHandlerStructOutput = [string, string, string[]] & {
+    handler: string;
+    calltype: string;
+    allowedCallers: string[];
   };
 }
 
-export interface EtherspotWallet7579Interface extends utils.Interface {
+export interface ModularEtherspotWalletInterface extends utils.Interface {
   functions: {
-    "AUTHOR()": FunctionFragment;
-    "NAME()": FunctionFragment;
-    "VERSION()": FunctionFragment;
+    "accountId()": FunctionFragment;
     "addGuardian(address)": FunctionFragment;
     "addOwner(address)": FunctionFragment;
     "changeProposalTimelock(uint256)": FunctionFragment;
     "discardCurrentProposal()": FunctionFragment;
     "entryPoint()": FunctionFragment;
-    "execute(address,uint256,bytes)": FunctionFragment;
-    "executeBatch((address,uint256,bytes)[])": FunctionFragment;
-    "executeBatchFromExecutor((address,uint256,bytes)[])": FunctionFragment;
-    "executeDelegateCall(address,bytes)": FunctionFragment;
-    "executeDelegateCallFromExecutor(address,bytes)": FunctionFragment;
-    "executeFromExecutor(address,uint256,bytes)": FunctionFragment;
+    "execute(bytes32,bytes)": FunctionFragment;
+    "executeFromExecutor(bytes32,bytes)": FunctionFragment;
+    "executeUserOp((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes))": FunctionFragment;
+    "getActiveFallbackHandler(bytes4)": FunctionFragment;
+    "getActiveHook()": FunctionFragment;
     "getExecutorsPaginated(address,uint256)": FunctionFragment;
     "getProposal(uint256)": FunctionFragment;
     "getValidatorPaginated(address,uint256)": FunctionFragment;
     "guardianCosign()": FunctionFragment;
     "guardianCount()": FunctionFragment;
     "guardianPropose(address)": FunctionFragment;
+    "implementation()": FunctionFragment;
     "initializeAccount(bytes)": FunctionFragment;
-    "installExecutor(address,bytes)": FunctionFragment;
-    "installFallback(address,bytes)": FunctionFragment;
-    "installValidator(address,bytes)": FunctionFragment;
-    "isExecutorInstalled(address)": FunctionFragment;
-    "isFallbackInstalled(address)": FunctionFragment;
+    "installModule(uint256,address,bytes)": FunctionFragment;
     "isGuardian(address)": FunctionFragment;
+    "isModuleInstalled(uint256,address,bytes)": FunctionFragment;
     "isOwner(address)": FunctionFragment;
     "isValidSignature(bytes32,bytes)": FunctionFragment;
-    "isValidatorInstalled(address)": FunctionFragment;
     "ownerCount()": FunctionFragment;
     "proposalId()": FunctionFragment;
     "proposalTimelock()": FunctionFragment;
     "removeGuardian(address)": FunctionFragment;
     "removeOwner(address)": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
-    "uninstallExecutor(address,bytes)": FunctionFragment;
-    "uninstallFallback(address,bytes)": FunctionFragment;
-    "uninstallValidator(address,bytes)": FunctionFragment;
-    "validateUserOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),bytes32,uint256)": FunctionFragment;
+    "supportsExecutionMode(bytes32)": FunctionFragment;
+    "supportsModule(uint256)": FunctionFragment;
+    "uninstallModule(uint256,address,bytes)": FunctionFragment;
+    "validateUserOp((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes),bytes32,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "AUTHOR"
-      | "NAME"
-      | "VERSION"
+      | "accountId"
       | "addGuardian"
       | "addOwner"
       | "changeProposalTimelock"
       | "discardCurrentProposal"
       | "entryPoint"
       | "execute"
-      | "executeBatch"
-      | "executeBatchFromExecutor"
-      | "executeDelegateCall"
-      | "executeDelegateCallFromExecutor"
       | "executeFromExecutor"
+      | "executeUserOp"
+      | "getActiveFallbackHandler"
+      | "getActiveHook"
       | "getExecutorsPaginated"
       | "getProposal"
       | "getValidatorPaginated"
       | "guardianCosign"
       | "guardianCount"
       | "guardianPropose"
+      | "implementation"
       | "initializeAccount"
-      | "installExecutor"
-      | "installFallback"
-      | "installValidator"
-      | "isExecutorInstalled"
-      | "isFallbackInstalled"
+      | "installModule"
       | "isGuardian"
+      | "isModuleInstalled"
       | "isOwner"
       | "isValidSignature"
-      | "isValidatorInstalled"
       | "ownerCount"
       | "proposalId"
       | "proposalTimelock"
       | "removeGuardian"
       | "removeOwner"
-      | "supportsInterface"
-      | "uninstallExecutor"
-      | "uninstallFallback"
-      | "uninstallValidator"
+      | "supportsExecutionMode"
+      | "supportsModule"
+      | "uninstallModule"
       | "validateUserOp"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "AUTHOR", values?: undefined): string;
-  encodeFunctionData(functionFragment: "NAME", values?: undefined): string;
-  encodeFunctionData(functionFragment: "VERSION", values?: undefined): string;
+  encodeFunctionData(functionFragment: "accountId", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "addGuardian",
     values: [PromiseOrValue<string>]
@@ -197,35 +173,23 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "execute",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "executeBatch",
-    values: [IExecution.ExecutionStruct[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "executeBatchFromExecutor",
-    values: [IExecution.ExecutionStruct[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "executeDelegateCall",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "executeDelegateCallFromExecutor",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "executeFromExecutor",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeUserOp",
+    values: [PackedUserOperationStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getActiveFallbackHandler",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getActiveHook",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getExecutorsPaginated",
@@ -252,32 +216,32 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "implementation",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "initializeAccount",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "installExecutor",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "installFallback",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "installValidator",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isExecutorInstalled",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isFallbackInstalled",
-    values: [PromiseOrValue<string>]
+    functionFragment: "installModule",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "isGuardian",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isModuleInstalled",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "isOwner",
@@ -286,10 +250,6 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "isValidSignature",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "isValidatorInstalled",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "ownerCount",
@@ -312,33 +272,31 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "supportsInterface",
+    functionFragment: "supportsExecutionMode",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "uninstallExecutor",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+    functionFragment: "supportsModule",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "uninstallFallback",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "uninstallValidator",
-    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
+    functionFragment: "uninstallModule",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "validateUserOp",
     values: [
-      IERC4337.UserOperationStruct,
+      PackedUserOperationStruct,
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
 
-  decodeFunctionResult(functionFragment: "AUTHOR", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "NAME", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "VERSION", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "accountId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addGuardian",
     data: BytesLike
@@ -355,23 +313,19 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
   decodeFunctionResult(functionFragment: "entryPoint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "executeBatch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "executeBatchFromExecutor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "executeDelegateCall",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "executeDelegateCallFromExecutor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "executeFromExecutor",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeUserOp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getActiveFallbackHandler",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getActiveHook",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -399,37 +353,25 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "implementation",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "initializeAccount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "installExecutor",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "installFallback",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "installValidator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isExecutorInstalled",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isFallbackInstalled",
+    functionFragment: "installModule",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "isGuardian", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isModuleInstalled",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "isOwner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isValidSignature",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "isValidatorInstalled",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "ownerCount", data: BytesLike): Result;
@@ -447,19 +389,15 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "supportsInterface",
+    functionFragment: "supportsExecutionMode",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "uninstallExecutor",
+    functionFragment: "supportsModule",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "uninstallFallback",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "uninstallValidator",
+    functionFragment: "uninstallModule",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -468,87 +406,29 @@ export interface EtherspotWallet7579Interface extends utils.Interface {
   ): Result;
 
   events: {
-    "DisableExecutor(address)": EventFragment;
-    "DisableValidator(address)": EventFragment;
-    "EnableExecutor(address)": EventFragment;
-    "EnableValidator(address)": EventFragment;
-    "FallbackHandlerChanged(address)": EventFragment;
     "GuardianAdded(address,address)": EventFragment;
     "GuardianRemoved(address,address)": EventFragment;
+    "ModuleInstalled(uint256,address)": EventFragment;
+    "ModuleUninstalled(uint256,address)": EventFragment;
     "OwnerAdded(address,address)": EventFragment;
     "OwnerRemoved(address,address)": EventFragment;
     "ProposalDiscarded(address,uint256,address)": EventFragment;
     "ProposalSubmitted(address,uint256,address,address)": EventFragment;
-    "ProposalTimelockChanged(address,uint256)": EventFragment;
     "QuorumNotReached(address,uint256,address,uint256)": EventFragment;
+    "TryExecuteUnsuccessful(uint256,bytes)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "DisableExecutor"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "DisableValidator"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EnableExecutor"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EnableValidator"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FallbackHandlerChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GuardianAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "GuardianRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ModuleInstalled"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ModuleUninstalled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnerAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnerRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalDiscarded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ProposalSubmitted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ProposalTimelockChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "QuorumNotReached"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TryExecuteUnsuccessful"): EventFragment;
 }
-
-export interface DisableExecutorEventObject {
-  module: string;
-}
-export type DisableExecutorEvent = TypedEvent<
-  [string],
-  DisableExecutorEventObject
->;
-
-export type DisableExecutorEventFilter = TypedEventFilter<DisableExecutorEvent>;
-
-export interface DisableValidatorEventObject {
-  module: string;
-}
-export type DisableValidatorEvent = TypedEvent<
-  [string],
-  DisableValidatorEventObject
->;
-
-export type DisableValidatorEventFilter =
-  TypedEventFilter<DisableValidatorEvent>;
-
-export interface EnableExecutorEventObject {
-  module: string;
-}
-export type EnableExecutorEvent = TypedEvent<
-  [string],
-  EnableExecutorEventObject
->;
-
-export type EnableExecutorEventFilter = TypedEventFilter<EnableExecutorEvent>;
-
-export interface EnableValidatorEventObject {
-  module: string;
-}
-export type EnableValidatorEvent = TypedEvent<
-  [string],
-  EnableValidatorEventObject
->;
-
-export type EnableValidatorEventFilter = TypedEventFilter<EnableValidatorEvent>;
-
-export interface FallbackHandlerChangedEventObject {
-  handler: string;
-}
-export type FallbackHandlerChangedEvent = TypedEvent<
-  [string],
-  FallbackHandlerChangedEventObject
->;
-
-export type FallbackHandlerChangedEventFilter =
-  TypedEventFilter<FallbackHandlerChangedEvent>;
 
 export interface GuardianAddedEventObject {
   account: string;
@@ -571,6 +451,29 @@ export type GuardianRemovedEvent = TypedEvent<
 >;
 
 export type GuardianRemovedEventFilter = TypedEventFilter<GuardianRemovedEvent>;
+
+export interface ModuleInstalledEventObject {
+  moduleTypeId: BigNumber;
+  module: string;
+}
+export type ModuleInstalledEvent = TypedEvent<
+  [BigNumber, string],
+  ModuleInstalledEventObject
+>;
+
+export type ModuleInstalledEventFilter = TypedEventFilter<ModuleInstalledEvent>;
+
+export interface ModuleUninstalledEventObject {
+  moduleTypeId: BigNumber;
+  module: string;
+}
+export type ModuleUninstalledEvent = TypedEvent<
+  [BigNumber, string],
+  ModuleUninstalledEventObject
+>;
+
+export type ModuleUninstalledEventFilter =
+  TypedEventFilter<ModuleUninstalledEvent>;
 
 export interface OwnerAddedEventObject {
   account: string;
@@ -621,18 +524,6 @@ export type ProposalSubmittedEvent = TypedEvent<
 export type ProposalSubmittedEventFilter =
   TypedEventFilter<ProposalSubmittedEvent>;
 
-export interface ProposalTimelockChangedEventObject {
-  account: string;
-  newTimelock: BigNumber;
-}
-export type ProposalTimelockChangedEvent = TypedEvent<
-  [string, BigNumber],
-  ProposalTimelockChangedEventObject
->;
-
-export type ProposalTimelockChangedEventFilter =
-  TypedEventFilter<ProposalTimelockChangedEvent>;
-
 export interface QuorumNotReachedEventObject {
   account: string;
   proposalId: BigNumber;
@@ -647,12 +538,24 @@ export type QuorumNotReachedEvent = TypedEvent<
 export type QuorumNotReachedEventFilter =
   TypedEventFilter<QuorumNotReachedEvent>;
 
-export interface EtherspotWallet7579 extends BaseContract {
+export interface TryExecuteUnsuccessfulEventObject {
+  batchExecutionindex: BigNumber;
+  result: string;
+}
+export type TryExecuteUnsuccessfulEvent = TypedEvent<
+  [BigNumber, string],
+  TryExecuteUnsuccessfulEventObject
+>;
+
+export type TryExecuteUnsuccessfulEventFilter =
+  TypedEventFilter<TryExecuteUnsuccessfulEvent>;
+
+export interface ModularEtherspotWallet extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: EtherspotWallet7579Interface;
+  interface: ModularEtherspotWalletInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -674,11 +577,7 @@ export interface EtherspotWallet7579 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    AUTHOR(overrides?: CallOverrides): Promise<[string]>;
-
-    NAME(overrides?: CallOverrides): Promise<[string]>;
-
-    VERSION(overrides?: CallOverrides): Promise<[string]>;
+    accountId(overrides?: CallOverrides): Promise<[string]>;
 
     addGuardian(
       _newGuardian: PromiseOrValue<string>,
@@ -702,40 +601,30 @@ export interface EtherspotWallet7579 extends BaseContract {
     entryPoint(overrides?: CallOverrides): Promise<[string]>;
 
     execute(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    executeBatch(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    executeBatchFromExecutor(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    executeDelegateCall(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    executeDelegateCallFromExecutor(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     executeFromExecutor(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    executeUserOp(
+      userOp: PackedUserOperationStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    getActiveFallbackHandler(
+      functionSig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[ModuleManager.FallbackHandlerStructOutput]>;
+
+    getActiveHook(
+      overrides?: CallOverrides
+    ): Promise<[string] & { hook: string }>;
 
     getExecutorsPaginated(
       cursor: PromiseOrValue<string>,
@@ -773,41 +662,29 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    implementation(overrides?: CallOverrides): Promise<[string]>;
+
     initializeAccount(
       data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    installExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    installModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      initData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    installFallback(
-      fallbackHandler: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    installValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    isExecutorInstalled(
-      executor: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    isFallbackInstalled(
-      fallbackHandler: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { enabled: boolean }>;
 
     isGuardian(
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isModuleInstalled(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      additionalContext: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -821,11 +698,6 @@ export interface EtherspotWallet7579 extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
-
-    isValidatorInstalled(
-      validator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     ownerCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -843,42 +715,32 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    supportsInterface(
-      interfaceID: PromiseOrValue<BytesLike>,
+    supportsExecutionMode(
+      mode: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[boolean] & { isSupported: boolean }>;
+
+    supportsModule(
+      modulTypeId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    uninstallExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    uninstallFallback(
-      arg0: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    uninstallValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    uninstallModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      deInitData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     validateUserOp(
-      userOp: IERC4337.UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       missingAccountFunds: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
-  AUTHOR(overrides?: CallOverrides): Promise<string>;
-
-  NAME(overrides?: CallOverrides): Promise<string>;
-
-  VERSION(overrides?: CallOverrides): Promise<string>;
+  accountId(overrides?: CallOverrides): Promise<string>;
 
   addGuardian(
     _newGuardian: PromiseOrValue<string>,
@@ -902,40 +764,28 @@ export interface EtherspotWallet7579 extends BaseContract {
   entryPoint(overrides?: CallOverrides): Promise<string>;
 
   execute(
-    target: PromiseOrValue<string>,
-    value: PromiseOrValue<BigNumberish>,
-    callData: PromiseOrValue<BytesLike>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  executeBatch(
-    executions: IExecution.ExecutionStruct[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  executeBatchFromExecutor(
-    executions: IExecution.ExecutionStruct[],
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  executeDelegateCall(
-    target: PromiseOrValue<string>,
-    callData: PromiseOrValue<BytesLike>,
-    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  executeDelegateCallFromExecutor(
-    target: PromiseOrValue<string>,
-    callData: PromiseOrValue<BytesLike>,
+    mode: PromiseOrValue<BytesLike>,
+    executionCalldata: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   executeFromExecutor(
-    target: PromiseOrValue<string>,
-    value: PromiseOrValue<BigNumberish>,
-    callData: PromiseOrValue<BytesLike>,
+    mode: PromiseOrValue<BytesLike>,
+    executionCalldata: PromiseOrValue<BytesLike>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  executeUserOp(
+    userOp: PackedUserOperationStruct,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getActiveFallbackHandler(
+    functionSig: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<ModuleManager.FallbackHandlerStructOutput>;
+
+  getActiveHook(overrides?: CallOverrides): Promise<string>;
 
   getExecutorsPaginated(
     cursor: PromiseOrValue<string>,
@@ -973,41 +823,29 @@ export interface EtherspotWallet7579 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  implementation(overrides?: CallOverrides): Promise<string>;
+
   initializeAccount(
     data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  installExecutor(
-    executor: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  installModule(
+    moduleTypeId: PromiseOrValue<BigNumberish>,
+    module: PromiseOrValue<string>,
+    initData: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  installFallback(
-    fallbackHandler: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  installValidator(
-    validator: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  isExecutorInstalled(
-    executor: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  isFallbackInstalled(
-    fallbackHandler: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   isGuardian(
     _address: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isModuleInstalled(
+    moduleTypeId: PromiseOrValue<BigNumberish>,
+    module: PromiseOrValue<string>,
+    additionalContext: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -1021,11 +859,6 @@ export interface EtherspotWallet7579 extends BaseContract {
     data: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
-
-  isValidatorInstalled(
-    validator: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   ownerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1043,42 +876,32 @@ export interface EtherspotWallet7579 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  supportsInterface(
-    interfaceID: PromiseOrValue<BytesLike>,
+  supportsExecutionMode(
+    mode: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  uninstallExecutor(
-    executor: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  supportsModule(
+    modulTypeId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
-  uninstallFallback(
-    arg0: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  uninstallValidator(
-    validator: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  uninstallModule(
+    moduleTypeId: PromiseOrValue<BigNumberish>,
+    module: PromiseOrValue<string>,
+    deInitData: PromiseOrValue<BytesLike>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   validateUserOp(
-    userOp: IERC4337.UserOperationStruct,
+    userOp: PackedUserOperationStruct,
     userOpHash: PromiseOrValue<BytesLike>,
     missingAccountFunds: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    AUTHOR(overrides?: CallOverrides): Promise<string>;
-
-    NAME(overrides?: CallOverrides): Promise<string>;
-
-    VERSION(overrides?: CallOverrides): Promise<string>;
+    accountId(overrides?: CallOverrides): Promise<string>;
 
     addGuardian(
       _newGuardian: PromiseOrValue<string>,
@@ -1100,40 +923,28 @@ export interface EtherspotWallet7579 extends BaseContract {
     entryPoint(overrides?: CallOverrides): Promise<string>;
 
     execute(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<string>;
-
-    executeBatch(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
-    executeBatchFromExecutor(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
-    executeDelegateCall(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    executeDelegateCallFromExecutor(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<void>;
 
     executeFromExecutor(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<string[]>;
+
+    executeUserOp(
+      userOp: PackedUserOperationStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getActiveFallbackHandler(
+      functionSig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<ModuleManager.FallbackHandlerStructOutput>;
+
+    getActiveHook(overrides?: CallOverrides): Promise<string>;
 
     getExecutorsPaginated(
       cursor: PromiseOrValue<string>,
@@ -1169,41 +980,29 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    implementation(overrides?: CallOverrides): Promise<string>;
+
     initializeAccount(
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    installExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
+    installModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      initData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    installFallback(
-      fallbackHandler: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    installValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    isExecutorInstalled(
-      executor: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    isFallbackInstalled(
-      fallbackHandler: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     isGuardian(
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isModuleInstalled(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      additionalContext: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -1217,11 +1016,6 @@ export interface EtherspotWallet7579 extends BaseContract {
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    isValidatorInstalled(
-      validator: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     ownerCount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1239,31 +1033,25 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    supportsInterface(
-      interfaceID: PromiseOrValue<BytesLike>,
+    supportsExecutionMode(
+      mode: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    uninstallExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
+    supportsModule(
+      modulTypeId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<boolean>;
 
-    uninstallFallback(
-      arg0: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    uninstallValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
+    uninstallModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      deInitData: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     validateUserOp(
-      userOp: IERC4337.UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       missingAccountFunds: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1271,23 +1059,6 @@ export interface EtherspotWallet7579 extends BaseContract {
   };
 
   filters: {
-    "DisableExecutor(address)"(module?: null): DisableExecutorEventFilter;
-    DisableExecutor(module?: null): DisableExecutorEventFilter;
-
-    "DisableValidator(address)"(module?: null): DisableValidatorEventFilter;
-    DisableValidator(module?: null): DisableValidatorEventFilter;
-
-    "EnableExecutor(address)"(module?: null): EnableExecutorEventFilter;
-    EnableExecutor(module?: null): EnableExecutorEventFilter;
-
-    "EnableValidator(address)"(module?: null): EnableValidatorEventFilter;
-    EnableValidator(module?: null): EnableValidatorEventFilter;
-
-    "FallbackHandlerChanged(address)"(
-      handler?: null
-    ): FallbackHandlerChangedEventFilter;
-    FallbackHandlerChanged(handler?: null): FallbackHandlerChangedEventFilter;
-
     "GuardianAdded(address,address)"(
       account?: null,
       newGuardian?: null
@@ -1302,6 +1073,24 @@ export interface EtherspotWallet7579 extends BaseContract {
       account?: null,
       removedGuardian?: null
     ): GuardianRemovedEventFilter;
+
+    "ModuleInstalled(uint256,address)"(
+      moduleTypeId?: null,
+      module?: null
+    ): ModuleInstalledEventFilter;
+    ModuleInstalled(
+      moduleTypeId?: null,
+      module?: null
+    ): ModuleInstalledEventFilter;
+
+    "ModuleUninstalled(uint256,address)"(
+      moduleTypeId?: null,
+      module?: null
+    ): ModuleUninstalledEventFilter;
+    ModuleUninstalled(
+      moduleTypeId?: null,
+      module?: null
+    ): ModuleUninstalledEventFilter;
 
     "OwnerAdded(address,address)"(
       account?: null,
@@ -1339,15 +1128,6 @@ export interface EtherspotWallet7579 extends BaseContract {
       proposer?: null
     ): ProposalSubmittedEventFilter;
 
-    "ProposalTimelockChanged(address,uint256)"(
-      account?: null,
-      newTimelock?: null
-    ): ProposalTimelockChangedEventFilter;
-    ProposalTimelockChanged(
-      account?: null,
-      newTimelock?: null
-    ): ProposalTimelockChangedEventFilter;
-
     "QuorumNotReached(address,uint256,address,uint256)"(
       account?: null,
       proposalId?: null,
@@ -1360,14 +1140,19 @@ export interface EtherspotWallet7579 extends BaseContract {
       newOwnerProposed?: null,
       approvalCount?: null
     ): QuorumNotReachedEventFilter;
+
+    "TryExecuteUnsuccessful(uint256,bytes)"(
+      batchExecutionindex?: null,
+      result?: null
+    ): TryExecuteUnsuccessfulEventFilter;
+    TryExecuteUnsuccessful(
+      batchExecutionindex?: null,
+      result?: null
+    ): TryExecuteUnsuccessfulEventFilter;
   };
 
   estimateGas: {
-    AUTHOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    NAME(overrides?: CallOverrides): Promise<BigNumber>;
-
-    VERSION(overrides?: CallOverrides): Promise<BigNumber>;
+    accountId(overrides?: CallOverrides): Promise<BigNumber>;
 
     addGuardian(
       _newGuardian: PromiseOrValue<string>,
@@ -1391,40 +1176,28 @@ export interface EtherspotWallet7579 extends BaseContract {
     entryPoint(overrides?: CallOverrides): Promise<BigNumber>;
 
     execute(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    executeBatch(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    executeBatchFromExecutor(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    executeDelegateCall(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    executeDelegateCallFromExecutor(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     executeFromExecutor(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    executeUserOp(
+      userOp: PackedUserOperationStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    getActiveFallbackHandler(
+      functionSig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getActiveHook(overrides?: CallOverrides): Promise<BigNumber>;
 
     getExecutorsPaginated(
       cursor: PromiseOrValue<string>,
@@ -1454,41 +1227,29 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    implementation(overrides?: CallOverrides): Promise<BigNumber>;
+
     initializeAccount(
       data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    installExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    installFallback(
-      fallbackHandler: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    installValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    isExecutorInstalled(
-      executor: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isFallbackInstalled(
-      fallbackHandler: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    installModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      initData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     isGuardian(
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isModuleInstalled(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      additionalContext: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1500,11 +1261,6 @@ export interface EtherspotWallet7579 extends BaseContract {
     isValidSignature(
       hash: PromiseOrValue<BytesLike>,
       data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isValidatorInstalled(
-      validator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1524,31 +1280,25 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    supportsInterface(
-      interfaceID: PromiseOrValue<BytesLike>,
+    supportsExecutionMode(
+      mode: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    uninstallExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    supportsModule(
+      modulTypeId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    uninstallFallback(
-      arg0: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    uninstallValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    uninstallModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      deInitData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     validateUserOp(
-      userOp: IERC4337.UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       missingAccountFunds: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1556,11 +1306,7 @@ export interface EtherspotWallet7579 extends BaseContract {
   };
 
   populateTransaction: {
-    AUTHOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    NAME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    VERSION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    accountId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addGuardian(
       _newGuardian: PromiseOrValue<string>,
@@ -1584,40 +1330,28 @@ export interface EtherspotWallet7579 extends BaseContract {
     entryPoint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     execute(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    executeBatch(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    executeBatchFromExecutor(
-      executions: IExecution.ExecutionStruct[],
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    executeDelegateCall(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
-      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    executeDelegateCallFromExecutor(
-      target: PromiseOrValue<string>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     executeFromExecutor(
-      target: PromiseOrValue<string>,
-      value: PromiseOrValue<BigNumberish>,
-      callData: PromiseOrValue<BytesLike>,
+      mode: PromiseOrValue<BytesLike>,
+      executionCalldata: PromiseOrValue<BytesLike>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    executeUserOp(
+      userOp: PackedUserOperationStruct,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getActiveFallbackHandler(
+      functionSig: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getActiveHook(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getExecutorsPaginated(
       cursor: PromiseOrValue<string>,
@@ -1647,41 +1381,29 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    implementation(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     initializeAccount(
       data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    installExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    installFallback(
-      fallbackHandler: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    installValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    isExecutorInstalled(
-      executor: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isFallbackInstalled(
-      fallbackHandler: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    installModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      initData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     isGuardian(
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isModuleInstalled(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      additionalContext: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1693,11 +1415,6 @@ export interface EtherspotWallet7579 extends BaseContract {
     isValidSignature(
       hash: PromiseOrValue<BytesLike>,
       data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isValidatorInstalled(
-      validator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1717,31 +1434,25 @@ export interface EtherspotWallet7579 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    supportsInterface(
-      interfaceID: PromiseOrValue<BytesLike>,
+    supportsExecutionMode(
+      mode: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    uninstallExecutor(
-      executor: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    supportsModule(
+      modulTypeId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    uninstallFallback(
-      arg0: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    uninstallValidator(
-      validator: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    uninstallModule(
+      moduleTypeId: PromiseOrValue<BigNumberish>,
+      module: PromiseOrValue<string>,
+      deInitData: PromiseOrValue<BytesLike>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     validateUserOp(
-      userOp: IERC4337.UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       userOpHash: PromiseOrValue<BytesLike>,
       missingAccountFunds: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }

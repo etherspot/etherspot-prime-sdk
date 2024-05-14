@@ -239,7 +239,7 @@ export abstract class BaseAccountAPI {
   /**
    * return current account's nonce.
    */
-  protected abstract getNonce(key?: number): Promise<BigNumber>;
+  protected abstract getNonce(key?: BigNumber): Promise<BigNumber>;
 
   /**
    * encode the call from entryPoint through our account to the target contract.
@@ -401,7 +401,7 @@ export abstract class BaseAccountAPI {
    * - if gas or nonce are missing, read them from the chain (note that we can't fill gaslimit before the account is created)
    * @param info
    */
-  async createUnsignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<any> {
+  async createUnsignedUserOp(info: TransactionDetailsForUserOp, key = BigNumber.from(0)): Promise<any> {
     const { callData, callGasLimit } = await this.encodeUserOpCallDataAndGasLimit(info);
     const factoryData = await this.getInitCode();
 
@@ -486,7 +486,7 @@ export abstract class BaseAccountAPI {
    * helper method: create and sign a user operation.
    * @param info transaction details for the userOp
    */
-  async createSignedUserOp(info: TransactionDetailsForUserOp, key = 0): Promise<UserOperation> {
+  async createSignedUserOp(info: TransactionDetailsForUserOp, key = BigNumber.from(0)): Promise<UserOperation> {
     return await this.signUserOp(await this.createUnsignedUserOp(info, key));
   }
 

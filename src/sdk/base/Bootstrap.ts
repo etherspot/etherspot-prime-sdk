@@ -469,12 +469,12 @@ const abi = [
     },
 ] as const;
 
-export function _makeBootstrapConfig(module: string, data: string) : BootstrapConfig  {
-    const config: BootstrapConfig  = {
+export function _makeBootstrapConfig(module: string, data: string): BootstrapConfig {
+    const config: BootstrapConfig = {
         module: "",
         data: ""
     };
-    let iface = new ethers.utils.Interface(abi);
+    const iface = new ethers.utils.Interface(abi);
 
     config.module = module;
     config.data = iface.encodeFunctionData(
@@ -486,7 +486,7 @@ export function _makeBootstrapConfig(module: string, data: string) : BootstrapCo
 
 export function makeBootstrapConfig(module: string, data: string): BootstrapConfig[] {
     const config: BootstrapConfig[] = [];
-    let iface = new ethers.utils.Interface(abi);
+    const iface = new ethers.utils.Interface(abi);
     const data1 = iface.encodeFunctionData(
         'onInstall',
         [data]
