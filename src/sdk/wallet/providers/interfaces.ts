@@ -1,4 +1,4 @@
-import { BytesLike, Wallet } from 'ethers';
+import { BytesLike, TypedDataField, Wallet } from 'ethers';
 import type UniversalProvider from '@walletconnect/universal-provider';
 import { UniqueSubject } from '../../common';
 import { NetworkNames } from '../../network';
@@ -12,6 +12,7 @@ export interface WalletProvider {
   readonly networkName$?: UniqueSubject<NetworkNames>;
 
   signMessage(message: BytesLike): Promise<string>;
+  signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string>;
 }
 
 export interface Web3Provider {

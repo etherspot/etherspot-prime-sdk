@@ -1,4 +1,10 @@
 # Changelog
+## [1.8.1] - 2024-05-14
+### New
+- Added signTypedData method to all providers supported
+### Bug Fix
+- Sign message rpc parameters should be in the correct order according to the rpc documentation msg params should always be first
+
 ## [1.8.0] - 2024-04-29
 ### Breaking changes
 - Removed (deprecated) networks Goerli, Op Goerli, Arb Goerli, Mumbai, Klaytn and Mantle Testnet (Goerli)
