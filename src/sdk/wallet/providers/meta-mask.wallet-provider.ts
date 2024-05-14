@@ -52,8 +52,8 @@ export class MetaMaskWalletProvider extends DynamicWalletProvider {
 
   async signMessage(message: BytesLike): Promise<string> {
     return this.sendRequest('personal_sign', [
-      this.address, //
       toHex(message),
+      this.address, //
     ]);
   }
 

@@ -51,8 +51,8 @@ export class Web3WalletProvider extends DynamicWalletProvider {
     return this.sendRequest(
       'personal_sign',
       [
-        this.address, //
         toHex(message),
+        this.address, //
       ],
       this.address,
     );
