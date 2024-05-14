@@ -1,4 +1,4 @@
-import { BytesLike } from 'ethers';
+import { BytesLike, TypedDataField } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
 import { WalletConnectConnector } from './interfaces';
@@ -40,6 +40,10 @@ export class WalletConnectWalletProvider extends DynamicWalletProvider {
     ]);
 
     return response || null;
+  }
+
+  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
+    throw new Error('Not supported on this provider')
   }
 
   protected updateSessionHandler(error: Error, payload: { params: { accounts: string[]; chainId: number } }): void {
