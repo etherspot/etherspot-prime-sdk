@@ -51,6 +51,20 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     this.multipleOwnerECDSAValidatorAddress = Networks[params.optionsLike.chainId].contracts.multipleOwnerECDSAValidator;
   }
 
+  async installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+    const installModuleInterface = new ethers.utils.Interface(['function installModule(uint256 moduleTypeId,address module,bytes initData)']);
+    const installModuleData = installModuleInterface.encodeFunctionData('installModule', [moduleTypeId, module, initData]);
+
+    return installModuleData;
+  }
+
+  async uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+    const uninstallModuleInterface = new ethers.utils.Interface(['function uninstallModule(uint256 moduleTypeId,address module,bytes deInitData)']);
+    const uninstallModuleData = uninstallModuleInterface.encodeFunctionData('uninstallModule', [moduleTypeId, module, deinitData]);
+
+    return uninstallModuleData;
+  }
+
   async checkAccountAddress(address: string): Promise<void> {
     const accountContract = EtherspotWallet7579__factory.connect(address, this.provider);
     if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
@@ -68,7 +82,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     return this.accountContract;
   }
 
-  async getInitCode(): Promise<string> {
+  async getInitCodeData(): Promise<string> {
     const iface = new ethers.utils.Interface(BOOTSTRAP_ABI);
     const validators: BootstrapConfig[] = makeBootstrapConfig(this.multipleOwnerECDSAValidatorAddress, '0x');
     const executors: BootstrapConfig[] = makeBootstrapConfig(constants.AddressZero, '0x');
@@ -99,7 +113,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
       throw new Error('no factory to get initCode');
     }
 
-    const initCode = await this.getInitCode();
+    const initCode = await this.getInitCodeData();
     const salt = ethers.utils.hexZeroPad(ethers.utils.hexValue(this.index), 32);
 
     return hexConcat([
@@ -117,7 +131,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     }
 
     const salt = ethers.utils.hexZeroPad(ethers.utils.hexValue(this.index), 32);
-    const initCode = await this.getInitCode();
+    const initCode = await this.getInitCodeData();
 
     if (!this.accountAddress) {
       this.factory = EtherspotWallet7579Factory__factory.connect(this.factoryAddress, this.provider);

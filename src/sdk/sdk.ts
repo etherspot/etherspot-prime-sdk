@@ -285,6 +285,14 @@ export class PrimeSdk {
     return this.etherspotWallet._getAccountContract();
   }
 
+  async installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+    return this.etherspotWallet.installModule(moduleTypeId, module, initData);
+  }
+
+  async uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+    return this.etherspotWallet.uninstallModule(moduleTypeId, module, deinitData);
+  }
+
   async totalGasEstimated(userOp: UserOperation): Promise<BigNumber> {
     const callGasLimit = BigNumber.from(await userOp.callGasLimit);
     const verificationGasLimit = BigNumber.from(await userOp.verificationGasLimit);

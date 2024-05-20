@@ -115,4 +115,12 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     const accountContract = await this._getAccountContract();
     return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
   }
+
+  public installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  public uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 }

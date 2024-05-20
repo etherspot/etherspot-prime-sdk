@@ -171,4 +171,12 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
       Operation.DelegateCall,
     ])
   }
+
+  public installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  public uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 }
