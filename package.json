@@ -44,6 +44,7 @@
     "22-concurrent-userops": "./node_modules/.bin/ts-node ./examples/22-concurrent-userops",
     "25-get-quotes": "./node_modules/.bin/ts-node ./examples/25-get-quotes",
     "26-install-module": "./node_modules/.bin/ts-node ./examples/26-install-module",
+    "27-uninstall-module": "./node_modules/.bin/ts-node ./examples/27-uninstall-module",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test,examples}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",

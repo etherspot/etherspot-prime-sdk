@@ -275,10 +275,6 @@ export abstract class BaseAccountAPI {
     return this.isPhantom;
   }
 
-  public abstract installModule(moduleTypeId: string, module: string, initData: string): Promise<string>;
-
-  public abstract uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string>;
-
   /**
    * calculate the account address even before it is deployed
    */

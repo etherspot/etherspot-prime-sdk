@@ -116,11 +116,11 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
   }
 
-  public installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+  installModule(): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  public uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+  uninstallModule(): Promise<string> {
     throw new Error('Method not implemented.');
   }
 }

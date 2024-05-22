@@ -172,11 +172,11 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
     ])
   }
 
-  public installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+  installModule(): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  public uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+  uninstallModule(): Promise<string> {
     throw new Error('Method not implemented.');
   }
 }

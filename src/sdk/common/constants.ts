@@ -33,9 +33,9 @@ export enum VALIDATOR_MODE {
   ENABLE = "0x01"
 }
 
-export const MODULE_TYPE = {
-  VALIDATOR: '0x01',
-  EXECUTOR: '0x02',
-  FALLBACK: '0x03',
-  HOOK: '0x04',
+export enum MODULE_TYPE {
+  VALIDATOR = '0x01',
+  EXECUTOR = '0x02',
+  FALLBACK = '0x03',
+  HOOK = '0x04',
 }

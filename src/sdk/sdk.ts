@@ -9,7 +9,7 @@ import {
 } from './wallet';
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOperation, UserOpsRequest } from "./common";
+import { BatchUserOpsRequest, Exception, getGasFee, MODULE_TYPE, onRampApiKey, openUrl, UserOperation, UserOpsRequest } from "./common";
 import { BigNumber, BigNumberish, Contract, ethers, providers } from 'ethers';
 import { Networks, onRamperAllNetworks } from './network/constants';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
@@ -285,11 +285,11 @@ export class PrimeSdk {
     return this.etherspotWallet._getAccountContract();
   }
 
-  async installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+  async installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
     return this.etherspotWallet.installModule(moduleTypeId, module, initData);
   }
 
-  async uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+  async uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
     return this.etherspotWallet.uninstallModule(moduleTypeId, module, deinitData);
   }
 

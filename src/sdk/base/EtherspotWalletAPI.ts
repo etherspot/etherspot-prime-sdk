@@ -5,7 +5,7 @@ import { EtherspotWallet7579Factory__factory, EtherspotWallet7579__factory } fro
 import { ModularEtherspotWallet, EtherspotWallet7579Factory } from '../contracts/src/ERC7579/wallet';
 import { BOOTSTRAP_ABI, BootstrapConfig, _makeBootstrapConfig, makeBootstrapConfig } from './Bootstrap';
 import { Networks } from '../network/constants';
-import { CALL_TYPE, EXEC_TYPE, getExecuteMode } from '../common';
+import { CALL_TYPE, EXEC_TYPE, MODULE_TYPE, getExecuteMode } from '../common';
 
 /**
  * constructor params, added no top of base params:
@@ -51,14 +51,24 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     this.multipleOwnerECDSAValidatorAddress = Networks[params.optionsLike.chainId].contracts.multipleOwnerECDSAValidator;
   }
 
-  async installModule(moduleTypeId: string, module: string, initData: string): Promise<string> {
+  async installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
+    const accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
+    if (await accountContract.isModuleInstalled(moduleTypeId, module, initData)) {
+      throw new Error('the module is already installed')
+    }
+
     const installModuleInterface = new ethers.utils.Interface(['function installModule(uint256 moduleTypeId,address module,bytes initData)']);
     const installModuleData = installModuleInterface.encodeFunctionData('installModule', [moduleTypeId, module, initData]);
 
     return installModuleData;
   }
 
-  async uninstallModule(moduleTypeId: string, module: string, deinitData: string): Promise<string> {
+  async uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
+    const accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
+    if (!(await accountContract.isModuleInstalled(moduleTypeId, module, deinitData))) {
+      throw new Error('the module is not installed in the wallet')
+    }
+
     const uninstallModuleInterface = new ethers.utils.Interface(['function uninstallModule(uint256 moduleTypeId,address module,bytes deInitData)']);
     const uninstallModuleData = uninstallModuleInterface.encodeFunctionData('uninstallModule', [moduleTypeId, module, deinitData]);
 
@@ -144,7 +154,10 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async getNonce(key: BigNumber = BigNumber.from(0)): Promise<BigNumber> {
-    const dummyKey = ethers.utils.getAddress(key.toHexString()) + "00000000"
+    if (key.eq(BigNumber.from(0))) {
+      return await this.nonceManager.getNonce(await this.getAccountAddress(), BigInt(key.toString()));
+    }
+    const dummyKey = ethers.utils.getAddress(key.toHexString()) + "00000000";
     return await this.nonceManager.getNonce(await this.getAccountAddress(), BigInt(dummyKey));
   }
 

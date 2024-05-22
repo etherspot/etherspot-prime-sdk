@@ -2,7 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import * as dotenv from 'dotenv';
-import { sleep } from '../src/sdk/common';
+import { MODULE_TYPE, sleep } from '../src/sdk/common';
 
 dotenv.config();
 
@@ -24,8 +24,8 @@ async function main() {
     ['0x0000000000000000000000000000000000000001', '0x00']
   );
 
-  const uninstallData = await primeSdk.uninstallModule('1', '0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124', deInitData);
-  console.log('\x1b[33m%s\x1b[0m', `installData: ${uninstallData}`);
+  // get uninstallData of module
+  const uninstallData = await primeSdk.uninstallModule(MODULE_TYPE.VALIDATOR, '0x6a00da4DEEf677Ad854B7c14F17Ed9312c2B5fDf', deInitData);
 
   // clear the transaction batch
   await primeSdk.clearUserOpsFromBatch();
