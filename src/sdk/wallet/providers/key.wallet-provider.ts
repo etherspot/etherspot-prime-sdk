@@ -1,4 +1,4 @@
-import { Wallet, BytesLike } from 'ethers';
+import { Wallet, BytesLike, TypedDataField } from 'ethers';
 import { WalletProvider } from './interfaces';
 
 export class KeyWalletProvider implements WalletProvider {
@@ -17,5 +17,10 @@ export class KeyWalletProvider implements WalletProvider {
 
   async signMessage(message: BytesLike): Promise<string> {
     return this.wallet.signMessage(message);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
+    throw new Error('Not supported in this connectedProvider');
   }
 }

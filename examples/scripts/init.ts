@@ -4,9 +4,9 @@ import prettier from "prettier";
 import { ethers } from "ethers";
 
 const INIT_CONFIG = {
-  rpcProviderUrl: "https://mumbai-bundler.etherspot.io",
+  rpcProviderUrl: "https://testnet-rpc.etherspot.io/v1/11155111",
   signingKey: new ethers.Wallet(ethers.utils.randomBytes(32)).privateKey,
-  chainId: 80001,
+  chainId: 11155111,
   paymaster: {
     rpcUrl: "",
     context: {},

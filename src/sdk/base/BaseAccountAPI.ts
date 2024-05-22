@@ -1,4 +1,4 @@
-import { ethers, BigNumber, BigNumberish } from 'ethers';
+import { ethers, BigNumber, BigNumberish, TypedDataField } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
 import { IEntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
@@ -507,5 +507,9 @@ export abstract class BaseAccountAPI {
       await new Promise((resolve) => setTimeout(resolve, interval));
     }
     return null;
+  }
+
+  async signTypedData(types: TypedDataField[], message: any) {
+    return this.services.walletService.signTypedData(types, message, this.accountAddress);
   }
 }

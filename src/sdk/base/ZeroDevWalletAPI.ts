@@ -8,6 +8,7 @@ import { KernelAccountAbi } from '../contracts/zeroDevKernal/KernalAccountAbi';
 import { MultiSendAbi } from '../contracts/zeroDevKernal/MultiSendAbi';
 import { Safe } from '../network/constants';
 import { KernelFactoryAbi } from '../contracts/zeroDevKernal/KernalFactoryAbi';
+import { MODULE_TYPE } from '../common';
 
 /**
  * For Interacting with safe contract
@@ -172,11 +173,13 @@ export class ZeroDevWalletAPI extends BaseAccountAPI {
     ])
   }
 
-  installModule(): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  uninstallModule(): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 }

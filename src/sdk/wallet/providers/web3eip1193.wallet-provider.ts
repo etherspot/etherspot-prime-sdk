@@ -1,4 +1,4 @@
-import { BytesLike } from 'ethers';
+import { BytesLike, TypedDataField } from 'ethers';
 import { prepareAddress, toHex } from '../../common';
 import { NetworkNames, prepareNetworkName } from '../../network';
 import { Web3eip1193Provider } from './interfaces';
@@ -48,6 +48,46 @@ export class Web3eip1193WalletProvider extends DynamicWalletProvider {
 
   async signMessage(message: BytesLike): Promise<string> {
     return this.sendRequest('personal_sign', [toHex(message), this.address]);
+  }
+
+  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
+    const chainId = await this.sendRequest<string>('eth_chainId');
+    const domainSeparator = {
+      name: "EtherspotWallet",
+      version: "2.0.0",
+      chainId: chainId,
+      verifyingContract: accountAddress
+    };
+    const signature = await this.sendRequest('eth_signTypedData_v4', [
+      this.address,
+      {
+        "types": {
+          "EIP712Domain": [
+            {
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "name": "chainId",
+              "type": "uint256"
+            },
+            {
+              "name": "verifyingContract",
+              "type": "address"
+            }
+          ],
+          "message": typedData
+        },
+        "primaryType": "message",
+        "domain": domainSeparator,
+        "message": message
+      }
+    ])
+    return signature;
   }
 
   protected async sendRequest<T = any>(method: string, params: any[] = []): Promise<T> {

@@ -10,7 +10,7 @@ import {
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, MODULE_TYPE, onRampApiKey, openUrl, UserOperation, UserOpsRequest } from "./common";
-import { BigNumber, BigNumberish, Contract, ethers, providers } from 'ethers';
+import { BigNumber, BigNumberish, Contract, TypedDataField, ethers, providers } from 'ethers';
 import { Networks, onRamperAllNetworks } from './network/constants';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
@@ -246,6 +246,13 @@ export class PrimeSdk {
   async send(userOp: any) {
     const signedUserOp = await this.etherspotWallet.signUserOp(userOp);
     return this.bundler.sendUserOpToBundler(signedUserOp);
+  }
+
+  async signTypedData(
+    DataFields: TypedDataField[],
+    message: any
+  ) {
+    return this.etherspotWallet.signTypedData(DataFields, message);
   }
 
   async getNativeBalance() {

@@ -6,6 +6,7 @@ import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
 import { SimpleAccountAbi } from '../contracts/SimpleAccount/SimpleAccountAbi';
 import { SimpleAccountFactoryAbi } from '../contracts/SimpleAccount/SimpleAccountFactoryAbi';
+import { MODULE_TYPE } from '../common';
 
 /**
  * constructor params, added no top of base params:
@@ -116,11 +117,13 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
   }
 
-  installModule(): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
-  uninstallModule(): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 }
