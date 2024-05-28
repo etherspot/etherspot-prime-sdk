@@ -51,7 +51,7 @@ export class HttpRpcClient {
     }
   }
 
-  async getVerificationGasInfo(tx: any): Promise<any> {
+  async getVerificationGasInfo(tx: UserOperationStruct): Promise<any> {
     const hexifiedUserOp = deepHexlify(await resolveProperties(tx));
     try {
       const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [hexifiedUserOp, this.entryPointAddress]);

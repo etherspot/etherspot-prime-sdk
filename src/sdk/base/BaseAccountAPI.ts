@@ -466,7 +466,7 @@ export abstract class BaseAccountAPI {
    * Sign the filled userOp.
    * @param userOp the UserOperation to sign (with signature field ignored)
    */
-  async signUserOp(userOp: any): Promise<any> {
+  async signUserOp(userOp: UserOperation): Promise<UserOperation> {
     if (this.paymasterAPI != null) {
       const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
       userOp.paymasterAndData = paymasterAndData.result.paymasterAndData;

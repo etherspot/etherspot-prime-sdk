@@ -113,7 +113,7 @@ export class ERC4337EthersProvider extends BaseProvider {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       wait: async (confirmations?: number): Promise<TransactionReceipt> => {
         const transactionReceipt = await waitPromise;
-        if (userOp.factory != null) {
+        if (userOp.factory != null && userOp.factory.length > 0) {
           // checking if the wallet has been deployed by the transaction; it must be if we are here
           await this.smartAccountAPI.checkAccountPhantom();
         }

@@ -57,10 +57,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
       throw new Error('the module is already installed')
     }
 
-    const installModuleInterface = new ethers.utils.Interface(['function installModule(uint256 moduleTypeId,address module,bytes initData)']);
-    const installModuleData = installModuleInterface.encodeFunctionData('installModule', [moduleTypeId, module, initData]);
-
-    return installModuleData;
+    return accountContract.interface.encodeFunctionData('installModule', [moduleTypeId, module, initData]);
   }
 
   async uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
@@ -69,10 +66,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
       throw new Error('the module is not installed in the wallet')
     }
 
-    const uninstallModuleInterface = new ethers.utils.Interface(['function uninstallModule(uint256 moduleTypeId,address module,bytes deInitData)']);
-    const uninstallModuleData = uninstallModuleInterface.encodeFunctionData('uninstallModule', [moduleTypeId, module, deinitData]);
-
-    return uninstallModuleData;
+    return accountContract.interface.encodeFunctionData('uninstallModule', [moduleTypeId, module, deinitData]);
   }
 
   async checkAccountAddress(address: string): Promise<void> {
