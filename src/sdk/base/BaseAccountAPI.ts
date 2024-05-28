@@ -469,7 +469,6 @@ export abstract class BaseAccountAPI {
   async signUserOp(userOp: UserOperation): Promise<UserOperation> {
     if (this.paymasterAPI != null) {
       const paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOp);
-      userOp.paymasterAndData = paymasterAndData.result.paymasterAndData;
       userOp.verificationGasLimit = paymasterAndData.result.verificationGasLimit;
       userOp.preVerificationGas = paymasterAndData.result.preVerificationGas;
       userOp.callGasLimit = paymasterAndData.result.callGasLimit;

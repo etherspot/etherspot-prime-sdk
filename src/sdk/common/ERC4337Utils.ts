@@ -18,7 +18,6 @@ export interface UserOperation {
   paymasterVerificationGasLimit?: BigNumberish
   paymasterPostOpGasLimit?: BigNumberish
   paymasterData?: BytesLike
-  paymasterAndData?: BytesLike
   signature: BytesLike
 }
 
