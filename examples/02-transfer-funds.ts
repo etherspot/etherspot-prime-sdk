@@ -34,7 +34,7 @@ async function main() {
 
   // estimate transactions added to the batch and get the fee data for the UserOp
   const op = await primeSdk.estimate({
-    key: BigNumber.from('0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124')
+    key: BigNumber.from('0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124') // multipleOwnerECDSAValidator address
   });
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 

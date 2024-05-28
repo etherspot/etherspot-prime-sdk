@@ -1,4 +1,10 @@
 # Changelog
+## [1.8.2] - 2024-05-28
+### New
+- Added support for EP7.0 and Etherspot's Modular accounts
+- Added `installModule` function to install module
+- Added `uninstallModule` function to remove module
+
 ## [1.8.1] - 2024-05-14
 ### New
 - Added signTypedData method to all providers supported

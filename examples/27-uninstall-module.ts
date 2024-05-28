@@ -36,7 +36,7 @@ async function main() {
 
   // sign transactions added to the batch
   const op = await primeSdk.estimate({
-    key: BigNumber.from('0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124')
+    key: BigNumber.from('0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124') // multipleOwnerECDSAValidator address
   });
   console.log(`Estimated UserOp: ${await printOp(op)}`);
 
