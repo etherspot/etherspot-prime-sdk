@@ -47,9 +47,9 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
       // A dummy value here is required in order to calculate a correct preVerificationGas value.
       paymasterData: DUMMY_PAYMASTER_AND_DATA,
       signature: userOp.signature ?? '0x',
-      paymaster: userOp?.paymaster,
-      paymasterVerificationGasLimit: userOp?.paymasterVerificationGasLimit,
-      paymasterPostOpGasLimit: userOp?.paymasterPostOpGasLimit,
+      paymaster: userOp.paymaster,
+      paymasterVerificationGasLimit: userOp.paymasterVerificationGasLimit,
+      paymasterPostOpGasLimit: userOp.paymasterPostOpGasLimit,
     };
     const op = await ethers.utils.resolveProperties(pmOp);
     op.preVerificationGas = calcPreVerificationGas(op);
