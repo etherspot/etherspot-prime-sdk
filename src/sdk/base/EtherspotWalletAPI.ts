@@ -148,11 +148,12 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   }
 
   async getNonce(key: BigNumber = BigNumber.from(0)): Promise<BigNumber> {
-    if (key.eq(BigNumber.from(0))) {
-      return await this.nonceManager.getNonce(await this.getAccountAddress(), BigInt(key.toString()));
-    }
-    const dummyKey = ethers.utils.getAddress(key.toHexString()) + "00000000";
-    return await this.nonceManager.getNonce(await this.getAccountAddress(), BigInt(dummyKey));
+    const accountAddress = await this.getAccountAddress();
+    const dummyKey = key.eq(0)
+      ? ethers.utils.getAddress(this.multipleOwnerECDSAValidatorAddress) + "00000000"
+      : ethers.utils.getAddress(key.toHexString()) + "00000000";
+
+    return await this.nonceManager.getNonce(accountAddress, BigInt(dummyKey));
   }
 
   /**

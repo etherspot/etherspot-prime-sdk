@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { EtherspotBundler, PrimeSdk } from '../src';
 import { printOp } from '../src/sdk/common/OperationUtils';
 import * as dotenv from 'dotenv';
@@ -33,9 +33,7 @@ async function main() {
   console.log('balances: ', balance);
 
   // estimate transactions added to the batch and get the fee data for the UserOp
-  const op = await primeSdk.estimate({
-    key: BigNumber.from('0x1E714c551Fe6234B6eE406899Ec3Be9234Ad2124') // multipleOwnerECDSAValidator address
-  });
+  const op = await primeSdk.estimate();
   console.log(`Estimate UserOp: ${await printOp(op)}`);
 
   // sign the UserOp and sending to the bundler...
