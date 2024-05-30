@@ -15,5 +15,7 @@ export interface NetworkConfig {
       zeroDev: string;
       simpleAccount: string;
     };
+    bootstrap: string;
+    multipleOwnerECDSAValidator: string;
   };
 };

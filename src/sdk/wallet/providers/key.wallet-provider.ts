@@ -19,6 +19,7 @@ export class KeyWalletProvider implements WalletProvider {
     return this.wallet.signMessage(message);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
     throw new Error('Not supported in this connectedProvider');
   }

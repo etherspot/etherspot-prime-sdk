@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { resolveProperties } from 'ethers/lib/utils';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import Debug from 'debug';
-import { deepHexlify } from '../common/ERC4337Utils';
+import { UserOperation, deepHexlify } from '../common/ERC4337Utils';
 import { Gas } from '../common';
 import { ErrorHandler } from '../errorHandler/errorHandler.service';
 
@@ -70,7 +70,7 @@ export class HttpRpcClient {
    * @param userOp1
    * @return userOpHash the id of this operation, for getUserOperationTransaction
    */
-  async sendUserOpToBundler(userOp1: UserOperationStruct): Promise<string> {
+  async sendUserOpToBundler(userOp1: UserOperation): Promise<string> {
     try {
       await this.initializing;
       const hexifiedUserOp = deepHexlify(await resolveProperties(userOp1));

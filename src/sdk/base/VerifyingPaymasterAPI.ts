@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import fetch from 'cross-fetch';
 import { calcPreVerificationGas } from './calcPreVerificationGas';
 import { PaymasterAPI } from './PaymasterAPI';
-import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { toJSON } from '../common/OperationUtils';
+import { UserOperation } from '../common';
 
 const DUMMY_PAYMASTER_AND_DATA =
   '0x0101010101010101010101010101010101010101000000000000000000000000000000000000000000000000000001010101010100000000000000000000000000000000000000000000000000000000000000000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101';
@@ -28,25 +28,28 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     this.context = context;
   }
 
-  async getPaymasterAndData(userOp: Partial<UserOperationStruct>): Promise<PaymasterResponse> {
+  async getPaymasterAndData(userOp: Partial<UserOperation>): Promise<PaymasterResponse> {
     // Hack: userOp includes empty paymasterAndData which calcPreVerificationGas requires.
     try {
       // userOp.preVerificationGas contains a promise that will resolve to an error.
       await ethers.utils.resolveProperties(userOp);
       // eslint-disable-next-line no-empty
     } catch (_) { }
-    const pmOp: Partial<UserOperationStruct> = {
+    const pmOp: Partial<UserOperation> = {
       sender: userOp.sender,
       nonce: userOp.nonce,
-      initCode: userOp.initCode,
+      factoryData: userOp.factoryData,
       callData: userOp.callData,
       callGasLimit: userOp.callGasLimit,
       verificationGasLimit: userOp.verificationGasLimit,
       maxFeePerGas: userOp.maxFeePerGas,
       maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
       // A dummy value here is required in order to calculate a correct preVerificationGas value.
-      paymasterAndData: DUMMY_PAYMASTER_AND_DATA,
+      paymasterData: DUMMY_PAYMASTER_AND_DATA,
       signature: userOp.signature ?? '0x',
+      paymaster: userOp.paymaster,
+      paymasterVerificationGasLimit: userOp.paymasterVerificationGasLimit,
+      paymasterPostOpGasLimit: userOp.paymasterPostOpGasLimit,
     };
     const op = await ethers.utils.resolveProperties(pmOp);
     op.preVerificationGas = calcPreVerificationGas(op);

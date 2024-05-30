@@ -2,14 +2,12 @@ import { BaseProvider, TransactionReceipt, TransactionResponse } from '@etherspr
 import { BigNumber, Signer } from 'ethers';
 import { Network } from '@ethersproject/networks';
 import { hexValue, resolveProperties } from 'ethers/lib/utils';
-
 import { ClientConfig } from './ClientConfig';
 import { ERC4337EthersSigner } from './ERC4337EthersSigner';
 import { UserOperationEventListener } from './UserOperationEventListener';
 import { HttpRpcClient } from './HttpRpcClient';
-import type { EntryPoint } from '../contracts';
-import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
-import { getUserOpHash } from '../common';
+import type { IEntryPoint } from '../contracts';
+import { UserOperation, getUserOpHash } from '../common';
 import { BaseAccountAPI } from './BaseAccountAPI';
 
 export class ERC4337EthersProvider extends BaseProvider {
@@ -23,7 +21,7 @@ export class ERC4337EthersProvider extends BaseProvider {
     readonly originalSigner: Signer,
     readonly originalProvider: BaseProvider,
     readonly httpRpcClient: HttpRpcClient,
-    readonly entryPoint: EntryPoint,
+    readonly entryPoint: IEntryPoint,
     readonly smartAccountAPI: BaseAccountAPI,
   ) {
     super({
@@ -97,7 +95,7 @@ export class ERC4337EthersProvider extends BaseProvider {
   }
 
   // fabricate a response in a format usable by ethers users...
-  async constructUserOpTransactionResponse(userOp1: UserOperationStruct): Promise<TransactionResponse> {
+  async constructUserOpTransactionResponse(userOp1: UserOperation): Promise<TransactionResponse> {
     const userOp = await resolveProperties(userOp1);
     const userOpHash = getUserOpHash(userOp, this.config.entryPointAddress, this.chainId);
     const waitPromise = new Promise<TransactionReceipt>((resolve, reject) => {
@@ -115,7 +113,7 @@ export class ERC4337EthersProvider extends BaseProvider {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       wait: async (confirmations?: number): Promise<TransactionReceipt> => {
         const transactionReceipt = await waitPromise;
-        if (userOp.initCode.length !== 0) {
+        if (userOp.factory != null && userOp.factory.length > 0) {
           // checking if the wallet has been deployed by the transaction; it must be if we are here
           await this.smartAccountAPI.checkAccountPhantom();
         }

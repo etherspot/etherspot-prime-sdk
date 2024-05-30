@@ -6,6 +6,7 @@ import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
 import { SimpleAccountAbi } from '../contracts/SimpleAccount/SimpleAccountAbi';
 import { SimpleAccountFactoryAbi } from '../contracts/SimpleAccount/SimpleAccountFactoryAbi';
+import { MODULE_TYPE } from '../common';
 
 /**
  * constructor params, added no top of base params:
@@ -84,7 +85,7 @@ export class SimpleAccountAPI extends BaseAccountAPI {
     return this.accountAddress;
   }
 
-  async getNonce(key = 0): Promise<BigNumber> {
+  async getNonce(key = BigNumber.from(0)): Promise<BigNumber> {
     if (await this.checkAccountPhantom()) {
       return BigNumber.from(0);
     }
@@ -114,5 +115,15 @@ export class SimpleAccountAPI extends BaseAccountAPI {
   async encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string> {
     const accountContract = await this._getAccountContract();
     return accountContract.interface.encodeFunctionData('executeBatch', [targets, datas]);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
+    throw new Error('Method not implemented.');
   }
 }

@@ -28,30 +28,26 @@ import type {
   PromiseOrValue,
 } from "../../../common";
 
-export type UserOperationStruct = {
+export type PackedUserOperationStruct = {
   sender: PromiseOrValue<string>;
   nonce: PromiseOrValue<BigNumberish>;
   initCode: PromiseOrValue<BytesLike>;
   callData: PromiseOrValue<BytesLike>;
-  callGasLimit: PromiseOrValue<BigNumberish>;
-  verificationGasLimit: PromiseOrValue<BigNumberish>;
+  accountGasLimits: PromiseOrValue<BytesLike>;
   preVerificationGas: PromiseOrValue<BigNumberish>;
-  maxFeePerGas: PromiseOrValue<BigNumberish>;
-  maxPriorityFeePerGas: PromiseOrValue<BigNumberish>;
+  gasFees: PromiseOrValue<BytesLike>;
   paymasterAndData: PromiseOrValue<BytesLike>;
   signature: PromiseOrValue<BytesLike>;
 };
 
-export type UserOperationStructOutput = [
+export type PackedUserOperationStructOutput = [
   string,
   BigNumber,
   string,
   string,
+  string,
   BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
-  BigNumber,
+  string,
   string,
   string
 ] & {
@@ -59,11 +55,9 @@ export type UserOperationStructOutput = [
   nonce: BigNumber;
   initCode: string;
   callData: string;
-  callGasLimit: BigNumber;
-  verificationGasLimit: BigNumber;
+  accountGasLimits: string;
   preVerificationGas: BigNumber;
-  maxFeePerGas: BigNumber;
-  maxPriorityFeePerGas: BigNumber;
+  gasFees: string;
   paymasterAndData: string;
   signature: string;
 };
@@ -94,17 +88,17 @@ export declare namespace IStakeManager {
 
 export declare namespace IEntryPoint {
   export type UserOpsPerAggregatorStruct = {
-    userOps: UserOperationStruct[];
+    userOps: PackedUserOperationStruct[];
     aggregator: PromiseOrValue<string>;
     signature: PromiseOrValue<BytesLike>;
   };
 
   export type UserOpsPerAggregatorStructOutput = [
-    UserOperationStructOutput[],
+    PackedUserOperationStructOutput[],
     string,
     string
   ] & {
-    userOps: UserOperationStructOutput[];
+    userOps: PackedUserOperationStructOutput[];
     aggregator: string;
     signature: string;
   };
@@ -114,16 +108,15 @@ export interface IEntryPointInterface extends utils.Interface {
   functions: {
     "addStake(uint32)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "delegateAndRevert(address,bytes)": FunctionFragment;
     "depositTo(address)": FunctionFragment;
     "getDepositInfo(address)": FunctionFragment;
     "getNonce(address,uint192)": FunctionFragment;
     "getSenderAddress(bytes)": FunctionFragment;
-    "getUserOpHash((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
-    "handleAggregatedOps(((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address,bytes)[],address)": FunctionFragment;
-    "handleOps((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes)[],address)": FunctionFragment;
+    "getUserOpHash((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes))": FunctionFragment;
+    "handleAggregatedOps(((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address,bytes)[],address)": FunctionFragment;
+    "handleOps((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address)": FunctionFragment;
     "incrementNonce(uint192)": FunctionFragment;
-    "simulateHandleOp((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes),address,bytes)": FunctionFragment;
-    "simulateValidation((address,uint256,bytes,bytes,uint256,uint256,uint256,uint256,uint256,bytes,bytes))": FunctionFragment;
     "unlockStake()": FunctionFragment;
     "withdrawStake(address)": FunctionFragment;
     "withdrawTo(address,uint256)": FunctionFragment;
@@ -133,6 +126,7 @@ export interface IEntryPointInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "addStake"
       | "balanceOf"
+      | "delegateAndRevert"
       | "depositTo"
       | "getDepositInfo"
       | "getNonce"
@@ -141,8 +135,6 @@ export interface IEntryPointInterface extends utils.Interface {
       | "handleAggregatedOps"
       | "handleOps"
       | "incrementNonce"
-      | "simulateHandleOp"
-      | "simulateValidation"
       | "unlockStake"
       | "withdrawStake"
       | "withdrawTo"
@@ -155,6 +147,10 @@ export interface IEntryPointInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "delegateAndRevert",
+    values: [PromiseOrValue<string>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "depositTo",
@@ -174,7 +170,7 @@ export interface IEntryPointInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getUserOpHash",
-    values: [UserOperationStruct]
+    values: [PackedUserOperationStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "handleAggregatedOps",
@@ -182,23 +178,11 @@ export interface IEntryPointInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "handleOps",
-    values: [UserOperationStruct[], PromiseOrValue<string>]
+    values: [PackedUserOperationStruct[], PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "incrementNonce",
     values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "simulateHandleOp",
-    values: [
-      UserOperationStruct,
-      PromiseOrValue<string>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "simulateValidation",
-    values: [UserOperationStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "unlockStake",
@@ -215,6 +199,10 @@ export interface IEntryPointInterface extends utils.Interface {
 
   decodeFunctionResult(functionFragment: "addStake", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "delegateAndRevert",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "depositTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getDepositInfo",
@@ -239,14 +227,6 @@ export interface IEntryPointInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "simulateHandleOp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "simulateValidation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "unlockStake",
     data: BytesLike
   ): Result;
@@ -260,11 +240,13 @@ export interface IEntryPointInterface extends utils.Interface {
     "AccountDeployed(bytes32,address,address,address)": EventFragment;
     "BeforeExecution()": EventFragment;
     "Deposited(address,uint256)": EventFragment;
+    "PostOpRevertReason(bytes32,address,uint256,bytes)": EventFragment;
     "SignatureAggregatorChanged(address)": EventFragment;
     "StakeLocked(address,uint256,uint256)": EventFragment;
     "StakeUnlocked(address,uint256)": EventFragment;
     "StakeWithdrawn(address,address,uint256)": EventFragment;
     "UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)": EventFragment;
+    "UserOperationPrefundTooLow(bytes32,address,uint256)": EventFragment;
     "UserOperationRevertReason(bytes32,address,uint256,bytes)": EventFragment;
     "Withdrawn(address,address,uint256)": EventFragment;
   };
@@ -272,11 +254,13 @@ export interface IEntryPointInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "AccountDeployed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeforeExecution"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Deposited"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PostOpRevertReason"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SignatureAggregatorChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakeLocked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakeUnlocked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakeWithdrawn"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserOperationEvent"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "UserOperationPrefundTooLow"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "UserOperationRevertReason"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
 }
@@ -309,6 +293,20 @@ export type DepositedEvent = TypedEvent<
 >;
 
 export type DepositedEventFilter = TypedEventFilter<DepositedEvent>;
+
+export interface PostOpRevertReasonEventObject {
+  userOpHash: string;
+  sender: string;
+  nonce: BigNumber;
+  revertReason: string;
+}
+export type PostOpRevertReasonEvent = TypedEvent<
+  [string, string, BigNumber, string],
+  PostOpRevertReasonEventObject
+>;
+
+export type PostOpRevertReasonEventFilter =
+  TypedEventFilter<PostOpRevertReasonEvent>;
 
 export interface SignatureAggregatorChangedEventObject {
   aggregator: string;
@@ -373,6 +371,19 @@ export type UserOperationEventEvent = TypedEvent<
 export type UserOperationEventEventFilter =
   TypedEventFilter<UserOperationEventEvent>;
 
+export interface UserOperationPrefundTooLowEventObject {
+  userOpHash: string;
+  sender: string;
+  nonce: BigNumber;
+}
+export type UserOperationPrefundTooLowEvent = TypedEvent<
+  [string, string, BigNumber],
+  UserOperationPrefundTooLowEventObject
+>;
+
+export type UserOperationPrefundTooLowEventFilter =
+  TypedEventFilter<UserOperationPrefundTooLowEvent>;
+
 export interface UserOperationRevertReasonEventObject {
   userOpHash: string;
   sender: string;
@@ -436,6 +447,12 @@ export interface IEntryPoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    delegateAndRevert(
+      target: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     depositTo(
       account: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -462,7 +479,7 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<ContractTransaction>;
 
     getUserOpHash(
-      userOp: UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -473,25 +490,13 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<ContractTransaction>;
 
     handleOps(
-      ops: UserOperationStruct[],
+      ops: PackedUserOperationStruct[],
       beneficiary: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     incrementNonce(
       key: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    simulateHandleOp(
-      op: UserOperationStruct,
-      target: PromiseOrValue<string>,
-      targetCallData: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    simulateValidation(
-      userOp: UserOperationStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -521,6 +526,12 @@ export interface IEntryPoint extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  delegateAndRevert(
+    target: PromiseOrValue<string>,
+    data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   depositTo(
     account: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -543,7 +554,7 @@ export interface IEntryPoint extends BaseContract {
   ): Promise<ContractTransaction>;
 
   getUserOpHash(
-    userOp: UserOperationStruct,
+    userOp: PackedUserOperationStruct,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -554,25 +565,13 @@ export interface IEntryPoint extends BaseContract {
   ): Promise<ContractTransaction>;
 
   handleOps(
-    ops: UserOperationStruct[],
+    ops: PackedUserOperationStruct[],
     beneficiary: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   incrementNonce(
     key: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  simulateHandleOp(
-    op: UserOperationStruct,
-    target: PromiseOrValue<string>,
-    targetCallData: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  simulateValidation(
-    userOp: UserOperationStruct,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -602,6 +601,12 @@ export interface IEntryPoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    delegateAndRevert(
+      target: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     depositTo(
       account: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -624,7 +629,7 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<void>;
 
     getUserOpHash(
-      userOp: UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -635,25 +640,13 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<void>;
 
     handleOps(
-      ops: UserOperationStruct[],
+      ops: PackedUserOperationStruct[],
       beneficiary: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     incrementNonce(
       key: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    simulateHandleOp(
-      op: UserOperationStruct,
-      target: PromiseOrValue<string>,
-      targetCallData: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    simulateValidation(
-      userOp: UserOperationStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -696,6 +689,19 @@ export interface IEntryPoint extends BaseContract {
       account?: PromiseOrValue<string> | null,
       totalDeposit?: null
     ): DepositedEventFilter;
+
+    "PostOpRevertReason(bytes32,address,uint256,bytes)"(
+      userOpHash?: PromiseOrValue<BytesLike> | null,
+      sender?: PromiseOrValue<string> | null,
+      nonce?: null,
+      revertReason?: null
+    ): PostOpRevertReasonEventFilter;
+    PostOpRevertReason(
+      userOpHash?: PromiseOrValue<BytesLike> | null,
+      sender?: PromiseOrValue<string> | null,
+      nonce?: null,
+      revertReason?: null
+    ): PostOpRevertReasonEventFilter;
 
     "SignatureAggregatorChanged(address)"(
       aggregator?: PromiseOrValue<string> | null
@@ -754,6 +760,17 @@ export interface IEntryPoint extends BaseContract {
       actualGasUsed?: null
     ): UserOperationEventEventFilter;
 
+    "UserOperationPrefundTooLow(bytes32,address,uint256)"(
+      userOpHash?: PromiseOrValue<BytesLike> | null,
+      sender?: PromiseOrValue<string> | null,
+      nonce?: null
+    ): UserOperationPrefundTooLowEventFilter;
+    UserOperationPrefundTooLow(
+      userOpHash?: PromiseOrValue<BytesLike> | null,
+      sender?: PromiseOrValue<string> | null,
+      nonce?: null
+    ): UserOperationPrefundTooLowEventFilter;
+
     "UserOperationRevertReason(bytes32,address,uint256,bytes)"(
       userOpHash?: PromiseOrValue<BytesLike> | null,
       sender?: PromiseOrValue<string> | null,
@@ -790,6 +807,12 @@ export interface IEntryPoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    delegateAndRevert(
+      target: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     depositTo(
       account: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -812,7 +835,7 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<BigNumber>;
 
     getUserOpHash(
-      userOp: UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -823,25 +846,13 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<BigNumber>;
 
     handleOps(
-      ops: UserOperationStruct[],
+      ops: PackedUserOperationStruct[],
       beneficiary: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     incrementNonce(
       key: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    simulateHandleOp(
-      op: UserOperationStruct,
-      target: PromiseOrValue<string>,
-      targetCallData: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    simulateValidation(
-      userOp: UserOperationStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -872,6 +883,12 @@ export interface IEntryPoint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    delegateAndRevert(
+      target: PromiseOrValue<string>,
+      data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     depositTo(
       account: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -894,7 +911,7 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getUserOpHash(
-      userOp: UserOperationStruct,
+      userOp: PackedUserOperationStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -905,25 +922,13 @@ export interface IEntryPoint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     handleOps(
-      ops: UserOperationStruct[],
+      ops: PackedUserOperationStruct[],
       beneficiary: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     incrementNonce(
       key: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    simulateHandleOp(
-      op: UserOperationStruct,
-      target: PromiseOrValue<string>,
-      targetCallData: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    simulateValidation(
-      userOp: UserOperationStruct,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

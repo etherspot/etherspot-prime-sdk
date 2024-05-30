@@ -76,5 +76,4 @@ export type { EtherspotWalletFactory } from "./src/wallet/EtherspotWalletFactory
 export { EtherspotWalletFactory__factory } from "./factories/src/wallet/EtherspotWalletFactory__factory";
 export type { Proxy } from "./src/wallet/Proxy";
 export { Proxy__factory } from "./factories/src/wallet/Proxy__factory";
-export type { EntryPoint } from "./account-abstraction/contracts/core/EntryPoint";
 export { EntryPoint__factory } from "./factories/account-abstraction/contracts/core/EntryPoint__factory";

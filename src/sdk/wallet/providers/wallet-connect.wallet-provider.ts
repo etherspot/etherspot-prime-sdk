@@ -42,6 +42,7 @@ export class WalletConnectWalletProvider extends DynamicWalletProvider {
     return response || null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
     throw new Error('Not supported on this provider')
   }

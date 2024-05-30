@@ -9,10 +9,9 @@ import {
 } from './wallet';
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
-import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
-import { BigNumber, BigNumberish, ethers, providers, TypedDataField } from 'ethers';
+import { BatchUserOpsRequest, Exception, getGasFee, MODULE_TYPE, onRampApiKey, openUrl, UserOperation, UserOpsRequest } from "./common";
+import { BigNumber, BigNumberish, Contract, TypedDataField, ethers, providers } from 'ethers';
 import { Networks, onRamperAllNetworks } from './network/constants';
-import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
 import { TransactionDetailsForUserOp, TransactionGasInfoForUserOp } from './base/TransactionDetailsForUserOp';
 import { OnRamperDto, SignMessageDto, validateDto } from './dto';
@@ -20,6 +19,7 @@ import { ZeroDevWalletAPI } from './base/ZeroDevWalletAPI';
 import { SimpleAccountAPI } from './base/SimpleAccountWalletAPI';
 import { ErrorHandler } from './errorHandler/errorHandler.service';
 import { EtherspotBundler } from './bundler';
+import { ModularEtherspotWallet } from './contracts/src/ERC7579/wallet';
 
 /**
  * Prime-Sdk
@@ -160,7 +160,7 @@ export class PrimeSdk {
     paymasterDetails?: PaymasterApi,
     gasDetails?: TransactionGasInfoForUserOp,
     callGasLimit?: BigNumberish,
-    key?: number
+    key?: BigNumber
   } = {}) {
     const { paymasterDetails, gasDetails, callGasLimit, key } = params;
     let dummySignature = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
@@ -183,7 +183,7 @@ export class PrimeSdk {
 
     const tx: TransactionDetailsForUserOp = {
       target: this.userOpsBatch.to,
-      values: this.userOpsBatch.value,
+      values: this.userOpsBatch.value,  
       data: this.userOpsBatch.data,
       dummySignature: dummySignature,
       ...gasDetails,
@@ -199,6 +199,10 @@ export class PrimeSdk {
 
     if (callGasLimit) {
       partialtx.callGasLimit = BigNumber.from(callGasLimit).toHexString();
+    }
+
+    if (await this.etherspotWallet.checkAccountPhantom()) {
+      partialtx.factory = this.etherspotWallet.factoryAddress;
     }
 
     const bundlerGasEstimate = await this.bundler.getVerificationGasInfo(partialtx);
@@ -225,7 +229,7 @@ export class PrimeSdk {
       if (!callGasLimit)
         partialtx.callGasLimit = expectedCallGasLimit;
       else if (BigNumber.from(callGasLimit).lt(expectedCallGasLimit))
-        throw new ErrorHandler(`CallGasLimit is too low. Expected atleast ${expectedCallGasLimit.toString()}`);
+          throw new ErrorHandler(`CallGasLimit is too low. Expected atleast ${expectedCallGasLimit.toString()}`);
     }
 
     return partialtx;
@@ -239,7 +243,7 @@ export class PrimeSdk {
     return getGasFee(this.etherspotWallet.provider as providers.JsonRpcProvider);
   }
 
-  async send(userOp: UserOperationStruct) {
+  async send(userOp: any) {
     const signedUserOp = await this.etherspotWallet.signUserOp(userOp);
     return this.bundler.sendUserOpToBundler(signedUserOp);
   }
@@ -263,7 +267,7 @@ export class PrimeSdk {
     return this.bundler.getUserOpsReceipt(userOpHash);
   }
 
-  async getUserOpHash(userOp: UserOperationStruct) {
+  async getUserOpHash(userOp: UserOperation) {
     return this.etherspotWallet.getUserOpHash(userOp);
   }
 
@@ -284,11 +288,19 @@ export class PrimeSdk {
     this.userOpsBatch.value = [];
   }
 
-  async getAccountContract() {
+  async getAccountContract(): Promise<ModularEtherspotWallet | Contract> {
     return this.etherspotWallet._getAccountContract();
   }
 
-  async totalGasEstimated(userOp: UserOperationStruct): Promise<BigNumber> {
+  async installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
+    return this.etherspotWallet.installModule(moduleTypeId, module, initData);
+  }
+
+  async uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
+    return this.etherspotWallet.uninstallModule(moduleTypeId, module, deinitData);
+  }
+
+  async totalGasEstimated(userOp: UserOperation): Promise<BigNumber> {
     const callGasLimit = BigNumber.from(await userOp.callGasLimit);
     const verificationGasLimit = BigNumber.from(await userOp.verificationGasLimit);
     const preVerificationGas = BigNumber.from(await userOp.preVerificationGas);

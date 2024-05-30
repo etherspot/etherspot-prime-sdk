@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.8.1",
+  "version": "2.0.0",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -43,6 +43,8 @@
     "21-get-multiple-accounts": "./node_modules/.bin/ts-node ./examples/21-get-multiple-accounts",
     "22-concurrent-userops": "./node_modules/.bin/ts-node ./examples/22-concurrent-userops",
     "25-get-quotes": "./node_modules/.bin/ts-node ./examples/25-get-quotes",
+    "26-install-module": "./node_modules/.bin/ts-node ./examples/26-install-module",
+    "27-uninstall-module": "./node_modules/.bin/ts-node ./examples/27-uninstall-module",
     "format": "prettier --write \"{src,test,examples}/**/*.ts\"",
     "lint": "eslint \"{src,test,examples}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
@@ -65,7 +67,6 @@
     "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
-    "@apollo/client": "3.8.7",
     "@lifi/sdk": "2.5.0",
     "@thehubbleproject/bls": "0.5.1",
     "@walletconnect/universal-provider": "2.10.0",

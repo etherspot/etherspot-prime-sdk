@@ -1,12 +1,11 @@
-import { BigNumber, BigNumberish, Contract } from 'ethers';
-import {
-  EtherspotWallet,
-  EtherspotWallet__factory,
-  EtherspotWalletFactory,
-  EtherspotWalletFactory__factory,
-} from '../contracts';
+import { BigNumber, BigNumberish, Contract, constants, ethers } from 'ethers';
 import { arrayify, hexConcat } from 'ethers/lib/utils';
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
+import { EtherspotWallet7579Factory__factory, EtherspotWallet7579__factory } from '../contracts/factories/src/ERC7579/wallet';
+import { ModularEtherspotWallet, EtherspotWallet7579Factory } from '../contracts/src/ERC7579/wallet';
+import { BOOTSTRAP_ABI, BootstrapConfig, _makeBootstrapConfig, makeBootstrapConfig } from './Bootstrap';
+import { Networks } from '../network/constants';
+import { CALL_TYPE, EXEC_TYPE, MODULE_TYPE, getExecuteMode } from '../common';
 
 /**
  * constructor params, added no top of base params:
@@ -32,24 +31,46 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   index: number;
   accountAddress?: string;
   predefinedAccountAddress?: string;
+  bootstrapAddress?: string;
+  multipleOwnerECDSAValidatorAddress?: string;
 
   /**
    * our account contract.
    * should support the "execFromEntryPoint" and "nonce" methods
    */
-  accountContract?: EtherspotWallet;
+  accountContract?: ModularEtherspotWallet;
 
-  factory?: EtherspotWalletFactory;
+  factory?: EtherspotWallet7579Factory;
 
   constructor(params: EtherspotWalletApiParams) {
     super(params);
     this.factoryAddress = params.factoryAddress;
     this.index = params.index ?? 0;
     this.predefinedAccountAddress = params.predefinedAccountAddress ?? null;
+    this.bootstrapAddress = Networks[params.optionsLike.chainId].contracts.bootstrap;
+    this.multipleOwnerECDSAValidatorAddress = Networks[params.optionsLike.chainId].contracts.multipleOwnerECDSAValidator;
+  }
+
+  async installModule(moduleTypeId: MODULE_TYPE, module: string, initData: string): Promise<string> {
+    const accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
+    if (await accountContract.isModuleInstalled(moduleTypeId, module, initData)) {
+      throw new Error('the module is already installed')
+    }
+
+    return accountContract.interface.encodeFunctionData('installModule', [moduleTypeId, module, initData]);
+  }
+
+  async uninstallModule(moduleTypeId: MODULE_TYPE, module: string, deinitData: string): Promise<string> {
+    const accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
+    if (!(await accountContract.isModuleInstalled(moduleTypeId, module, deinitData))) {
+      throw new Error('the module is not installed in the wallet')
+    }
+
+    return accountContract.interface.encodeFunctionData('uninstallModule', [moduleTypeId, module, deinitData]);
   }
 
   async checkAccountAddress(address: string): Promise<void> {
-    const accountContract = EtherspotWallet__factory.connect(address, this.provider);
+    const accountContract = EtherspotWallet7579__factory.connect(address, this.provider);
     if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
       throw new Error('the specified accountAddress does not belong to the given EOA provider')
     }
@@ -58,11 +79,31 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     }
   }
 
-  async _getAccountContract(): Promise<EtherspotWallet | Contract> {
+  async _getAccountContract(): Promise<Contract> {
     if (this.accountContract == null) {
-      this.accountContract = EtherspotWallet__factory.connect(await this.getAccountAddress(), this.provider);
+      this.accountContract = EtherspotWallet7579__factory.connect(await this.getAccountAddress(), this.provider);
     }
     return this.accountContract;
+  }
+
+  async getInitCodeData(): Promise<string> {
+    const iface = new ethers.utils.Interface(BOOTSTRAP_ABI);
+    const validators: BootstrapConfig[] = makeBootstrapConfig(this.multipleOwnerECDSAValidatorAddress, '0x');
+    const executors: BootstrapConfig[] = makeBootstrapConfig(constants.AddressZero, '0x');
+    const hook: BootstrapConfig = _makeBootstrapConfig(constants.AddressZero, '0x');
+    const fallbacks: BootstrapConfig[] = makeBootstrapConfig(constants.AddressZero, '0x');
+
+    const initMSAData = iface.encodeFunctionData(
+      "initMSA",
+      [validators, executors, hook, fallbacks]
+    );
+
+    const initCode = ethers.utils.defaultAbiCoder.encode(
+      ["address", "address", "bytes"],
+      [this.services.walletService.EOAAddress, this.bootstrapAddress, initMSAData]
+    );
+
+    return initCode;
   }
 
   /**
@@ -71,16 +112,19 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    */
   async getAccountInitCode(): Promise<string> {
     if (this.factoryAddress != null && this.factoryAddress !== '') {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
+      this.factory = EtherspotWallet7579Factory__factory.connect(this.factoryAddress, this.provider);
     } else {
       throw new Error('no factory to get initCode');
     }
 
+    const initCode = await this.getInitCodeData();
+    const salt = ethers.utils.hexZeroPad(ethers.utils.hexValue(this.index), 32);
+
     return hexConcat([
       this.factoryAddress,
       this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.EOAAddress,
-        this.index,
+        salt,
+        initCode,
       ]),
     ]);
   }
@@ -89,21 +133,27 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     if (this.predefinedAccountAddress) {
       await this.checkAccountAddress(this.predefinedAccountAddress);
     }
+
+    const salt = ethers.utils.hexZeroPad(ethers.utils.hexValue(this.index), 32);
+    const initCode = await this.getInitCodeData();
+
     if (!this.accountAddress) {
-      this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
+      this.factory = EtherspotWallet7579Factory__factory.connect(this.factoryAddress, this.provider);
       this.accountAddress = await this.factory.getAddress(
-        this.services.walletService.EOAAddress,
-        this.index,
+        salt,
+        initCode,
       );
     }
     return this.accountAddress;
   }
 
-  async getNonce(key = 0): Promise<BigNumber> {
-    if (await this.checkAccountPhantom()) {
-      return BigNumber.from(0);
-    }
-    return await this.nonceManager.getNonce(await this.getAccountAddress(), key);
+  async getNonce(key: BigNumber = BigNumber.from(0)): Promise<BigNumber> {
+    const accountAddress = await this.getAccountAddress();
+    const dummyKey = key.eq(0)
+      ? ethers.utils.getAddress(this.multipleOwnerECDSAValidatorAddress) + "00000000"
+      : ethers.utils.getAddress(key.toHexString()) + "00000000";
+
+    return await this.nonceManager.getNonce(accountAddress, BigInt(dummyKey));
   }
 
   /**
@@ -114,7 +164,18 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
    */
   async encodeExecute(target: string, value: BigNumberish, data: string): Promise<string> {
     const accountContract = await this._getAccountContract();
-    return accountContract.interface.encodeFunctionData('execute', [target, value, data]);
+    const executeMode = getExecuteMode({
+      callType: CALL_TYPE.SINGLE,
+      execType: EXEC_TYPE.DEFAULT
+    });
+
+    const calldata = hexConcat([
+      target,
+      ethers.utils.hexZeroPad(ethers.utils.hexValue(value), 32),
+      data
+    ]);
+
+    return accountContract.interface.encodeFunctionData('execute', [executeMode, calldata]);
   }
 
   async signUserOpHash(userOpHash: string): Promise<string> {
@@ -128,6 +189,23 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
   async encodeBatch(targets: string[], values: BigNumberish[], datas: string[]): Promise<string> {
     const accountContract = await this._getAccountContract();
-    return accountContract.interface.encodeFunctionData('executeBatch', [targets, values, datas]);
+
+    const executeMode = getExecuteMode({
+      callType: CALL_TYPE.BATCH,
+      execType: EXEC_TYPE.DEFAULT
+    });
+
+    const result = targets.map((target, index) => ({
+      target: target,
+      value: values[index],
+      callData: datas[index]
+    }));
+
+    const calldata = ethers.utils.defaultAbiCoder.encode(
+      ["tuple(address target,uint256 value,bytes callData)[]"],
+      [result]
+    );
+
+    return accountContract.interface.encodeFunctionData('execute', [executeMode, calldata]);
   }
 }

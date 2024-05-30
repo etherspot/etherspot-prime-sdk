@@ -111,12 +111,12 @@ jobs:
           name: Publish package to npm
           command: |
             cd ~/etherspot-prime-sdk
-            npm publish
+            npm publish --tag v2-modular
       - run:
           name: Announce Publish
           command: |
             chmod +x .circleci/announcePublish.sh
-            .circleci/announcePublish.sh "Etherspot Prime SDK" "$(node -e "console.log(require('./package.json').version)")"
+            .circleci/announcePublish.sh "Etherspot Prime SDK Modular" "$(node -e "console.log(require('./package.json').version)")"
   publish-github-release:
     docker:
       - image: ardd97/ghr
@@ -127,7 +127,7 @@ jobs:
           command: |
             PACKAGE_VERSION="$(jq .version package.json -r)"
             echo $PACKAGE_VERSION
-            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" "$PACKAGE_VERSION"
+            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" -n "V2 Modular" "$PACKAGE_VERSION"
 
 workflows:
   version: 2.1
@@ -150,7 +150,7 @@ workflows:
           filters:
             branches:
               only:
-                  - master
+                  - v2-modular
       - publish-github-release:
           context: general-vars
           requires:
@@ -158,4 +158,4 @@ workflows:
           filters:
             branches:
               only:
-                  - master
+                  - v2-modular

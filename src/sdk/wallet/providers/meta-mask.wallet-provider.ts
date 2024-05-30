@@ -65,7 +65,7 @@ export class MetaMaskWalletProvider extends DynamicWalletProvider {
       chainId: chainId,
       verifyingContract: accountAddress
     };
-    let signature = await this.sendRequest('eth_signTypedData_v4', [
+    const signature = await this.sendRequest('eth_signTypedData_v4', [
       this.address,
       {
         "types": {
