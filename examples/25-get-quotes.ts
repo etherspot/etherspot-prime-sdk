@@ -1,7 +1,7 @@
 import { utils } from 'ethers';
-import { DataUtils } from '../src';
+import { DataUtils } from '../data-utils/src';
 import * as dotenv from 'dotenv';
-import { BridgingProvider } from '../src/sdk/data';
+import { BridgingProvider } from '../data-utils/src/data';
 
 dotenv.config();
 const dataApiKey = '';

@@ -1,4 +1,9 @@
 # Changelog
+## [1.8.2] - 2024-06-18
+
+### Breaking changes
+- The `DataUtils` module has been removed from the Prime SDK and will now be available as a separate package.
+
 ## [1.8.1] - 2024-05-14
 ### New
 - Added signTypedData method to all providers supported
