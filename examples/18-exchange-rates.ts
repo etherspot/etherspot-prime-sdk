@@ -1,5 +1,5 @@
-import { RateData } from '../src/sdk/data';
-import { DataUtils } from '../src';
+import { RateData } from '../data-utils/src/data';
+import { DataUtils } from '../data-utils/src';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
