@@ -85,11 +85,67 @@ jobs:
           - store_artifacts:
               path: /tmp/mochawesome-report
               when: always
-          - slack/status:
-              failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job e2e tests failed! :circleci-fail: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
-              success_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Woohoh! The *$CIRCLE_JOB* job e2e tests completed successfully! :circleci-pass: \n\n Report URL: https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html"
-              # only_for_branches: master
-              webhook: "${SLACK_WEBHOOK_URL}"
+          - run:
+              name: Parse and send test results to Slack
+              when: always
+              command: |
+                wget https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.json
+
+                MOCHAWESOME_JSON_FILE=./mochawesome.json
+                FAILED_TESTS_FILE=failed-tests.txt
+                TOTAL_SUITES=$(jq '.stats.suites' $MOCHAWESOME_JSON_FILE)
+                TOTAL_PASSES=$(jq '.stats.passes' $MOCHAWESOME_JSON_FILE)
+                TOTAL_PENDING=$(jq '.stats.pending' $MOCHAWESOME_JSON_FILE)
+                TOTAL_FAILURES=$(jq '.stats.failures' $MOCHAWESOME_JSON_FILE)
+                START_TIME=$(jq -r '.stats.start' $MOCHAWESOME_JSON_FILE)
+                END_TIME=$(jq -r '.stats.end' $MOCHAWESOME_JSON_FILE)
+                DURATION_MS=$(jq -r '.stats.duration' $MOCHAWESOME_JSON_FILE)
+
+                START_TIME_FORMATTED=$(date -d "$START_TIME" "+%Y-%m-%d %H:%M:%S")
+                END_TIME_FORMATTED=$(date -d "$END_TIME" "+%Y-%m-%d %H:%M:%S")
+                DURATION_MIN=$(awk "BEGIN {printf \"%.2f\",${DURATION_MS}/60000}")
+
+
+                jq -r '.results[] | .suites[] | select(.failures > 0) | {suite: .title, tests: [.tests[] | select(.fail) | .title]} | select(.tests | length > 0) |
+                "*Suite:* \(.suite)\n*Failing Tests:* \n\(.tests | map("- " + .) | join("\n"))\n"' $MOCHAWESOME_JSON_FILE > $FAILED_TESTS_FILE
+
+                if [ -s $FAILED_TESTS_FILE ]; then
+                  MESSAGE=$(cat $FAILED_TESTS_FILE)
+                  SLACK_MESSAGE=":x: *E2E Tests Failed :x: *\n\
+                *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
+                *Triggered by:* ${CIRCLE_USERNAME}\n\
+                *Branch:* ${CIRCLE_BRANCH}\n\
+                *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\n\
+                *Test Summary:*\n\
+                *Total Suites:* ${TOTAL_SUITES}\n\
+                *Passes:* ${TOTAL_PASSES}\n\
+                *Pending:* ${TOTAL_PENDING}\n\
+                *Failures:* ${TOTAL_FAILURES}\n\
+                *Start Time:* ${START_TIME_FORMATTED}\n\
+                *End Time:* ${END_TIME_FORMATTED}\n\
+                *Duration:* ${DURATION_MIN} minutes\n\n\
+                *Failed Tests:*\n${MESSAGE}\n\
+                *Report:* <https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html|View HTML Report>\n\
+                *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
+                cc: ${TAG_RESPONSIBLE_PEOPLE}"
+                else
+                  SLACK_MESSAGE=":white_check_mark: All E2E tests passed\n\
+                *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
+                *Triggered by:* ${CIRCLE_USERNAME}\n\
+                *Branch:* ${CIRCLE_BRANCH}\n\
+                *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\
+                *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
+                \n*Test Summary:*\n\
+                *Total Suites:* ${TOTAL_SUITES}\n\
+                *Passes:* ${TOTAL_PASSES}\n\
+                *Pending:* ${TOTAL_PENDING}\n\
+                *Failures:* ${TOTAL_FAILURES}\n\
+                *Start Time:* ${START_TIME_FORMATTED}\n\
+                *End Time:* ${END_TIME_FORMATTED}\n\
+                *Duration:* ${DURATION_MIN} minutes"
+                fi
+
+                curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$SLACK_MESSAGE"'"}' $E2E_SLACK_WEBHOOK_URL
   publish-npm-package:
     working_directory: ~/etherspot-prime-sdk
     docker:
