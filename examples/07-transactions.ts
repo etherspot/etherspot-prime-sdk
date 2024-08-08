@@ -1,4 +1,4 @@
-import { DataUtils } from '../src';
+import { DataUtils } from '../data-utils/src';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
