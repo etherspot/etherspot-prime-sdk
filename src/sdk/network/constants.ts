@@ -107,7 +107,7 @@ export const Networks: {
   },
   [10]: {
     chainId: 10,
-    bundler: 'https://rpc.etherspot.io/optimism',
+    bundler: 'https://rpc.etherspot.io/v1/10',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -119,7 +119,7 @@ export const Networks: {
   },
   [137]: {
     chainId: 137,
-    bundler: 'https://rpc.etherspot.io/polygon',
+    bundler: 'https://rpc.etherspot.io/v1/137',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -131,7 +131,7 @@ export const Networks: {
   },
   [42161]: {
     chainId: 42161,
-    bundler: 'https://rpc.etherspot.io/arbitrum',
+    bundler: 'https://rpc.etherspot.io/v1/42161',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -143,7 +143,7 @@ export const Networks: {
   },
   [1]: {
     chainId: 1,
-    bundler: 'https://rpc.etherspot.io/ethereum',
+    bundler: 'https://rpc.etherspot.io/v1/1',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -167,7 +167,7 @@ export const Networks: {
   },
   [122]: {
     chainId: 122,
-    bundler: 'https://rpc.etherspot.io/fuse',
+    bundler: 'https://rpc.etherspot.io/v1/122',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -191,7 +191,7 @@ export const Networks: {
   },
   [100]: {
     chainId: 100,
-    bundler: 'https://rpc.etherspot.io/gnosis',
+    bundler: 'https://rpc.etherspot.io/v1/100',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -215,7 +215,7 @@ export const Networks: {
   },
   [30]: {
     chainId: 30,
-    bundler: 'https://rpc.etherspot.io/rootstock',
+    bundler: 'https://rpc.etherspot.io/v1/30',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -251,7 +251,7 @@ export const Networks: {
   },
   [5000]: {
     chainId: 5000,
-    bundler: 'https://rpc.etherspot.io/mantle',
+    bundler: 'https://rpc.etherspot.io/v1/5000',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -275,7 +275,7 @@ export const Networks: {
   },
   [43114]: {
     chainId: 43114,
-    bundler: 'https://rpc.etherspot.io/avalanche',
+    bundler: 'https://rpc.etherspot.io/v1/43114',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -287,7 +287,7 @@ export const Networks: {
   },
   [8453]: {
     chainId: 8453,
-    bundler: 'https://rpc.etherspot.io/base',
+    bundler: 'https://rpc.etherspot.io/v1/8453',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -299,7 +299,7 @@ export const Networks: {
   },
   [56]: {
     chainId: 56,
-    bundler: 'https://rpc.etherspot.io/bnb',
+    bundler: 'https://rpc.etherspot.io/v1/56',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -335,7 +335,7 @@ export const Networks: {
   },
   [59144]: {
     chainId: 59144,
-    bundler: 'https://rpc.etherspot.io/linea',
+    bundler: 'https://rpc.etherspot.io/v1/59144',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -371,7 +371,7 @@ export const Networks: {
   },
   [14]: {
     chainId: 14,
-    bundler: 'https://rpc.etherspot.io/flare',
+    bundler: 'https://rpc.etherspot.io/v1/14',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -395,7 +395,7 @@ export const Networks: {
   },
   [534352]: {
     chainId: 534352,
-    bundler: 'https://rpc.etherspot.io/scroll',
+    bundler: 'https://rpc.etherspot.io/v1/534352',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
@@ -431,7 +431,7 @@ export const Networks: {
   },
   [888888888]: {
     chainId: 888888888,
-    bundler: 'https://rpc.etherspot.io/ancient8',
+    bundler: 'https://rpc.etherspot.io/v1/888888888',
     contracts: {
       entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       walletFactory: {
