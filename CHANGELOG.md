@@ -1,4 +1,8 @@
 # Changelog
+## [1.8.2] - 2024-08-30
+### New
+- Update to the new bundler schema URLs
+
 ## [1.8.1] - 2024-05-14
 ### New
 - Added signTypedData method to all providers supported
