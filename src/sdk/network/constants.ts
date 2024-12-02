@@ -452,7 +452,19 @@ export const Networks: {
         simpleAccount: '',
       }
     }
-  }
+  },
+  [421614]: {
+    chainId: 421614,
+    bundler: 'https://testnet-rpc.etherspot.io/v1/421614',
+    contracts: {
+      entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+      walletFactory: {
+        etherspot: '0x7f6d8F107fE8551160BD5351d5F1514A6aD5d40E',
+        zeroDev: '',
+        simpleAccount: '',
+      }
+    },
+  },
 };
 
 interface ISafeConstant {

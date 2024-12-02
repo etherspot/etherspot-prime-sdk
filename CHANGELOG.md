@@ -1,4 +1,7 @@
 # Changelog
+## [1.9.0] - 2024-12-02
+- Added default configuration for Arbitrum Sepolia
+
 ## [1.8.2] - 2024-08-30
 ### New
 - Update to the new bundler schema URLs
