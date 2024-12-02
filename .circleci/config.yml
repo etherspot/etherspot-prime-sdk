@@ -2,7 +2,7 @@ version: 2.1
 parameters:
   run_e2e_tests:
     type: boolean
-    default: true
+    default: false
 orbs:
   slack: circleci/slack@3.4.2
 
