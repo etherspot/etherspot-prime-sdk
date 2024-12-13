@@ -1,4 +1,8 @@
 # Changelog
+## [1.9.1] - 2024-12-13
+### Bug Fix
+- Added `0x` before sending userOp to paymaster
+
 ## [1.9.0] - 2024-12-02
 - Added default configuration for Arbitrum Sepolia
 
