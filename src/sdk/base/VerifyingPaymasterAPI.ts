@@ -50,6 +50,7 @@ export class VerifyingPaymasterAPI extends PaymasterAPI {
     };
     const op = await ethers.utils.resolveProperties(pmOp);
     op.preVerificationGas = calcPreVerificationGas(op);
+    op.paymasterAndData = '0x'
 
     // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
     const paymasterAndData = await fetch(this.paymasterUrl, {
