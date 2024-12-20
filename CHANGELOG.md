@@ -1,4 +1,8 @@
 # Changelog
+## [1.9.2] - 2024-12-21
+### New
+- Added support for signTypedData along with Eip-6942
+
 ## [1.9.1] - 2024-12-13
 ### Bug Fix
 - Added `0x` before sending userOp to paymaster

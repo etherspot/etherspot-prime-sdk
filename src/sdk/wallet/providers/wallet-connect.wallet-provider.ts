@@ -1,7 +1,7 @@
-import { BytesLike, TypedDataField } from 'ethers';
+import { BytesLike } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
-import { WalletConnectConnector } from './interfaces';
+import { MessagePayload, WalletConnectConnector } from './interfaces';
 
 export class WalletConnectWalletProvider extends DynamicWalletProvider {
   static connect(connector: WalletConnectConnector): WalletConnectWalletProvider {
@@ -42,7 +42,8 @@ export class WalletConnectWalletProvider extends DynamicWalletProvider {
     return response || null;
   }
 
-  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string> {
     throw new Error('Not supported on this provider')
   }
 
