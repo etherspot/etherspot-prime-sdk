@@ -37,6 +37,7 @@ export interface WalletConnectConnector {
   accounts: string[];
   chainId: number;
   signPersonalMessage(params: any[]): Promise<any>;
+  request<T = unknown>(args: RequestArguments): Promise<T>;
   on(event: string, callback: (error: Error | null, payload: any | null) => void): void;
 }
 

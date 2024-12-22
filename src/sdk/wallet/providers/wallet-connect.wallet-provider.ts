@@ -1,4 +1,4 @@
-import { BytesLike } from 'ethers';
+import { BytesLike, utils } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
 import { MessagePayload, WalletConnectConnector } from './interfaces';
@@ -42,9 +42,28 @@ export class WalletConnectWalletProvider extends DynamicWalletProvider {
     return response || null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string> {
-    throw new Error('Not supported on this provider')
+    const signature: string = await this.connector.request({
+      method: 'eth_signTypedData_v4',
+      params: [
+        this.address,
+        {
+          domain: typedData.domain,
+          message,
+          primaryType: typedData.primaryType,
+          types: typedData.types,
+        }
+      ]
+    });
+
+    if (initCode !== '0x') {
+      const abiCoderResult = utils.defaultAbiCoder.encode(
+        ['address', 'bytes', 'bytes'],
+        [factoryAddress, initCode, signature]
+      );
+      return abiCoderResult + '6492649264926492649264926492649264926492649264926492649264926492'; //magicBytes
+    }
+    return signature;
   }
 
   protected updateSessionHandler(error: Error, payload: { params: { accounts: string[]; chainId: number } }): void {
