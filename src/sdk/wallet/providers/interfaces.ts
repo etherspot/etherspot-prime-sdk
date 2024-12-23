@@ -1,7 +1,13 @@
-import { BytesLike, TypedDataField, Wallet } from 'ethers';
+import { BytesLike, TypedDataField, Wallet, TypedDataDomain } from 'ethers';
 import type UniversalProvider from '@walletconnect/universal-provider';
 import { UniqueSubject } from '../../common';
 import { NetworkNames } from '../../network';
+
+export type MessagePayload = {
+  domain: TypedDataDomain;
+  types: Record<string, TypedDataField[]>;
+  primaryType: string;
+};
 
 export interface WalletProvider {
   readonly type?: string;
@@ -12,7 +18,7 @@ export interface WalletProvider {
   readonly networkName$?: UniqueSubject<NetworkNames>;
 
   signMessage(message: BytesLike): Promise<string>;
-  signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string>;
+  signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string>;
 }
 
 export interface Web3Provider {
@@ -31,6 +37,7 @@ export interface WalletConnectConnector {
   accounts: string[];
   chainId: number;
   signPersonalMessage(params: any[]): Promise<any>;
+  request<T = unknown>(args: RequestArguments): Promise<T>;
   on(event: string, callback: (error: Error | null, payload: any | null) => void): void;
 }
 

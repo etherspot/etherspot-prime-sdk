@@ -1,4 +1,4 @@
-import { ethers, BigNumber, BigNumberish, TypedDataField } from 'ethers';
+import { ethers, BigNumber, BigNumberish } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
 import { Provider } from '@ethersproject/providers';
 import { EntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
@@ -8,7 +8,7 @@ import { resolveProperties } from 'ethers/lib/utils';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { Factory, isWalletProvider, Network, NetworkNames, NetworkService, SdkOptions, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import { Factory, isWalletProvider, MessagePayload, Network, NetworkNames, NetworkService, SdkOptions, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
 import { Context } from '../context';
 import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
@@ -17,6 +17,7 @@ export interface BaseApiParams {
   entryPointAddress: string;
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
+  factoryAddress?: string;
   walletProvider: WalletProviderLike, 
   optionsLike?: SdkOptions
 }
@@ -57,6 +58,7 @@ export abstract class BaseAccountAPI {
   accountAddress?: string;
   paymasterAPI?: PaymasterAPI;
   factoryUsed: Factory;
+  factoryAddress?: string;
 
   /**
    * base constructor.
@@ -97,6 +99,7 @@ export abstract class BaseAccountAPI {
     this.overheads = params.overheads;
     this.entryPointAddress = params.entryPointAddress;
     this.accountAddress = params.accountAddress;
+    this.factoryAddress = params.factoryAddress;
 
     // factory "connect" define the contract address. the contract "connect" defines the "from" address.
     this.entryPointView = EntryPoint__factory.connect(params.entryPointAddress, params.provider).connect(
@@ -509,7 +512,8 @@ export abstract class BaseAccountAPI {
     return null;
   }
 
-  async signTypedData(types: TypedDataField[], message: any) {
-    return this.services.walletService.signTypedData(types, message, this.accountAddress);
+  async signTypedData(types: MessagePayload, message: any) {
+    const initCode = await this.getInitCode();
+    return this.services.walletService.signTypedData(types, message, this.factoryAddress, initCode);
   }
 }

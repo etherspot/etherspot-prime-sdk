@@ -1,5 +1,5 @@
-import { Wallet, BytesLike, TypedDataField } from 'ethers';
-import { WalletProvider } from './interfaces';
+import { Wallet, BytesLike, utils } from 'ethers';
+import { MessagePayload, WalletProvider } from './interfaces';
 
 export class KeyWalletProvider implements WalletProvider {
   readonly type = 'Key';
@@ -19,7 +19,27 @@ export class KeyWalletProvider implements WalletProvider {
     return this.wallet.signMessage(message);
   }
 
-  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
-    throw new Error('Not supported in this connectedProvider');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string> {
+    const {domain, types} = typedData;
+
+    // EIP Domain has to be removed because ethers will add it using `domain`
+    if(types["EIP712Domain"]) {
+      delete typedData.types["EIP712Domain"];
+    }
+    const signature = await this.wallet._signTypedData(
+      domain,
+      types,
+      message
+    );
+
+    if (initCode !== '0x') {
+      const abiCoderResult = utils.defaultAbiCoder.encode(
+        ['address', 'bytes', 'bytes'],
+        [factoryAddress, initCode, signature]
+      );
+      return abiCoderResult + '6492649264926492649264926492649264926492649264926492649264926492'; //magicBytes
+    }
+    return signature;
   }
 }

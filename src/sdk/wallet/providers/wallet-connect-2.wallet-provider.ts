@@ -1,7 +1,7 @@
-import { BytesLike, TypedDataField } from 'ethers';
+import { BytesLike, utils } from 'ethers';
 import { toHex } from '../../common';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
-import { EthereumProvider } from './interfaces';
+import { EthereumProvider, MessagePayload } from './interfaces';
 
 export class WalletConnect2WalletProvider extends DynamicWalletProvider {
   constructor(readonly provider: EthereumProvider) {
@@ -38,47 +38,31 @@ export class WalletConnect2WalletProvider extends DynamicWalletProvider {
     return typeof response === 'string' ? response : null;
   }
 
-  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
-    
-    const domainSeparator = {
-      name: "EtherspotWallet",
-      version: "2.0.0",
-      chainId: this.provider.chainId,
-      verifyingContract: accountAddress
-    };
-    const signature = await this.provider.signer.request({
-      method: 'eth_signTypedData_v4', 
+  async signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string> {
+    const {domain, types, primaryType} = typedData;
+
+    const msgParams = JSON.stringify({
+      domain,
+      message,
+      primaryType,
+      types
+    });
+    const signature: string = await this.provider.signer.request({
+      method: 'eth_signTypedData_v4',
       params: [
         this.address,
-        {
-          "types": {
-            "EIP712Domain": [
-              {
-                "name": "name",
-                "type": "string"
-              },
-              {
-                "name": "version",
-                "type": "string"
-              },
-              {
-                "name": "chainId",
-                "type": "uint256"
-              },
-              {
-                "name": "verifyingContract",
-                "type": "address"
-              }
-            ],
-            "message": typedData
-          },
-          "primaryType": "message",
-          "domain": domainSeparator,
-          "message": message
-        }
+        msgParams
       ]
     })
-    return typeof signature === 'string' ? signature : null;
+
+    if (initCode !== '0x') {
+      const abiCoderResult = utils.defaultAbiCoder.encode(
+        ['address', 'bytes', 'bytes'],
+        [factoryAddress, initCode, signature]
+      );
+      return abiCoderResult + '6492649264926492649264926492649264926492649264926492649264926492'; //magicBytes
+    }
+    return signature;
   }
 
   protected updateSessionHandler(error: Error, payload: { params: { accounts: string[]; chainId: number } }): void {
