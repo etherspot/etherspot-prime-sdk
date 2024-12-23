@@ -1,7 +1,7 @@
-import { BytesLike, TypedDataField } from 'ethers';
+import { BytesLike, utils } from 'ethers';
 import { prepareAddress, toHex } from '../../common';
 import { NetworkNames, prepareNetworkName } from '../../network';
-import { Web3Provider } from './interfaces';
+import { MessagePayload, Web3Provider } from './interfaces';
 import { DynamicWalletProvider } from './dynamic.wallet-provider';
 
 export class Web3WalletProvider extends DynamicWalletProvider {
@@ -58,43 +58,27 @@ export class Web3WalletProvider extends DynamicWalletProvider {
     );
   }
 
-  async signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string> {
-    const chainId = await this.sendRequest<string>('eth_chainId');
-    const domainSeparator = {
-      name: "EtherspotWallet",
-      version: "2.0.0",
-      chainId: chainId,
-      verifyingContract: accountAddress
-    };
-    let signature = await this.sendRequest('eth_signTypedData_v4', [
+  async signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string> {
+    const {domain, types, primaryType} = typedData;
+
+    const msgParams = JSON.stringify({
+      domain,
+      message,
+      primaryType,
+      types
+    });
+    const signature = await this.sendRequest('eth_signTypedData_v4', [
       this.address,
-      {
-        "types": {
-          "EIP712Domain": [
-            {
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "name": "version",
-              "type": "string"
-            },
-            {
-              "name": "chainId",
-              "type": "uint256"
-            },
-            {
-              "name": "verifyingContract",
-              "type": "address"
-            }
-          ],
-          "message": typedData
-        },
-        "primaryType": "message",
-        "domain": domainSeparator,
-        "message": message
-      }
-    ])
+      msgParams
+    ]);
+
+    if (initCode !== '0x') {
+      const abiCoderResult = utils.defaultAbiCoder.encode(
+        ['address', 'bytes', 'bytes'],
+        [factoryAddress, initCode, signature]
+      );
+      return abiCoderResult + '6492649264926492649264926492649264926492649264926492649264926492'; //magicBytes
+    }
     return signature;
   }
 

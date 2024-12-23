@@ -4,13 +4,14 @@ import {
   EthereumProvider,
   isWalletConnectProvider,
   isWalletProvider,
+  MessagePayload,
   WalletConnect2WalletProvider,
   WalletProviderLike
 } from './wallet';
 import { Factory, PaymasterApi, SdkOptions } from './interfaces';
 import { Network } from "./network";
 import { BatchUserOpsRequest, Exception, getGasFee, onRampApiKey, openUrl, UserOpsRequest } from "./common";
-import { BigNumber, BigNumberish, ethers, providers, TypedDataField } from 'ethers';
+import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
 import { Networks, onRamperAllNetworks } from './network/constants';
 import { UserOperationStruct } from './contracts/account-abstraction/contracts/core/BaseAccount';
 import { EtherspotWalletAPI, HttpRpcClient, VerifyingPaymasterAPI } from './base';
@@ -245,7 +246,7 @@ export class PrimeSdk {
   }
 
   async signTypedData(
-    DataFields: TypedDataField[],
+    DataFields: MessagePayload,
     message: any
   ) {
     return this.etherspotWallet.signTypedData(DataFields, message);

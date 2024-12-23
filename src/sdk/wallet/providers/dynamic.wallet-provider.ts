@@ -1,7 +1,6 @@
 import { NetworkNames, prepareNetworkName } from '../../network';
 import { prepareAddress, UniqueSubject } from '../../common';
-import { WalletProvider } from './interfaces';
-import { TypedDataField } from 'ethers';
+import { MessagePayload, WalletProvider } from './interfaces';
 
 export abstract class DynamicWalletProvider implements WalletProvider {
   readonly address$ = new UniqueSubject<string>();
@@ -21,7 +20,7 @@ export abstract class DynamicWalletProvider implements WalletProvider {
 
   abstract signMessage(message: any): Promise<string>;
 
-  abstract signTypedData(typedData: TypedDataField[], message: any, accountAddress: string): Promise<string>;
+  abstract signTypedData(typedData: MessagePayload, message: any, factoryAddress?: string, initCode?: string): Promise<string>;
 
   protected setAddress(address: string): void {
     this.address$.next(prepareAddress(address));
