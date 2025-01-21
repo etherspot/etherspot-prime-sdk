@@ -79,7 +79,7 @@ jobs:
                 jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
                 rm temp.json
                 npm i
-                npm run test-mainnet
+                npm run test-mainnet-combined
           - run:
               name: Move test report
               command: |
