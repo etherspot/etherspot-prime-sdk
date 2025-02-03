@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function main() {
-  const arkaApiKey = 'arka_public_key';
+  const arkaApiKey = 'etherspot_public_key';
   const arkaUrl = 'https://arka.etherspot.io'; // Only testnets are available, if you need further assistance in setting up a paymaster service for your dapp, please reach out to us on discord or https://etherspot.fyi/arka/intro
 
   // initializating sdk...

@@ -8,7 +8,7 @@ dotenv.config();
 
 const recipient = '0x80a1874E1046B1cc5deFdf4D3153838B72fF94Ac'; // recipient wallet address
 const value = '0.000001'; // transfer value
-const bundlerApiKey = 'eyJvcmciOiI2NTIzZjY5MzUwOTBmNzAwMDFiYjJkZWIiLCJpZCI6IjMxMDZiOGY2NTRhZTRhZTM4MGVjYjJiN2Q2NDMzMjM4IiwiaCI6Im11cm11cjEyOCJ9';
+const bundlerApiKey = 'etherspot_public_key';
 
 async function main() {
   const provider = new providers.JsonRpcProvider(process.env.RPC_PROVIDER_URL);
