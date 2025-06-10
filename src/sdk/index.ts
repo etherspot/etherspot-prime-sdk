@@ -9,6 +9,7 @@ export * from './network';
 export * from './state';
 export * from './wallet';
 export * from './bundler';
+export * from './base';
 
 export { PrimeSdk, DataUtils, ArkaPaymaster };
 export default PrimeSdk;

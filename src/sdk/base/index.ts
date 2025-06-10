@@ -6,4 +6,6 @@ export { ClientConfig } from './ClientConfig';
 export { HttpRpcClient } from './HttpRpcClient';
 export { DeterministicDeployer } from './DeterministicDeployer';
 export { VerifyingPaymasterAPI } from './VerifyingPaymasterAPI';
+export { UserOperationEventListener } from './UserOperationEventListener';
+export * from './TransactionDetailsForUserOp';
 export * from './calcPreVerificationGas';

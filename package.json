@@ -14,12 +14,20 @@
   ],
   "license": "MIT",
   "homepage": "https://etherspot.dev",
-  "main": "./dist/node.js",
+  "main": "./dist/cjs/index.cjs.js",
+  "module": "./dist/esm/index.esm.js",
   "browser": {
-    "./dist/browser.js": "./dist/browser.js",
+    ".": "./dist/esm/index.esm.js",
     "child_process": false
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.esm.js",
+      "require": "./dist/cjs/index.cjs.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
   "scripts": {
     "start": "exit 1",
     "01-get-address": "./node_modules/.bin/ts-node ./examples/01-get-address",
@@ -48,7 +56,6 @@
     "lint": "eslint \"{src,test,examples}/**/*.ts\"",
     "lint-fix": "npm run lint -- --fix",
     "prebuild": "rimraf ./dist",
-    "build": "npm run compile",
     "compile": "tsc -p ./tsconfig.build.json",
     "compile-watch": "npm run compile -- --watch",
     "init": "ts-node examples/scripts/init.ts",
@@ -56,7 +63,12 @@
     "predocs:build": "rimraf ./docs",
     "docs:build": "typedoc ./src",
     "postdocs:build": "cp -r ./.github-pages/files/* ./docs && date > ./docs/.nojekyll",
-    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.io.git"
+    "docs:deploy": "gh-pages -d ./docs -b master -r git@github.com:etherspot/sdk.etherspot.io.git",
+    "build": "bun run clean && bun run build:cjs && bun run build:esm && bun run build:types",
+    "build:cjs": "tsc --project ./tsconfig/tsconfig.cjs.json && tsc-alias -p ./tsconfig/tsconfig.cjs.json && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --project ./tsconfig/tsconfig.esm.json && tsc-alias -p ./tsconfig/tsconfig.esm.json && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig/tsconfig.types.json && tsc-alias -p ./tsconfig/tsconfig.types.json",
+    "clean": "rimraf ./dist/esm ./dist/cjs ./dist/types"
   },
   "repository": {
     "type": "git",
@@ -95,6 +107,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "npm": "9.6.4",
     "ts-node": "10.9.1",
+    "tsc-alias": "1.8.8",
     "typedoc": "^0.17.8",
     "typescript": "4.9.5"
   }
