@@ -1,7 +1,8 @@
 import { BaseProvider, TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
 import { BigNumber, Signer } from 'ethers';
 import { Network } from '@ethersproject/networks';
-import { hexValue, resolveProperties } from 'ethers/lib/utils';
+import { utils } from 'ethers';
+const { hexValue, resolveProperties } = utils;
 
 import { ClientConfig } from './ClientConfig';
 import { ERC4337EthersSigner } from './ERC4337EthersSigner';

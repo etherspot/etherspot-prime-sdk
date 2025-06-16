@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { ethers } from 'ethers';
-import { resolveProperties } from 'ethers/lib/utils';
+import { utils } from 'ethers';
+const { resolveProperties } = utils;
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import Debug from 'debug';
 import { deepHexlify } from '../common/ERC4337Utils';
@@ -16,18 +17,19 @@ export class HttpRpcClient {
 
   constructor(readonly bundlerUrl: string, readonly entryPointAddress: string, readonly chainId: number) {
     try {
-      this.userOpJsonRpcProvider = new ethers.providers.JsonRpcProvider({
-        url: this.bundlerUrl
-      }, {
-        name: 'Connected bundler network',
-        chainId,
-      });
+      this.userOpJsonRpcProvider = new ethers.providers.JsonRpcProvider(
+        {
+          url: this.bundlerUrl,
+        },
+        {
+          name: 'Connected bundler network',
+          chainId,
+        },
+      );
       this.initializing = this.validateChainId();
     } catch (err) {
-      if (err.message.includes('failed response'))
-        throw new ErrorHandler(err.message, 2);
-      if (err.message.includes('timeout'))
-        throw new ErrorHandler(err.message, 3);
+      if (err.message.includes('failed response')) throw new ErrorHandler(err.message, 2);
+      if (err.message.includes('timeout')) throw new ErrorHandler(err.message, 3);
       throw new Error(err.message);
     }
   }
@@ -43,10 +45,8 @@ export class HttpRpcClient {
         );
       }
     } catch (err) {
-      if (err.message.includes('failed response'))
-        throw new ErrorHandler(err.message, 400);
-      if (err.message.includes('timeout'))
-        throw new ErrorHandler(err.message, 404);
+      if (err.message.includes('failed response')) throw new ErrorHandler(err.message, 400);
+      if (err.message.includes('timeout')) throw new ErrorHandler(err.message, 404);
       throw new Error(err.message);
     }
   }
@@ -54,12 +54,15 @@ export class HttpRpcClient {
   async getVerificationGasInfo(tx: UserOperationStruct): Promise<any> {
     const hexifiedUserOp = deepHexlify(await resolveProperties(tx));
     try {
-      const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [hexifiedUserOp, this.entryPointAddress]);
+      const response = await this.userOpJsonRpcProvider.send('eth_estimateUserOperationGas', [
+        hexifiedUserOp,
+        this.entryPointAddress,
+      ]);
       return response;
     } catch (err) {
       const body = JSON.parse(err.body);
       if (body?.error?.code) {
-        throw new ErrorHandler(body.error.message, body.error.code)
+        throw new ErrorHandler(body.error.message, body.error.code);
       }
       throw new Error(err.message);
     }
@@ -80,7 +83,7 @@ export class HttpRpcClient {
     } catch (err) {
       const body = JSON.parse(err.body);
       if (body?.error?.code) {
-        throw new ErrorHandler(body.error.message, body.error.code)
+        throw new ErrorHandler(body.error.message, body.error.code);
       }
       throw new Error(err);
     }
@@ -96,7 +99,7 @@ export class HttpRpcClient {
     } catch (err) {
       const body = JSON.parse(err.body);
       if (body?.error?.code) {
-        throw new ErrorHandler(body.error.message, body.error.code)
+        throw new ErrorHandler(body.error.message, body.error.code);
       }
       throw new Error(err);
     }
@@ -107,9 +110,7 @@ export class HttpRpcClient {
       const { maxFeePerGas, maxPriorityFeePerGas } = await this.userOpJsonRpcProvider.send('skandha_getGasPrice', []);
       return { maxFeePerGas, maxPriorityFeePerGas };
     } catch (err) {
-      console.warn(
-        "getGas: skandha_getGasPrice failed, falling back to legacy gas price."
-      );
+      console.warn('getGas: skandha_getGasPrice failed, falling back to legacy gas price.');
       const gas = await this.userOpJsonRpcProvider.getGasPrice();
       return { maxFeePerGas: gas, maxPriorityFeePerGas: gas };
     }

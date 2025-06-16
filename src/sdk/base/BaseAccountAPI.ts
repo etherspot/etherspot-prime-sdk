@@ -4,11 +4,25 @@ import { Provider } from '@ethersproject/providers';
 import { EntryPoint, EntryPoint__factory, INonceManager, INonceManager__factory } from '../contracts';
 import { UserOperationStruct } from '../contracts/account-abstraction/contracts/core/BaseAccount';
 import { TransactionDetailsForUserOp } from './TransactionDetailsForUserOp';
-import { resolveProperties } from 'ethers/lib/utils';
+import { utils } from 'ethers';
 import { PaymasterAPI } from './PaymasterAPI';
 import { ErrorSubject, Exception, getUserOpHash, NotPromise, packUserOp } from '../common';
 import { calcPreVerificationGas, GasOverheads } from './calcPreVerificationGas';
-import { Factory, isWalletProvider, MessagePayload, Network, NetworkNames, NetworkService, SdkOptions, SignMessageDto, State, StateService, validateDto, WalletProviderLike, WalletService } from '..';
+import {
+  Factory,
+  isWalletProvider,
+  MessagePayload,
+  Network,
+  NetworkNames,
+  NetworkService,
+  SdkOptions,
+  SignMessageDto,
+  State,
+  StateService,
+  validateDto,
+  WalletProviderLike,
+  WalletService,
+} from '..';
 import { Context } from '../context';
 import { PaymasterResponse } from './VerifyingPaymasterAPI';
 
@@ -18,8 +32,8 @@ export interface BaseApiParams {
   accountAddress?: string;
   overheads?: Partial<GasOverheads>;
   factoryAddress?: string;
-  walletProvider: WalletProviderLike, 
-  optionsLike?: SdkOptions
+  walletProvider: WalletProviderLike;
+  optionsLike?: SdkOptions;
 }
 
 export interface UserOpResult {
@@ -65,7 +79,6 @@ export abstract class BaseAccountAPI {
    * subclass SHOULD add parameters that define the owner (signer) of this wallet
    */
   constructor(params: BaseApiParams) {
-
     const optionsLike = params.optionsLike;
 
     if (!isWalletProvider(params.walletProvider)) {
@@ -82,9 +95,14 @@ export abstract class BaseAccountAPI {
 
     this.services = {
       networkService: new NetworkService(chainId),
-      walletService: new WalletService(params.walletProvider, {
-        provider: rpcProviderUrl,
-      }, bundlerProvider.url, chainId),
+      walletService: new WalletService(
+        params.walletProvider,
+        {
+          provider: rpcProviderUrl,
+        },
+        bundlerProvider.url,
+        chainId,
+      ),
       stateService: new StateService({
         storage: stateStorage,
       }),
@@ -93,7 +111,7 @@ export abstract class BaseAccountAPI {
     this.context = new Context(this.services);
 
     this.factoryUsed = factoryWallet;
-    
+
     // super();
     this.provider = params.provider;
     this.overheads = params.overheads;
@@ -106,7 +124,7 @@ export abstract class BaseAccountAPI {
       ethers.constants.AddressZero,
     );
     this.nonceManager = INonceManager__factory.connect(params.entryPointAddress, params.provider).connect(
-      ethers.constants.AddressZero
+      ethers.constants.AddressZero,
     );
   }
 
@@ -131,7 +149,7 @@ export abstract class BaseAccountAPI {
   /**
    * destroys
    */
-   destroy(): void {
+  destroy(): void {
     this.context.destroy();
   }
 
@@ -156,9 +174,7 @@ export abstract class BaseAccountAPI {
     this.paymasterAPI = paymaster;
   }
 
-
   // private
-
 
   async require(
     options: {
@@ -181,7 +197,6 @@ export abstract class BaseAccountAPI {
     if (options.wallet && !walletService.EOAAddress) {
       throw new Exception('Require wallet');
     }
-
   }
 
   getNetworkChainId(networkName: NetworkNames = null): number {
@@ -317,7 +332,7 @@ export abstract class BaseAccountAPI {
    * actual overhead depends on the expected bundle size
    */
   async getPreVerificationGas(userOp: Partial<UserOperationStruct>): Promise<number> {
-    const p = await resolveProperties(userOp);
+    const p = await utils.resolveProperties(userOp);
     return calcPreVerificationGas(p, this.overheads);
   }
 
@@ -345,7 +360,7 @@ export abstract class BaseAccountAPI {
         throw new Error('must have target address if data is single value');
       }
       callData = await this.encodeExecute(target, value, data);
-    } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT && target.length === 1){
+    } else if (this.factoryUsed === Factory.SIMPLE_ACCOUNT && target.length === 1) {
       callData = await this.encodeExecute(target[0], detailsForUserOp.values[0], data[0]);
     } else {
       if (typeof target === 'string') {
@@ -354,8 +369,7 @@ export abstract class BaseAccountAPI {
       callData = await this.encodeBatch(target, detailsForUserOp.values, data);
     }
 
-    const callGasLimit =
-      parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000)
+    const callGasLimit = parseNumber(detailsForUserOp.gasLimit) ?? BigNumber.from(35000);
 
     return {
       callData,
@@ -369,7 +383,7 @@ export abstract class BaseAccountAPI {
    * @param userOp userOperation, (signature field ignored)
    */
   async getUserOpHash(userOp: UserOperationStruct): Promise<string> {
-    const op = await resolveProperties(userOp);
+    const op = await utils.resolveProperties(userOp);
     const provider = this.services.walletService.getWalletProvider();
     const chainId = await provider.getNetwork().then((net) => net.chainId);
     return getUserOpHash(op, this.entryPointAddress, chainId);
@@ -418,9 +432,7 @@ export abstract class BaseAccountAPI {
       try {
         feeData = await provider.getFeeData();
       } catch (err) {
-        console.warn(
-          "getGas: eth_maxPriorityFeePerGas failed, falling back to legacy gas price."
-        );
+        console.warn('getGas: eth_maxPriorityFeePerGas failed, falling back to legacy gas price.');
         const gas = await provider.getGasPrice();
 
         feeData = { maxFeePerGas: gas, maxPriorityFeePerGas: gas };
@@ -444,7 +456,6 @@ export abstract class BaseAccountAPI {
       maxPriorityFeePerGas,
     };
 
-
     let paymasterAndData: PaymasterResponse | undefined = null;
     if (this.paymasterAPI != null) {
       // fill (partial) preVerificationGas (all except the cost of the generated paymasterAndData)
@@ -452,7 +463,7 @@ export abstract class BaseAccountAPI {
         ...partialUserOp,
         preVerificationGas: this.getPreVerificationGas(partialUserOp),
       };
-      paymasterAndData = (await this.paymasterAPI.getPaymasterAndData(userOpForPm));
+      paymasterAndData = await this.paymasterAPI.getPaymasterAndData(userOpForPm);
       partialUserOp.verificationGasLimit = paymasterAndData.result.verificationGasLimit;
       partialUserOp.preVerificationGas = paymasterAndData.result.preVerificationGas;
       partialUserOp.callGasLimit = paymasterAndData.result.callGasLimit;
