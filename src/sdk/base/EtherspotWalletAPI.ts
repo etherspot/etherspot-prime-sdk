@@ -5,7 +5,8 @@ import {
   EtherspotWalletFactory,
   EtherspotWalletFactory__factory,
 } from '../contracts';
-import { arrayify, hexConcat } from 'ethers/lib/utils';
+import { utils } from 'ethers';
+const { arrayify, hexConcat } = utils;
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
 
 /**
@@ -51,9 +52,8 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
   async checkAccountAddress(address: string): Promise<void> {
     const accountContract = EtherspotWallet__factory.connect(address, this.provider);
     if (!(await accountContract.isOwner(this.services.walletService.EOAAddress))) {
-      throw new Error('the specified accountAddress does not belong to the given EOA provider')
-    }
-    else {
+      throw new Error('the specified accountAddress does not belong to the given EOA provider');
+    } else {
       this.accountAddress = address;
     }
   }
@@ -78,10 +78,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
 
     return hexConcat([
       this.factoryAddress,
-      this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.EOAAddress,
-        this.index,
-      ]),
+      this.factory.interface.encodeFunctionData('createAccount', [this.services.walletService.EOAAddress, this.index]),
     ]);
   }
 
@@ -91,10 +88,7 @@ export class EtherspotWalletAPI extends BaseAccountAPI {
     }
     if (!this.accountAddress) {
       this.factory = EtherspotWalletFactory__factory.connect(this.factoryAddress, this.provider);
-      this.accountAddress = await this.factory.getAddress(
-        this.services.walletService.EOAAddress,
-        this.index,
-      );
+      this.accountAddress = await this.factory.getAddress(this.services.walletService.EOAAddress, this.index);
     }
     return this.accountAddress;
   }

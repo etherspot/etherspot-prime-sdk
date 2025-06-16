@@ -1,8 +1,7 @@
 import { BigNumber, BigNumberish, Contract, ethers } from 'ethers';
-import {
-  EntryPoint__factory,
-} from '../contracts';
-import { arrayify, hexConcat } from 'ethers/lib/utils';
+import { EntryPoint__factory } from '../contracts';
+import { utils } from 'ethers';
+const { arrayify, hexConcat } = utils;
 import { BaseApiParams, BaseAccountAPI } from './BaseAccountAPI';
 import { SimpleAccountAbi } from '../contracts/SimpleAccount/SimpleAccountAbi';
 import { SimpleAccountFactoryAbi } from '../contracts/SimpleAccount/SimpleAccountFactoryAbi';
@@ -58,10 +57,7 @@ export class SimpleAccountAPI extends BaseAccountAPI {
 
     return hexConcat([
       this.factoryAddress,
-      this.factory.interface.encodeFunctionData('createAccount', [
-        this.services.walletService.EOAAddress,
-        this.index,
-      ]),
+      this.factory.interface.encodeFunctionData('createAccount', [this.services.walletService.EOAAddress, this.index]),
     ]);
   }
 
@@ -72,7 +68,7 @@ export class SimpleAccountAPI extends BaseAccountAPI {
         const entryPoint = EntryPoint__factory.connect(this.entryPointAddress, this.provider);
         await entryPoint.callStatic.getSenderAddress(initCode);
 
-        throw new Error("getSenderAddress: unexpected result");
+        throw new Error('getSenderAddress: unexpected result');
       } catch (error: any) {
         const addr = error?.errorArgs?.sender;
         if (!addr) throw error;
