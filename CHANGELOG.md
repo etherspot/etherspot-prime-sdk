@@ -1,4 +1,8 @@
 # Changelog
+## [1.9.2] - 2025-06-18
+### New
+- Added build support for esm using bun
+
 ## [1.9.2] - 2024-12-21
 ### New
 - Added support for signTypedData along with Eip-6942
