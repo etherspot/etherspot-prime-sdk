@@ -27,12 +27,12 @@ jobs:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - restore_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
+          key: dependency-cache-{{ checksum "bun.lock" }}
       - run:
           name: Install dependencies
           command: bun install
       - save_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
+          key: dependency-cache-{{ checksum "bun.lock" }}
           paths:
             - ./node_modules
             - ~/.bun
@@ -63,7 +63,7 @@ jobs:
                 echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
                 source $BASH_ENV
           - restore_cache:
-              key: dependency-cache-{{ checksum "bun.lockb" }}
+              key: dependency-cache-{{ checksum "bun.lock" }}
           - run:
               name: Authenticate with registry
               command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
@@ -184,7 +184,7 @@ jobs:
             echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
             source $BASH_ENV
       - restore_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
+          key: dependency-cache-{{ checksum "bun.lock" }}
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
