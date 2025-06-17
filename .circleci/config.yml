@@ -29,6 +29,9 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: Install Bun
+          command: npm install -g bun
+      - run:
           name: Dry run build
           command: npm run build
       # - slack/status:
@@ -53,6 +56,9 @@ jobs:
           - run:
               name: Authenticate with registry
               command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+          - run:
+              name: Install Bun
+              command: npm i -g bun
           - run:
               name: Build Etherpot Prime SDK
               command: npm run build
@@ -164,6 +170,9 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+      - run:
+          name: Install Bun
+          command: npm i -g bun
       - run:
           name: Build Etherpot Prime SDK
           command: npm run build
