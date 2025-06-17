@@ -71,7 +71,7 @@ jobs:
               name: Install dependencies
               command: bun install
           - run:
-              name: Build Etherpot Modular SDK
+              name: Build Etherpot Prime SDK
               command: bun run build
           - run:
               name: Checkout e2e repo and run tests
@@ -197,7 +197,7 @@ jobs:
       - run:
           name: Publish package to npm
           command: |
-            cd ~/etherspot-modular-sdk
+            cd ~/etherspot-prime-sdk
             bun publish --access public
       - run:
           name: Announce Publish
