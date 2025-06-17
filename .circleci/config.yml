@@ -32,10 +32,13 @@ jobs:
           name: Install Bun
           command: |
             curl -fsSL https://bun.sh/install | bash
-            export PATH="$HOME/.bun/bin:$PATH"
+            echo 'export PATH="$HOME/.bun/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
       - run:
           name: Dry run build
-          command: npm run build
+          command: |
+            export PATH="$HOME/.bun/bin:$PATH"
+            bun run build
       # - slack/status:
       #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
       #     webhook: "${SLACK_WEBHOOK_URL}"
@@ -62,10 +65,13 @@ jobs:
               name: Install Bun
               command: |
                 curl -fsSL https://bun.sh/install | bash
-                export PATH="$HOME/.bun/bin:$PATH"
+                echo 'export PATH="$HOME/.bun/bin:$PATH"' >> $BASH_ENV
+                source $BASH_ENV
           - run:
               name: Build Etherpot Prime SDK
-              command: npm run build
+              command: |
+                export PATH="$HOME/.bun/bin:$PATH"
+                bun run build
           - run:
               name: Checkout e2e repo and run tests
               no_output_timeout: 60m
@@ -178,10 +184,13 @@ jobs:
           name: Install Bun
           command: |
             curl -fsSL https://bun.sh/install | bash
-            export PATH="$HOME/.bun/bin:$PATH"
+            echo 'export PATH="$HOME/.bun/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
       - run:
           name: Build Etherpot Prime SDK
-          command: npm run build
+          command: |
+            export PATH="$HOME/.bun/bin:$PATH"
+            bun run build
       - run:
           name: Publish package to npm
           command: |
