@@ -27,7 +27,7 @@ jobs:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "bun.lockb" }}
       - run:
           name: Install dependencies
           command: bun install
@@ -55,12 +55,21 @@ jobs:
       - when:
           condition: <<pipeline.parameters.run_e2e_tests>>
           steps:
-          
+          - run:
+              name: Install Bun
+              command: |
+                curl -fsSL https://bun.sh/install | bash
+                echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
+                echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
+                source $BASH_ENV
           - restore_cache:
-              key: dependency-cache-{{ checksum "package.json" }}
+              key: dependency-cache-{{ checksum "bun.lockb" }}
           - run:
               name: Authenticate with registry
               command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+          - run:
+              name: Install dependencies
+              command: bun install
           - run:
               name: Build Etherpot Modular SDK
               command: bun run build
@@ -179,6 +188,9 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
+      - run:
+          name: Install dependencies
+          command: bun install
       - run:
           name: Build Etherpot Prime SDK
           command: bun run build
