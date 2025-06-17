@@ -37,6 +37,22 @@ jobs:
             - ./node_modules
             - ~/.bun
       - run:
+          name: Verify project structure
+          command: |
+            echo "=== Verifying project structure ==="
+            echo "Working directory: $(pwd)"
+            echo "Expected to be in: ~/etherspot-prime-sdk"
+            echo "Current directory contents:"
+            ls -la
+            echo "Checking for key files:"
+            echo "package.json exists: $([ -f package.json ] && echo 'YES' || echo 'NO')"
+            echo "src directory exists: $([ -d src ] && echo 'YES' || echo 'NO')"
+            echo "tsconfig directory exists: $([ -d tsconfig ] && echo 'YES' || echo 'NO')"
+            echo "bun.lock exists: $([ -f bun.lock ] && echo 'YES' || echo 'NO')"
+            echo "Source files:"
+            find src -name "*.ts" | head -10
+            echo "=== Project structure verification complete ==="
+      - run:
           name: Dry run build
           command: bun run build
       # - slack/status:
@@ -70,6 +86,22 @@ jobs:
             - run:
                 name: Install dependencies
                 command: bun install
+            - run:
+                name: Verify project structure
+                command: |
+                  echo "=== Verifying project structure ==="
+                  echo "Working directory: $(pwd)"
+                  echo "Expected to be in: ~/etherspot-prime-sdk"
+                  echo "Current directory contents:"
+                  ls -la
+                  echo "Checking for key files:"
+                  echo "package.json exists: $([ -f package.json ] && echo 'YES' || echo 'NO')"
+                  echo "src directory exists: $([ -d src ] && echo 'YES' || echo 'NO')"
+                  echo "tsconfig directory exists: $([ -d tsconfig ] && echo 'YES' || echo 'NO')"
+                  echo "bun.lock exists: $([ -f bun.lock ] && echo 'YES' || echo 'NO')"
+                  echo "Source files:"
+                  find src -name "*.ts" | head -10
+                  echo "=== Project structure verification complete ==="
             - run:
                 name: Build Etherpot Prime SDK
                 command: |
