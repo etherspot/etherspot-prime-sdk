@@ -30,7 +30,9 @@ jobs:
             - ./node_modules
       - run:
           name: Install Bun
-          command: npm install -g bun
+          command: |
+            curl -fsSL https://bun.sh/install | bash
+            export PATH="$HOME/.bun/bin:$PATH"
       - run:
           name: Dry run build
           command: npm run build
@@ -58,7 +60,9 @@ jobs:
               command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
           - run:
               name: Install Bun
-              command: npm i -g bun
+              command: |
+                curl -fsSL https://bun.sh/install | bash
+                export PATH="$HOME/.bun/bin:$PATH"
           - run:
               name: Build Etherpot Prime SDK
               command: npm run build
@@ -172,7 +176,9 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - run:
           name: Install Bun
-          command: npm i -g bun
+          command: |
+            curl -fsSL https://bun.sh/install | bash
+            export PATH="$HOME/.bun/bin:$PATH"
       - run:
           name: Build Etherpot Prime SDK
           command: npm run build
