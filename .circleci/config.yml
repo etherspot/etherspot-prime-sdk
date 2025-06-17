@@ -17,20 +17,28 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Bun
+          command: |
+            curl -fsSL https://bun.sh/install | bash
+            echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
+            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
-          command: npm install
+          command: bun install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "bun.lockb" }}
           paths:
             - ./node_modules
+            - ~/.bun
       - run:
           name: Dry run build
-          command: npm run build
+          command: bun run build
       # - slack/status:
       #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
       #     webhook: "${SLACK_WEBHOOK_URL}"
@@ -54,8 +62,8 @@ jobs:
               name: Authenticate with registry
               command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
           - run:
-              name: Build Etherpot Prime SDK
-              command: npm run build
+              name: Build Etherpot Modular SDK
+              command: bun run build
           - run:
               name: Checkout e2e repo and run tests
               no_output_timeout: 60m
@@ -159,19 +167,26 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - run:
+          name: Install Bun
+          command: |
+            curl -fsSL https://bun.sh/install | bash
+            echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
+            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "bun.lockb" }}
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
       - run:
           name: Build Etherpot Prime SDK
-          command: npm run build
+          command: bun run build
       - run:
           name: Publish package to npm
           command: |
-            cd ~/etherspot-prime-sdk
-            npm publish
+            cd ~/etherspot-modular-sdk
+            bun publish --access public
       - run:
           name: Announce Publish
           command: |
