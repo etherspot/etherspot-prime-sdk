@@ -74,6 +74,23 @@ jobs:
                 name: Build Etherpot Prime SDK
                 command: bun run build
             - run:
+                name: Verify build output
+                command: |
+                  echo "Checking build output..."
+                  ls -la ~/etherspot-prime-sdk/dist/
+                  ls -la ~/etherspot-prime-sdk/dist/esm/
+                  echo "Checking for specific ESM file..."
+                  if [ -f ~/etherspot-prime-sdk/dist/esm/index.esm.js ]; then
+                    echo "✅ ESM build file exists"
+                    ls -la ~/etherspot-prime-sdk/dist/esm/index.esm.js
+                  else
+                    echo "❌ ESM build file missing!"
+                    echo "Contents of dist/esm directory:"
+                    find ~/etherspot-prime-sdk/dist/esm -type f
+                    exit 1
+                  fi
+                  echo "Build verification complete"
+            - run:
                 name: Checkout e2e repo and run tests
                 no_output_timeout: 60m
                 command: |
@@ -95,7 +112,25 @@ jobs:
                   mv package.json temp.json
                   jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
                   rm temp.json
+                  echo "Installing dependencies..."
                   npm i
+                  echo "Verifying SDK installation..."
+                  ls -la node_modules/@etherspot/prime-sdk/
+                  ls -la node_modules/@etherspot/prime-sdk/dist/
+                  ls -la node_modules/@etherspot/prime-sdk/dist/esm/
+                  echo "Checking if ESM file is accessible..."
+                  if [ -f node_modules/@etherspot/prime-sdk/dist/esm/index.esm.js ]; then
+                    echo "✅ ESM file accessible in E2E tests"
+                    ls -la node_modules/@etherspot/prime-sdk/dist/esm/index.esm.js
+                  else
+                    echo "❌ ESM file not accessible in E2E tests!"
+                    echo "Checking symlink..."
+                    ls -la node_modules/@etherspot/prime-sdk
+                    echo "Contents of SDK directory:"
+                    find node_modules/@etherspot/prime-sdk -name "*.js" | head -10
+                    exit 1
+                  fi
+                  echo "Running tests..."
                   npm run test-mainnet-combined
             - run:
                 name: Move test report

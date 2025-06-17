@@ -106,6 +106,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "npm": "9.6.4",
+    "rimraf": "^5.0.0",
     "ts-node": "10.9.1",
     "tsc-alias": "1.8.8",
     "typedoc": "^0.17.8",
