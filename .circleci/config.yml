@@ -37,22 +37,6 @@ jobs:
             - ./node_modules
             - ~/.bun
       - run:
-          name: Verify project structure
-          command: |
-            echo "=== Verifying project structure ==="
-            echo "Working directory: $(pwd)"
-            echo "Expected to be in: ~/etherspot-prime-sdk"
-            echo "Current directory contents:"
-            ls -la
-            echo "Checking for key files:"
-            echo "package.json exists: $([ -f package.json ] && echo 'YES' || echo 'NO')"
-            echo "src directory exists: $([ -d src ] && echo 'YES' || echo 'NO')"
-            echo "tsconfig directory exists: $([ -d tsconfig ] && echo 'YES' || echo 'NO')"
-            echo "bun.lock exists: $([ -f bun.lock ] && echo 'YES' || echo 'NO')"
-            echo "Source files:"
-            find src -name "*.ts" | head -10
-            echo "=== Project structure verification complete ==="
-      - run:
           name: Dry run build
           command: bun run build
       # - slack/status:
@@ -87,91 +71,35 @@ jobs:
                 name: Install dependencies
                 command: bun install
             - run:
-                name: Verify project structure
-                command: |
-                  echo "=== Verifying project structure ==="
-                  echo "Working directory: $(pwd)"
-                  echo "Expected to be in: ~/etherspot-prime-sdk"
-                  echo "Current directory contents:"
-                  ls -la
-                  echo "Checking for key files:"
-                  echo "package.json exists: $([ -f package.json ] && echo 'YES' || echo 'NO')"
-                  echo "src directory exists: $([ -d src ] && echo 'YES' || echo 'NO')"
-                  echo "tsconfig directory exists: $([ -d tsconfig ] && echo 'YES' || echo 'NO')"
-                  echo "bun.lock exists: $([ -f bun.lock ] && echo 'YES' || echo 'NO')"
-                  echo "Source files:"
-                  find src -name "*.ts" | head -10
-                  echo "=== Project structure verification complete ==="
-            - run:
                 name: Build Etherpot Prime SDK
-                command: |
-                  echo "Starting build process..."
-                  echo "Current directory: $(pwd)"
-                  echo "Contents of current directory:"
-                  ls -la
-                  echo "Running build command..."
-                  bun run build
-                  echo "Build command completed"
-                  echo "Checking if dist directory was created:"
-                  ls -la dist/ || echo "dist directory not found"
-            - run:
-                name: Debug build step by step
-                command: |
-                  echo "=== Step-by-step build debugging ==="
-                  echo "1. Testing clean step..."
-                  bun run clean
-                  echo "Clean completed"
-
-                  echo "2. Testing ESM build step..."
-                  bun run build:esm
-                  echo "ESM build completed"
-                  echo "Checking ESM output:"
-                  ls -la dist/esm/ || echo "ESM directory not found"
-
-                  echo "3. Testing CJS build step..."
-                  bun run build:cjs
-                  echo "CJS build completed"
-                  echo "Checking CJS output:"
-                  ls -la dist/cjs/ || echo "CJS directory not found"
-
-                  echo "4. Testing types build step..."
-                  bun run build:types
-                  echo "Types build completed"
-                  echo "Checking types output:"
-                  ls -la dist/types/ || echo "Types directory not found"
-
-                  echo "=== Step-by-step debugging complete ==="
-            - run:
-                name: Test TypeScript compilation directly
-                command: |
-                  echo "=== Testing TypeScript compilation directly ==="
-                  echo "Running TypeScript compiler for ESM..."
-                  npx tsc --project ./tsconfig/tsconfig.esm.json --listFiles
-                  echo "TypeScript compilation completed"
-                  echo "Checking output directory:"
-                  ls -la dist/esm/ || echo "ESM directory not found"
-                  echo "=== Direct TypeScript test complete ==="
+                command: bun run build
             - run:
                 name: Verify build output
                 command: |
-                  echo "Checking build output..."
+                  echo "=== Verifying build output ==="
                   echo "Current directory: $(pwd)"
-                  echo "Contents of root directory:"
-                  ls -la
                   echo "Checking dist directory:"
                   ls -la dist/ || echo "dist directory not found"
                   echo "Checking dist/esm directory:"
                   ls -la dist/esm/ || echo "dist/esm directory not found"
+                  echo "Checking dist/cjs directory:"
+                  ls -la dist/cjs/ || echo "dist/cjs directory not found"
+                  echo "Checking dist/types directory:"
+                  ls -la dist/types/ || echo "dist/types directory not found"
                   echo "Checking for specific ESM file..."
-                  if [ -f ~/etherspot-prime-sdk/dist/esm/index.esm.js ]; then
+                  if [ -f dist/esm/index.esm.js ]; then
                     echo "✅ ESM build file exists"
-                    ls -la ~/etherspot-prime-sdk/dist/esm/index.esm.js
+                    ls -la dist/esm/index.esm.js
                   else
                     echo "❌ ESM build file missing!"
-                    echo "Contents of dist/esm directory:"
-                    find ~/etherspot-prime-sdk/dist/esm -type f 2>/dev/null || echo "No files found or directory doesn't exist"
-                    echo "Checking if TypeScript compilation failed..."
-                    echo "Checking for TypeScript errors in build output..."
+                    exit 1
+                  fi
+                  echo "Checking for specific CJS file..."
+                  if [ -f dist/cjs/index.cjs.js ]; then
+                    echo "✅ CJS build file exists"
+                    ls -la dist/cjs/index.cjs.js
+                  else
+                    echo "❌ CJS build file missing!"
                     exit 1
                   fi
                   echo "Build verification complete"
@@ -314,6 +242,36 @@ jobs:
       - run:
           name: Build Etherpot Prime SDK
           command: bun run build
+      - run:
+          name: Verify build output
+          command: |
+            echo "=== Verifying build output ==="
+            echo "Current directory: $(pwd)"
+            echo "Checking dist directory:"
+            ls -la dist/ || echo "dist directory not found"
+            echo "Checking dist/esm directory:"
+            ls -la dist/esm/ || echo "dist/esm directory not found"
+            echo "Checking dist/cjs directory:"
+            ls -la dist/cjs/ || echo "dist/cjs directory not found"
+            echo "Checking dist/types directory:"
+            ls -la dist/types/ || echo "dist/types directory not found"
+            echo "Checking for specific ESM file..."
+            if [ -f dist/esm/index.esm.js ]; then
+              echo "✅ ESM build file exists"
+              ls -la dist/esm/index.esm.js
+            else
+              echo "❌ ESM build file missing!"
+              exit 1
+            fi
+            echo "Checking for specific CJS file..."
+            if [ -f dist/cjs/index.cjs.js ]; then
+              echo "✅ CJS build file exists"
+              ls -la dist/cjs/index.cjs.js
+            else
+              echo "❌ CJS build file missing!"
+              exit 1
+            fi
+            echo "Build verification complete"
       - run:
           name: Publish package to npm
           command: |
