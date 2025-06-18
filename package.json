@@ -14,17 +14,17 @@
   ],
   "license": "MIT",
   "homepage": "https://etherspot.dev",
-  "main": "./dist/cjs/index.cjs.js",
-  "module": "./dist/esm/index.esm.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "browser": {
-    ".": "./dist/esm/index.esm.js",
+    ".": "./dist/esm/index.js",
     "child_process": false
   },
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.esm.js",
-      "require": "./dist/cjs/index.cjs.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts"
     }
   },
