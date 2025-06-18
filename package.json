@@ -79,7 +79,7 @@
     "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
-    "@apollo/client": "3.13.8",
+    "@apollo/client": "3.9.0",
     "@lifi/sdk": "2.5.0",
     "@thehubbleproject/bls": "0.5.1",
     "@walletconnect/universal-provider": "2.10.0",
@@ -94,13 +94,14 @@
     "prettier": "2.8.8",
     "qs": "6.12.0",
     "reflect-metadata": "0.1.14",
-    "rxjs": "7.8.2",
+    "rxjs": "6.6.7",
     "ws": "^8.18.2"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
     "@types/prettier": "2.7.3",
     "@types/qs": "6.9.12",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "5.45.0",
     "@typescript-eslint/parser": "5.45.0",
     "dotenv": "16.0.3",
