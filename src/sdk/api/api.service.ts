@@ -6,7 +6,7 @@ import {
   NormalizedCacheObject,
   Observable,
   split
-} from '@apollo/client';
+} from '@apollo/client/index.js';
 import { setContext } from '@apollo/client/link/context/index.js';
 import { WebSocketLink } from '@apollo/client/link/ws/index.js';
 import { getMainDefinition } from '@apollo/client/utilities/index.js';
