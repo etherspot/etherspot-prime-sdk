@@ -1,4 +1,4 @@
-import { FetchPolicy } from '@apollo/client/core';
+import { FetchPolicy } from '@apollo/client';
 
 export interface ApiOptions {
   host: string;

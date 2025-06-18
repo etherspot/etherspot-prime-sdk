@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client/core';
+import { ApolloError } from '@apollo/client';
 import { ValidationException } from '../../common';
 import { HttpExceptionCodes, HttpException } from '../exceptions';
 
