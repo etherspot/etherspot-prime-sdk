@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators/index.js';
+import { map } from 'rxjs/operators';
 import { BytesLike, ethers, providers, Wallet as EtherWallet } from 'ethers';
 import { Service, ObjectSubject } from '../common';
 import { WalletProvider, WalletProviderLike, KeyWalletProvider, WalletLike, MessagePayload } from './providers';

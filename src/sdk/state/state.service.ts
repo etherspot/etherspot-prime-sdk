@@ -1,6 +1,6 @@
 import { plainToClass } from 'class-transformer';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators/index.js';
+import { filter, map, tap } from 'rxjs/operators';
 import { Service } from '../common';
 import { Wallet } from '../wallet';
 import { State } from './classes';
