@@ -1,7 +1,7 @@
 import { ApolloClient, DocumentNode, InMemoryCache, HttpLink, NormalizedCacheObject, Observable, split } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context/index.js';
-import { WebSocketLink } from '@apollo/client/link/ws/index.js';
-import { getMainDefinition } from '@apollo/client/utilities/index.js';
+import { setContext } from '@apollo/client/link/context';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import fetch from 'cross-fetch';
 import { BigNumber } from 'ethers';
 import { isBigNumber } from '../common';
