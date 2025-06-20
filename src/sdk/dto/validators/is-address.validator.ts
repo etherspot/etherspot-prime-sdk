@@ -10,7 +10,7 @@ export function IsAddress(options: ValidationOptions = {}) {
         ...options,
       },
       name: 'isAddress',
-      target: object.constructor,
+      target: object ? object.constructor : undefined,
       constraints: [],
       validator: {
         validate(value: any): boolean {

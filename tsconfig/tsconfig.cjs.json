@@ -5,6 +5,7 @@
     "module": "commonjs",
     "moduleResolution": "Node",
     "outDir": "../dist/cjs",
-    "removeComments": true
+    "removeComments": true,
+    "verbatimModuleSyntax": false
   }
 }
