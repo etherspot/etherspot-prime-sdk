@@ -13,4 +13,3 @@ export * from './random-private-key';
 export * from './sleep';
 export * from './stringify-json';
 export * from './to-hex';
-export * from './openurl';

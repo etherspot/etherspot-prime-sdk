@@ -1,6 +1,6 @@
 {
   "name": "@etherspot/prime-sdk",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "Etherspot Prime (Account Abstraction) SDK",
   "keywords": [
     "ether",
@@ -14,17 +14,17 @@
   ],
   "license": "MIT",
   "homepage": "https://etherspot.dev",
-  "main": "./dist/cjs/index.cjs.js",
-  "module": "./dist/esm/index.esm.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "browser": {
-    ".": "./dist/esm/index.esm.js",
+    ".": "./dist/esm/index.js",
     "child_process": false
   },
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.esm.js",
-      "require": "./dist/cjs/index.cjs.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts"
     }
   },
@@ -78,12 +78,9 @@
     "url": "https://github.com/etherspot/etherspot-prime-sdk/issues"
   },
   "dependencies": {
-    "@apollo/client": "3.9.0",
     "@lifi/sdk": "2.5.0",
     "@thehubbleproject/bls": "0.5.1",
     "@walletconnect/universal-provider": "2.10.0",
-    "apollo-link-ws": "1.0.20",
-    "buffer": "^6.0.3",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
     "commander": "10.0.1",
@@ -93,7 +90,8 @@
     "prettier": "2.8.8",
     "qs": "6.12.0",
     "reflect-metadata": "0.1.14",
-    "rxjs": "6.6.7"
+    "rxjs": "7.8.2",
+    "tslib": "2.6.2"
   },
   "devDependencies": {
     "@types/node": "18.11.9",
@@ -108,7 +106,8 @@
     "npm": "9.6.4",
     "ts-node": "10.9.1",
     "tsc-alias": "1.8.8",
-    "typedoc": "^0.17.8",
-    "typescript": "4.9.5"
+    "tsx": "4.19.3",
+    "typedoc": "0.17.8",
+    "typescript": "5.5.3"
   }
 }
