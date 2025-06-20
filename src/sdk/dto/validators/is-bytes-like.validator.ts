@@ -10,7 +10,7 @@ export function IsBytesLike(options: ValidationOptions & { acceptText?: boolean 
         ...options,
       },
       name: 'IsBytesLike',
-      target: object.constructor,
+      target: object ? object.constructor : undefined,
       constraints: [],
       validator: {
         validate(value: any): boolean {
