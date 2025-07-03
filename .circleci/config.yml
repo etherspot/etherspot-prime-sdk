@@ -55,7 +55,7 @@ jobs:
 
       # 3) Install dependencies & run the tests
       - run:
-          name: Checkout x‑e2e repo and run tests
+          name: Checkout e2e-sdk-prime repo and run tests
           no_output_timeout: 90m
           command: |
             cd ~/e2e-sdk-prime
