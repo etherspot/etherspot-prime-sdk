@@ -1,248 +1,159 @@
 version: 2.1
-parameters:
-  run_e2e_tests:
-    type: boolean
-    default: true
+
 orbs:
   slack: circleci/slack@3.4.2
 
 jobs:
-  install:
-    working_directory: ~/etherspot-prime-sdk
-    docker:
-      - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
-    steps:
-      - checkout
-      - run:
-          name: Install Bun
-          command: |
-            curl -fsSL https://bun.sh/install | bash
-            echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
-            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
-      - restore_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
-      - run:
-          name: Install dependencies
-          command: bun install
-      - save_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
-          paths:
-            - ./node_modules
-            - ~/.bun
-      - run:
-          name: Dry run build
-          command: bun run build
-      # - slack/status:
-      #     failure_message: "Triggered by: *${CIRCLE_USERNAME}* \n\n Ooops! The *$CIRCLE_JOB* job has failed! :circleci-fail:"
-      #     webhook: "${SLACK_WEBHOOK_URL}"
-
   e2e-tests:
-    working_directory: ~/etherspot-prime-sdk
+    working_directory: ~/x
     docker:
-      - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
+      - image: cypress/included:cypress-13.15.1-node-20.18.0-chrome-130.0.6723.69-1-ff-131.0.3-edge-130.0.2849.52-1
+    resource_class: xlarge
     steps:
       - checkout
-      - when:
-          condition: <<pipeline.parameters.run_e2e_tests>>
-          steps:
-          - run:
-              name: Install Bun
-              command: |
-                curl -fsSL https://bun.sh/install | bash
-                echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
-                echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
-                source $BASH_ENV
-          - restore_cache:
-              key: dependency-cache-{{ checksum "bun.lockb" }}
-          - run:
-              name: Authenticate with registry
-              command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
-          - run:
-              name: Install dependencies
-              command: bun install
-          - run:
-              name: Build Etherpot Prime SDK
-              command: bun run build
-          - run:
-              name: Checkout e2e repo and run tests
-              no_output_timeout: 60m
-              command: |
-                cd ~
-                git clone https://github.com/etherspot/e2e-sdk-prime.git
-                cd e2e-sdk-prime
-                sed -i.bak "s/private_key/$PRIVATE_KEY/g" .env
-                sed -i.bak "s/project_key/$PROJECT_KEY/g" .env
-                sed -i.bak "s/project_key_testnet/$PROJECT_KEY_TESTNET/g" .env
-                sed -i.bak "s/api_key/$API_KEY/g" .env
-                sed -i.bak "s/api_key_arka/$API_KEY_ARKA/g" .env
-                #sed -i.bak "s/api_key_sessionkey/$API_KEY_SESSIONKEY/g" .env
-                sed -i.bak "s/incorrect_api_key/$INCORRECT_API_KEY/g" .env
-                sed -i.bak "s/incorrect_api_key_arka/$INCORRECT_API_KEY_ARKA/g" .env
-                sed -i.bak "s/invalid_api_key/$INVALID_API_KEY/g" .env
-                sed -i.bak "s/invalid_api_key_arka/$INVALID_API_KEY_ARKA/g" .env
-                sed -i.bak "s/bundler_api_key/$BUNDLER_API_KEY/g" .env
-                sed -i.bak "s/data_api_key/$DATA_API_KEY/g" .env                  
-                mv package.json temp.json
-                jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
-                rm temp.json
-                npm i
-                npm run test-mainnet-combined
-          - run:
-              name: Move test report
-              command: |
-                mv /home/circleci/e2e-sdk-prime/mochawesome-report /tmp/
-                chmod 777 -R /tmp/mochawesome-report
-              when: always 
-          - store_artifacts:
-              path: /tmp/mochawesome-report
-              when: always
-          - run:
-              name: Parse and send test results to Slack
-              when: always
-              command: |
-                wget https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.json
 
-                MOCHAWESOME_JSON_FILE=./mochawesome.json
-                FAILED_TESTS_FILE=failed-tests.txt
-                TOTAL_SUITES=$(jq '.stats.suites' $MOCHAWESOME_JSON_FILE)
-                TOTAL_PASSES=$(jq '.stats.passes' $MOCHAWESOME_JSON_FILE)
-                TOTAL_PENDING=$(jq '.stats.pending' $MOCHAWESOME_JSON_FILE)
-                TOTAL_FAILURES=$(jq '.stats.failures' $MOCHAWESOME_JSON_FILE)
-                START_TIME=$(jq -r '.stats.start' $MOCHAWESOME_JSON_FILE)
-                END_TIME=$(jq -r '.stats.end' $MOCHAWESOME_JSON_FILE)
-                DURATION_MS=$(jq -r '.stats.duration' $MOCHAWESOME_JSON_FILE)
-
-                START_TIME_FORMATTED=$(date -d "$START_TIME" "+%Y-%m-%d %H:%M:%S")
-                END_TIME_FORMATTED=$(date -d "$END_TIME" "+%Y-%m-%d %H:%M:%S")
-                DURATION_MIN=$(awk "BEGIN {printf \"%.2f\",${DURATION_MS}/60000}")
-
-
-                jq -r '.results[] | .suites[] | select(.failures > 0) | {suite: .title, tests: [.tests[] | select(.fail) | .title]} | select(.tests | length > 0) |
-                "*Suite:* \(.suite)\n*Failing Tests:* \n\(.tests | map("- " + .) | join("\n"))\n"' $MOCHAWESOME_JSON_FILE > $FAILED_TESTS_FILE
-
-                if [ -s $FAILED_TESTS_FILE ]; then
-                  MESSAGE=$(cat $FAILED_TESTS_FILE)
-                  SLACK_MESSAGE=":x: *E2E Tests Failed :x: *\n\
-                *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
-                *Triggered by:* ${CIRCLE_USERNAME}\n\
-                *Branch:* ${CIRCLE_BRANCH}\n\
-                *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\n\
-                *Test Summary:*\n\
-                *Total Suites:* ${TOTAL_SUITES}\n\
-                *Passes:* ${TOTAL_PASSES}\n\
-                *Pending:* ${TOTAL_PENDING}\n\
-                *Failures:* ${TOTAL_FAILURES}\n\
-                *Start Time:* ${START_TIME_FORMATTED}\n\
-                *End Time:* ${END_TIME_FORMATTED}\n\
-                *Duration:* ${DURATION_MIN} minutes\n\n\
-                *Failed Tests:*\n${MESSAGE}\n\
-                *Report:* <https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html|View HTML Report>\n\
-                *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
-                cc: ${TAG_RESPONSIBLE_PEOPLE}"
-                else
-                  SLACK_MESSAGE=":white_check_mark: All E2E tests passed\n\
-                *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
-                *Triggered by:* ${CIRCLE_USERNAME}\n\
-                *Branch:* ${CIRCLE_BRANCH}\n\
-                *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\
-                *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
-                \n*Test Summary:*\n\
-                *Total Suites:* ${TOTAL_SUITES}\n\
-                *Passes:* ${TOTAL_PASSES}\n\
-                *Pending:* ${TOTAL_PENDING}\n\
-                *Failures:* ${TOTAL_FAILURES}\n\
-                *Start Time:* ${START_TIME_FORMATTED}\n\
-                *End Time:* ${END_TIME_FORMATTED}\n\
-                *Duration:* ${DURATION_MIN} minutes"
-                fi
-
-                curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$SLACK_MESSAGE"'"}' $E2E_SLACK_WEBHOOK_URL
-  publish-npm-package:
-    working_directory: ~/etherspot-prime-sdk
-    docker:
-      - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
-    steps:
-      - checkout
       - run:
-          name: Install Bun
+          name: Install jq
+          command: apt-get update && apt-get install -y curl jq
+
+      # 1) Clone the e2e repo
+      - run:
+          name: Clone e2e‑sdk‑prime repository
           command: |
-            curl -fsSL https://bun.sh/install | bash
-            echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
-            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
-      - restore_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
+            cd ~
+            git clone -b main --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
+            cd e2e-sdk-prime
+            git pull
+
+      # 2) Generate .env inside the e2e‑sdk‑prime folder
       - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/etherspot-prime-sdk/.npmrc
-      - run:
-          name: Install dependencies
-          command: bun install
-      - run:
-          name: Build Etherpot Prime SDK
-          command: bun run build
-      - run:
-          name: Publish package to npm
+          name: Generate .env file from branch‑specific secrets
           command: |
-            cd ~/etherspot-prime-sdk
-            bun publish --access public
+            cd ~/e2e-sdk-prime
+
+            if [ "$CIRCLE_BRANCH" = "main" ]; then
+              echo "PRIVATE_KEY=$PRIVATE_KEY_MAINNET" > .env
+              echo "PROJECT_KEY=$PROJECT_KEY_MAINNET" >> .env
+              echo "API_KEY=$API_KEY_MAINNET" >> .env
+              echo "API_KEY_ARKA=$API_KEY_ARKA_MAINNET" >> .env
+              echo "API_KEY_SESSIONKEY=$API_KEY_SESSIONKEY_MAINNET" >> .env
+              echo "INCORRECT_API_KEY_ARKA=$INCORRECT_API_KEY_ARKA_MAINNET" >> .env
+              echo "INVALID_API_KEY_ARKA=$INVALID_API_KEY_ARKA_MAINNET" >> .env
+              echo "BUNDLER_API_KEY=$BUNDLER_API_KEY_MAINNET" >> .env
+              echo "DATA_API_KEY=$DATA_API_KEY_MAINNET" >> .env
+            else
+              echo "PRIVATE_KEY=$PRIVATE_KEY_TESTNET" > .env
+              echo "PROJECT_KEY=$PROJECT_KEY_TESTNET" >> .env
+              echo "API_KEY=$API_KEY_TESTNET" >> .env
+              echo "API_KEY_ARKA=$API_KEY_ARKA_TESTNET" >> .env
+              echo "API_KEY_SESSIONKEY=$API_KEY_SESSIONKEY_TESTNET" >> .env
+              echo "INCORRECT_API_KEY_ARKA=$INCORRECT_API_KEY_ARKA_TESTNET" >> .env
+              echo "INVALID_API_KEY_ARKA=$INVALID_API_KEY_ARKA_TESTNET" >> .env
+              echo "BUNDLER_API_KEY=$BUNDLER_API_KEY_TESTNET" >> .env
+              echo "DATA_API_KEY=$DATA_API_KEY_TESTNET" >> .env
+            fi
+
+      # 3) Install dependencies & run the tests
       - run:
-          name: Announce Publish
+          name: Checkout x‑e2e repo and run tests
+          no_output_timeout: 90m
           command: |
-            chmod +x .circleci/announcePublish.sh
-            .circleci/announcePublish.sh "Etherspot Prime SDK" "$(node -e "console.log(require('./package.json').version)")"
-  publish-github-release:
-    docker:
-      - image: ardd97/ghr
-    steps:
-      - checkout
+            cd ~/e2e-sdk-prime
+            cat cypress.config.js
+            npm install
+            npx playwright install --with-deps
+
+            if [ "$CIRCLE_BRANCH" == "main" ]; then
+              echo "Running mainnet tests"
+              npm run test-mainnet-combined
+            else
+              echo "Running testnet tests"
+              npm run test-testnet-combined
+            fi
+
       - run:
-          name: "Publish Release on GitHub"
+          name: Move test report
+          when: always
           command: |
-            PACKAGE_VERSION="$(jq .version package.json -r)"
-            echo $PACKAGE_VERSION
-            ghr -t "${GITHUB_TOKEN}" -u "${CIRCLE_PROJECT_USERNAME}" -r "${CIRCLE_PROJECT_REPONAME}" -c "${CIRCLE_SHA1}" "$PACKAGE_VERSION"
+            mv /root/x-e2e/mochawesome-report /tmp/
+            chmod 777 -R /tmp/mochawesome-report
+
+      - store_artifacts:
+          path: /tmp/mochawesome-report
+          when: always
+
+      - run:
+          name: Parse and send test results to Slack
+          when: always
+          command: |
+            wget https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.json
+
+            MOCHAWESOME_JSON_FILE=./mochawesome.json
+            FAILED_TESTS_FILE=failed-tests.txt
+            TOTAL_SUITES=$(jq '.stats.suites' $MOCHAWESOME_JSON_FILE)
+            TOTAL_PASSES=$(jq '.stats.passes' $MOCHAWESOME_JSON_FILE)
+            TOTAL_PENDING=$(jq '.stats.pending' $MOCHAWESOME_JSON_FILE)
+            TOTAL_FAILURES=$(jq '.stats.failures' $MOCHAWESOME_JSON_FILE)
+            START_TIME=$(jq -r '.stats.start' $MOCHAWESOME_JSON_FILE)
+            END_TIME=$(jq -r '.stats.end' $MOCHAWESOME_JSON_FILE)
+            DURATION_MS=$(jq -r '.stats.duration' $MOCHAWESOME_JSON_FILE)
+
+            START_TIME_FORMATTED=$(date -d "$START_TIME" "+%Y-%m-%d %H:%M:%S")
+            END_TIME_FORMATTED=$(date -d "$END_TIME" "+%Y-%m-%d %H:%M:%S")
+            DURATION_MIN=$(awk "BEGIN {printf \"%.2f\",${DURATION_MS}/60000}")
+
+            jq -r '.results[] | .suites[] | select(.failures > 0) | {suite: .title, tests: [.tests[] | select(.fail) | .title]} | select(.tests | length > 0) |
+            "*Suite:* \(.suite)\n*Failing Tests:* \n\(.tests | map("- " + .) | join("\n"))\n"' $MOCHAWESOME_JSON_FILE > $FAILED_TESTS_FILE
+
+            if [ -s $FAILED_TESTS_FILE ]; then
+              MESSAGE=$(cat $FAILED_TESTS_FILE)
+              SLACK_MESSAGE=":x: *ETHERSPOT_PRIME_SDK UI Tests Failed :x: *\n\
+            *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
+            *Triggered by:* ${CIRCLE_USERNAME}\n\
+            *Branch:* ${CIRCLE_BRANCH}\n\
+            *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\n\
+            *Test Summary:*\n\
+            *Total Suites:* ${TOTAL_SUITES}\n\
+            *Passes:* ${TOTAL_PASSES}\n\
+            *Pending:* ${TOTAL_PENDING}\n\
+            *Failures:* ${TOTAL_FAILURES}\n\
+            *Start Time:* ${START_TIME_FORMATTED}\n\
+            *End Time:* ${END_TIME_FORMATTED}\n\
+            *Duration:* ${DURATION_MIN} minutes\n\n\
+            *Failed Tests:*\n${MESSAGE}\n\
+            *Report:* <https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html|View HTML Report>\n\
+            *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
+            cc: ${TAG_RESPONSIBLE_PEOPLE}"
+            else
+              SLACK_MESSAGE=":white_check_mark: All ETHERSPOT_PRIME_SDK UI tests passed\n\
+            *Project:* ${CIRCLE_PROJECT_REPONAME}\n\
+            *Triggered by:* ${CIRCLE_USERNAME}\n\
+            *Branch:* ${CIRCLE_BRANCH}\n\
+            *Commit:* <https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_SHA1}>\n\
+            *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
+            \n*Test Summary:*\n\
+            *Total Suites:* ${TOTAL_SUITES}\n\
+            *Passes:* ${TOTAL_PASSES}\n\
+            *Pending:* ${TOTAL_PENDING}\n\
+            *Failures:* ${TOTAL_FAILURES}\n\
+            *Start Time:* ${START_TIME_FORMATTED}\n\
+            *End Time:* ${END_TIME_FORMATTED}\n\
+            *Duration:* ${DURATION_MIN} minutes\n\n\
+            *Report:* <https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/${CIRCLE_NODE_INDEX}/tmp/mochawesome-report/mochawesome.html|View HTML Report>\n\
+            *Job:* <https://circleci.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}|View Job>\n\
+            
+            fi
+
+            curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$SLACK_MESSAGE"'"}' $E2E_SLACK_WEBHOOK_URL
 
 workflows:
-  version: 2.1
-  install_and_publish:
+  version: 2
+
+  run-on-commit:
     jobs:
-      - install:
-          context: general-vars
       - e2e-tests:
-          context: general-vars
-          requires:
-            - install
-          # filters:
-          #   branches:
-          #     only:
-          #         - master
-      - publish-npm-package:
-          context: general-vars
-          requires:
-            - e2e-tests
           filters:
             branches:
               only:
-                  - master
-      - publish-github-release:
-          context: general-vars
-          requires:
-            - publish-npm-package
-          filters:
-            branches:
-              only:
-                  - master
+                - main
+                - develop
