@@ -59,7 +59,6 @@ jobs:
           no_output_timeout: 90m
           command: |
             cd ~/e2e-sdk-prime
-            cat cypress.config.js
             npm install
             npx playwright install --with-deps
 
@@ -75,7 +74,7 @@ jobs:
           name: Move test report
           when: always
           command: |
-            mv /root/x-e2e/mochawesome-report /tmp/
+            mv /root/e2e-sdk-prime/mochawesome-report /tmp/
             chmod 777 -R /tmp/mochawesome-report
 
       - store_artifacts:
