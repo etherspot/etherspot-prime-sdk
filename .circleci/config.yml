@@ -21,7 +21,7 @@ jobs:
           name: Clone e2e‑sdk‑prime repository
           command: |
             cd ~
-            git clone -b main --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
+            git clone -b master --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
             git pull
 
