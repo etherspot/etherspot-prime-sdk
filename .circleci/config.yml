@@ -157,3 +157,4 @@ workflows:
               only:
                 - main
                 - develop
+                - PRO-3477-e2e
