@@ -23,14 +23,8 @@ jobs:
             cd ~
             git clone -b master --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
-            git pull
-
-      # 2) Generate .env inside the e2e‑sdk‑prime folder
-      - run:
-          name: Generate .env file from branch‑specific secrets
-          command: |
-            cd ~/e2e-sdk-prime
-
+            ls -la
+            
             if [ "$CIRCLE_BRANCH" = "main" ]; then
               echo "PRIVATE_KEY=$PRIVATE_KEY_MAINNET" > .env
               echo "PROJECT_KEY=$PROJECT_KEY_MAINNET" >> .env
