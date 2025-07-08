@@ -59,7 +59,8 @@ jobs:
           no_output_timeout: 90m
           command: |
             cd ~/e2e-sdk-prime
-            npm install
+            rm -rf package-lock.json
+            npm install 
             npx playwright install --with-deps
 
             if [ "$CIRCLE_BRANCH" == "main" ]; then
