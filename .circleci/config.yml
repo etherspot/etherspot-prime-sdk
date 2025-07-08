@@ -46,7 +46,6 @@ jobs:
               echo "BUNDLER_API_KEY=$BUNDLER_API_KEY_TESTNET" >> .env
               echo "DATA_API_KEY=$DATA_API_KEY_TESTNET" >> .env
             fi
-            rm -rf package-lock.json
             npm install 
             npx playwright install --with-deps
 
