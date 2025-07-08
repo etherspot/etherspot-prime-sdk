@@ -52,13 +52,6 @@ jobs:
               echo "BUNDLER_API_KEY=$BUNDLER_API_KEY_TESTNET" >> .env
               echo "DATA_API_KEY=$DATA_API_KEY_TESTNET" >> .env
             fi
-
-      # 3) Install dependencies & run the tests
-      - run:
-          name: Checkout e2e-sdk-prime repo and run tests
-          no_output_timeout: 90m
-          command: |
-            cd ~/e2e-sdk-prime
             rm -rf package-lock.json
             npm install 
             npx playwright install --with-deps
@@ -70,6 +63,24 @@ jobs:
               echo "Running testnet tests"
               npm run test-testnet-combined
             fi
+
+      # 3) Install dependencies & run the tests
+      # - run:
+      #     name: Checkout e2e-sdk-prime repo and run tests
+      #     no_output_timeout: 90m
+      #     command: |
+      #       cd ~/e2e-sdk-prime
+      #       rm -rf package-lock.json
+      #       npm install 
+      #       npx playwright install --with-deps
+
+      #       if [ "$CIRCLE_BRANCH" == "main" ]; then
+      #         echo "Running mainnet tests"
+      #         npm run test-mainnet-combined
+      #       else
+      #         echo "Running testnet tests"
+      #         npm run test-testnet-combined
+      #       fi
 
       - run:
           name: Move test report
