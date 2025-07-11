@@ -24,7 +24,14 @@ jobs:
             git clone -b master --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
             #npm i @etherspot/prime-sdk --save
+            # ✅ Debug step to ensure we're editing the correct file
+            echo "Before patch:" && grep 'etherspot-prime-sdk' package.json
+
+            # ✅ Replace tarball path with NPM version
             sed -i 's|"file:./etherspot-prime-sdk-1.9.2.tgz"|"^1.9.2"|' package.json
+
+            # ✅ Confirm it worked
+            echo "After patch:" && grep 'etherspot-prime-sdk' package.json
             
             if [ "$CIRCLE_BRANCH" = "main" ]; then
               echo "PRIVATE_KEY=$PRIVATE_KEY_MAINNET" > .env
