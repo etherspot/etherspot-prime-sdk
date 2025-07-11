@@ -27,7 +27,7 @@ jobs:
             echo "Before patch:" && grep 'etherspot-prime-sdk' package.json
 
             #   ✅ Replace just the value (most robust)
-            sed -i 's|file:./etherspot-prime-sdk-1.9.2.tgz|^1.9.2|' package.json
+            cat package.json | sed 's|file:./etherspot-prime-sdk-1.9.2.tgz|^1.9.2|' > package.json.tmp && mv package.json.tmp package.json
 
             echo "After patch:" && grep 'etherspot-prime-sdk' package.json
             
