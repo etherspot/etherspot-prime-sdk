@@ -23,8 +23,8 @@ jobs:
             cd ~
             git clone -b master --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
-            npm i @etherspot/prime-sdk --save
-            ls -la
+            #npm i @etherspot/prime-sdk --save
+            sed -i 's|"file:./etherspot-prime-sdk-1.9.2.tgz"|"^1.9.2"|' package.json
             
             if [ "$CIRCLE_BRANCH" = "main" ]; then
               echo "PRIVATE_KEY=$PRIVATE_KEY_MAINNET" > .env
@@ -47,7 +47,7 @@ jobs:
               echo "BUNDLER_API_KEY=$BUNDLER_API_KEY_TESTNET" >> .env
               echo "DATA_API_KEY=$DATA_API_KEY_TESTNET" >> .env
             fi
-            npm install
+            npm install --legacy-peer-deps
             npx playwright install --with-deps
 
             if [ "$CIRCLE_BRANCH" == "main" ]; then
