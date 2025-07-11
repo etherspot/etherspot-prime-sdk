@@ -23,13 +23,7 @@ jobs:
             cd ~
             git clone -b master --single-branch https://$GITHUB_TOKEN@github.com/etherspot/e2e-sdk-prime.git
             cd e2e-sdk-prime
-            #npm i @etherspot/prime-sdk --save
-            echo "Before patch:" && grep 'etherspot-prime-sdk' package.json
-
-            #   ✅ Replace just the value (most robust)
-            cat package.json | sed 's|file:./etherspot-prime-sdk-1.9.2.tgz|^1.9.2|' > package.json.tmp && mv package.json.tmp package.json
-
-            echo "After patch:" && grep 'etherspot-prime-sdk' package.json
+            npm i @etherspot/prime-sdk --save
             
             if [ "$CIRCLE_BRANCH" = "main" ]; then
               echo "PRIVATE_KEY=$PRIVATE_KEY_MAINNET" > .env
