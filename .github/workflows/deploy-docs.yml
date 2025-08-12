@@ -28,7 +28,7 @@ jobs:
           git config --global user.name "EtherspotBOT"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node.js
         uses: actions/setup-node@v4
