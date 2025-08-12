@@ -11,7 +11,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Check if package version has been updated
         id: check
         uses: EndBug/version-check@v2.1.1
