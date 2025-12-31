@@ -80,23 +80,33 @@ jobs:
                 cd ~
                 git clone https://github.com/etherspot/e2e-sdk-prime.git
                 cd e2e-sdk-prime
+          
                 sed -i.bak "s/private_key/$PRIVATE_KEY/g" .env
                 sed -i.bak "s/project_key/$PROJECT_KEY/g" .env
                 sed -i.bak "s/project_key_testnet/$PROJECT_KEY_TESTNET/g" .env
                 sed -i.bak "s/api_key/$API_KEY/g" .env
                 sed -i.bak "s/api_key_arka/$API_KEY_ARKA/g" .env
-                #sed -i.bak "s/api_key_sessionkey/$API_KEY_SESSIONKEY/g" .env
                 sed -i.bak "s/incorrect_api_key/$INCORRECT_API_KEY/g" .env
                 sed -i.bak "s/incorrect_api_key_arka/$INCORRECT_API_KEY_ARKA/g" .env
                 sed -i.bak "s/invalid_api_key/$INVALID_API_KEY/g" .env
                 sed -i.bak "s/invalid_api_key_arka/$INVALID_API_KEY_ARKA/g" .env
                 sed -i.bak "s/bundler_api_key/$BUNDLER_API_KEY/g" .env
-                sed -i.bak "s/data_api_key/$DATA_API_KEY/g" .env                  
+                sed -i.bak "s/data_api_key/$DATA_API_KEY/g" .env
+          
                 mv package.json temp.json
                 jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
                 rm temp.json
-                npm i
-                npm run test-mainnet-combined
+          
+                npm install
+          
+                if [ "$CIRCLE_BRANCH" = "develop" ]; then
+                  echo "Running TESTNET E2E tests"
+                  npm run test-testnet-combined
+                else
+                  echo "Running MAINNET E2E tests"
+                  npm run test-mainnet-combined
+                fi
+
           - run:
               name: Move test report
               command: |
