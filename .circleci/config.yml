@@ -16,7 +16,6 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
-
     steps:
       - checkout
 
@@ -57,7 +56,6 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
-
     steps:
       - checkout
 
@@ -85,7 +83,7 @@ jobs:
                 command: bun install
 
             - run:
-                name: Build SDK (required for file: dependency)
+                name: "Build SDK (required for file: dependency)"
                 command: bun run build
 
             - run:
@@ -137,7 +135,6 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
-
     steps:
       - checkout
 
@@ -208,7 +205,7 @@ workflows:
             - e2e-tests
           filters:
             branches:
-              only: master
+              only: update-circleci
 
       - publish-github-release:
           context: general-vars
@@ -216,4 +213,4 @@ workflows:
             - publish-npm-package
           filters:
             branches:
-              only: master
+              only: update-circleci
