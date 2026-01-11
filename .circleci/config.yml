@@ -5,17 +5,11 @@ parameters:
     type: boolean
     default: true
 
-orbs:
-  slack: circleci/slack@3.4.2
-
 jobs:
   install:
     working_directory: ~/etherspot-prime-sdk
     docker:
       - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
 
@@ -28,113 +22,89 @@ jobs:
             source $BASH_ENV
 
       - run:
-          name: Authenticate with npm registry
+          name: Authenticate npm
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/.npmrc
-
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "bun.lockb" }}
 
       - run:
           name: Install dependencies
           command: bun install
 
-      - save_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
-          paths:
-            - node_modules
-            - ~/.bun
-
       - run:
           name: Build SDK
           command: bun run build
 
+      - run:
+          name: Pack SDK as tarball
+          command: |
+            npm pack
+            mv etherspot-prime-sdk-*.tgz /tmp/prime-sdk.tgz
+
+      - persist_to_workspace:
+          root: /
+          paths:
+            - tmp/prime-sdk.tgz
+
   e2e-tests:
-    working_directory: ~/etherspot-prime-sdk
     docker:
       - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
     steps:
-      - checkout
+      - attach_workspace:
+          at: /
 
-      - when:
-          condition: <<pipeline.parameters.run_e2e_tests>>
-          steps:
-            - run:
-                name: Install Bun
-                command: |
-                  curl -fsSL https://bun.sh/install | bash
-                  echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
-                  echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
-                  source $BASH_ENV
+      - run:
+          name: Checkout E2E repo
+          command: |
+            cd ~
+            git clone https://github.com/etherspot/e2e-sdk-prime.git
 
-            - restore_cache:
-                keys:
-                  - dependency-cache-{{ checksum "bun.lockb" }}
+      - run:
+          name: Configure E2E environment
+          command: |
+            cd ~/e2e-sdk-prime
+            sed -i.bak "s/private_key/$PRIVATE_KEY/g" .env
+            sed -i.bak "s/project_key/$PROJECT_KEY/g" .env
+            sed -i.bak "s/project_key_testnet/$PROJECT_KEY_TESTNET/g" .env
+            sed -i.bak "s/api_key/$API_KEY/g" .env
+            sed -i.bak "s/api_key_arka/$API_KEY_ARKA/g" .env
+            sed -i.bak "s/incorrect_api_key/$INCORRECT_API_KEY/g" .env
+            sed -i.bak "s/incorrect_api_key_arka/$INCORRECT_API_KEY_ARKA/g" .env
+            sed -i.bak "s/invalid_api_key/$INVALID_API_KEY/g" .env
+            sed -i.bak "s/invalid_api_key_arka/$INVALID_API_KEY_ARKA/g" .env
+            sed -i.bak "s/bundler_api_key/$BUNDLER_API_KEY/g" .env
+            sed -i.bak "s/data_api_key/$DATA_API_KEY/g" .env
 
-            - run:
-                name: Authenticate with npm registry
-                command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/.npmrc
+      - run:
+          name: Install SDK + E2E dependencies
+          command: |
+            cd ~/e2e-sdk-prime
+            npm install /tmp/prime-sdk.tgz --legacy-peer-deps
+            npm install --legacy-peer-deps
 
-            - run:
-                name: Install dependencies
-                command: bun install
+      - run:
+          name: Run E2E tests
+          no_output_timeout: 60m
+          command: |
+            cd ~/e2e-sdk-prime
+            npm run test-mainnet-combined
 
-            - run:
-                name: "Build SDK (required for file: dependency)"
-                command: bun run build
+      - run:
+          name: Collect test report
+          when: always
+          command: |
+            if [ -d "/home/circleci/e2e-sdk-prime/mochawesome-report" ]; then
+              mv /home/circleci/e2e-sdk-prime/mochawesome-report /tmp/
+            else
+              echo "mochawesome-report not found"
+            fi
 
-            - run:
-                name: Checkout e2e repo and run tests
-                no_output_timeout: 60m
-                command: |
-                  cd ~
-                  git clone https://github.com/etherspot/e2e-sdk-prime.git
-                  cd e2e-sdk-prime
-
-                  sed -i.bak "s/private_key/$PRIVATE_KEY/g" .env
-                  sed -i.bak "s/project_key/$PROJECT_KEY/g" .env
-                  sed -i.bak "s/project_key_testnet/$PROJECT_KEY_TESTNET/g" .env
-                  sed -i.bak "s/api_key/$API_KEY/g" .env
-                  sed -i.bak "s/api_key_arka/$API_KEY_ARKA/g" .env
-                  sed -i.bak "s/incorrect_api_key/$INCORRECT_API_KEY/g" .env
-                  sed -i.bak "s/incorrect_api_key_arka/$INCORRECT_API_KEY_ARKA/g" .env
-                  sed -i.bak "s/invalid_api_key/$INVALID_API_KEY/g" .env
-                  sed -i.bak "s/invalid_api_key_arka/$INVALID_API_KEY_ARKA/g" .env
-                  sed -i.bak "s/bundler_api_key/$BUNDLER_API_KEY/g" .env
-                  sed -i.bak "s/data_api_key/$DATA_API_KEY/g" .env
-
-                  mv package.json temp.json
-                  jq -r '.dependencies."@etherspot/prime-sdk" |= "file:../etherspot-prime-sdk"' temp.json > package.json
-                  rm temp.json
-
-                  npm install --legacy-peer-deps
-                  npm run test-mainnet-combined
-
-            - run:
-                name: Move test report
-                when: always
-                command: |
-                  if [ -d "/home/circleci/e2e-sdk-prime/mochawesome-report" ]; then
-                    mv /home/circleci/e2e-sdk-prime/mochawesome-report /tmp/
-                    chmod 777 -R /tmp/mochawesome-report
-                  else
-                    echo "⚠ mochawesome-report not found"
-                  fi
-
-            - store_artifacts:
-                path: /tmp/mochawesome-report
-                when: always
+      - store_artifacts:
+          path: /tmp/mochawesome-report
+          when: always
 
   publish-npm-package:
     working_directory: ~/etherspot-prime-sdk
     docker:
       - image: cimg/node:18.16.1
-        auth:
-          username: $DOCKERHUB_USER
-          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
 
@@ -146,71 +116,31 @@ jobs:
             echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
             source $BASH_ENV
 
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "bun.lockb" }}
-
       - run:
-          name: Authenticate with npm registry
+          name: Authenticate npm
           command: echo "//registry.npmjs.org/:_authToken=$ETHERSPOT_NPM_TOKEN" > ~/.npmrc
 
       - run:
-          name: Install dependencies
-          command: bun install
-
-      - save_cache:
-          key: dependency-cache-{{ checksum "bun.lockb" }}
-          paths:
-            - node_modules
-            - ~/.bun
-
-      - run:
-          name: Build SDK
-          command: bun run build
-
-      - run:
-          name: Publish to npm
-          command: bun publish --access public
-
-  publish-github-release:
-    docker:
-      - image: ardd97/ghr
-    steps:
-      - checkout
-      - run:
-          name: Publish GitHub Release
+          name: Install & Build
           command: |
-            VERSION=$(jq -r .version package.json)
-            ghr -t "$GITHUB_TOKEN" \
-                -u "$CIRCLE_PROJECT_USERNAME" \
-                -r "$CIRCLE_PROJECT_REPONAME" \
-                -c "$CIRCLE_SHA1" \
-                "$VERSION"
+            bun install
+            bun run build
+
+      - run:
+          name: Publish package
+          command: bun publish --access public
 
 workflows:
   version: 2.1
   install_and_publish:
     jobs:
-      - install:
-          context: general-vars
-
+      - install
       - e2e-tests:
-          context: general-vars
           requires:
             - install
-
       - publish-npm-package:
-          context: general-vars
           requires:
             - e2e-tests
-          filters:
-            branches:
-              only: update-circleci
-
-      - publish-github-release:
-          context: general-vars
-          requires:
-            - publish-npm-package
           filters:
             branches:
               only: update-circleci
