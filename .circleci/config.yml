@@ -16,6 +16,7 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
+
     steps:
       - checkout
 
@@ -34,7 +35,6 @@ jobs:
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "bun.lockb" }}
-            - dependency-cache-
 
       - run:
           name: Install dependencies
@@ -47,7 +47,7 @@ jobs:
             - ~/.bun
 
       - run:
-          name: Dry run build
+          name: Build SDK
           command: bun run build
 
   e2e-tests:
@@ -57,6 +57,7 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
+
     steps:
       - checkout
 
@@ -74,7 +75,6 @@ jobs:
             - restore_cache:
                 keys:
                   - dependency-cache-{{ checksum "bun.lockb" }}
-                  - dependency-cache-
 
             - run:
                 name: Authenticate with npm registry
@@ -85,7 +85,7 @@ jobs:
                 command: bun install
 
             - run:
-                name: Build SDK
+                name: Build SDK (required for file: dependency)
                 command: bun run build
 
             - run:
@@ -137,6 +137,7 @@ jobs:
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
+
     steps:
       - checkout
 
@@ -151,7 +152,6 @@ jobs:
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "bun.lockb" }}
-            - dependency-cache-
 
       - run:
           name: Authenticate with npm registry
@@ -172,7 +172,7 @@ jobs:
           command: bun run build
 
       - run:
-          name: Publish package
+          name: Publish to npm
           command: bun publish --access public
 
   publish-github-release:
@@ -184,7 +184,11 @@ jobs:
           name: Publish GitHub Release
           command: |
             VERSION=$(jq -r .version package.json)
-            ghr -t "$GITHUB_TOKEN" -u "$CIRCLE_PROJECT_USERNAME" -r "$CIRCLE_PROJECT_REPONAME" -c "$CIRCLE_SHA1" "$VERSION"
+            ghr -t "$GITHUB_TOKEN" \
+                -u "$CIRCLE_PROJECT_USERNAME" \
+                -r "$CIRCLE_PROJECT_REPONAME" \
+                -c "$CIRCLE_SHA1" \
+                "$VERSION"
 
 workflows:
   version: 2.1
@@ -204,7 +208,7 @@ workflows:
             - e2e-tests
           filters:
             branches:
-              only: update-circleci
+              only: master
 
       - publish-github-release:
           context: general-vars
@@ -212,4 +216,4 @@ workflows:
             - publish-npm-package
           filters:
             branches:
-              only: update-circleci
+              only: master
